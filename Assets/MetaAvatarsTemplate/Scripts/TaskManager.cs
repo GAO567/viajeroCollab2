@@ -1,13 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
+
 using System;
+using UnityEngine;
 using System.Linq;
 using System.Security.Cryptography;
 
+
+public enum CollabType
+{
+    FacetoFaceIntersect, FaceToFaceNoIntersect, SideBySide, AngledFaceToFace, CoupledView
+};
+
+
 public class TaskManager : MonoBehaviour
 {
+   
+
     public int userId = 0;
+    public CollabType collabType = CollabType.FacetoFaceIntersect;
     [SerializeField] GameObject Player1Area;
     [SerializeField] GameObject Player2Area;
     [SerializeField] GameObject userHead;
@@ -23,6 +34,7 @@ public class TaskManager : MonoBehaviour
     List<float[]> conditionsByUserId;
     //List<TaskCondition[]> taskConditionsByUserId;
     public float angleBetween;
+    private int currentPlayer;
 
     // Start is called before the first frame update
     void Start()
@@ -100,6 +112,43 @@ public class TaskManager : MonoBehaviour
     }
 
 
+    void nextPuzzle()
+    {
+        if(currentPlayer == 1)
+        {
+            currentPlayer = 0;
+        }
+        else
+        {
+            currentPlayer = 0;
+        }
+        ShufflePossiblePositionsArray();
+        initializePartsForTask();
+    }
+
+    void initializeTask()
+    {
+        if (collabType == CollabType.FacetoFaceIntersect)
+        {
+
+        }
+        else if (collabType == CollabType.FaceToFaceNoIntersect)
+        {
+
+        }
+        else if (collabType == CollabType.AngledFaceToFace)
+        {
+
+        }
+        else if (collabType == CollabType.CoupledView)
+        {
+
+        }
+        else if(collabType == CollabType.SideBySide)
+        {
+
+        }
+    }
     void calculateAngle()
     {
        /* if (rootObject && userHead)
