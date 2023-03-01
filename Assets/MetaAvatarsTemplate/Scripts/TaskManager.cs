@@ -120,8 +120,9 @@ public class TaskManager : MonoBehaviour
         }
         else
         {
-            currentPlayer = 0;
+            currentPlayer = 1;
         }
+        currentTask++;
         ShufflePossiblePositionsArray();
         initializePartsForTask();
     }
