@@ -14,6 +14,8 @@ public class WireareaDrawer : MonoBehaviour
     GameObject bottomRightGO;
     GameObject bottomLeftGO;
 
+    public Vector3 BoundsSize1 { get => BoundsSize; set => BoundsSize = value; }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -29,9 +31,9 @@ public class WireareaDrawer : MonoBehaviour
         Camera _camera = Camera.main;
 
         
-        float sizeX = BoundsSize.x;
-        float sizeY = BoundsSize.y;
-        float sizeZ = BoundsSize.z;
+        float sizeX = BoundsSize1.x;
+        float sizeY = BoundsSize1.y;
+        float sizeZ = BoundsSize1.z;
         if (lineRenderer)
         {
             print("entrou aqui = " + sizeX + "," + sizeY + "," + sizeZ + ")");

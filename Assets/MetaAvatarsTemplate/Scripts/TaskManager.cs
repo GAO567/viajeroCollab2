@@ -85,6 +85,21 @@ public class TaskManager : MonoBehaviour
 
         ShufflePossiblePositionsArray();
         initializePartsForTask();
+
+        if (Player1Area)
+        {
+            WireareaDrawer drawer =  Player1Area.GetComponentInChildren<WireareaDrawer>();
+            if(drawer) drawer.BoundsSize1 = boundsSize;
+           // drawer.
+        }
+
+        if (Player2Area)
+        {
+            WireareaDrawer drawer = Player2Area.GetComponentInChildren<WireareaDrawer>();
+            if(drawer) drawer.BoundsSize1 = boundsSize;
+        }
+
+        currentTaskLog = new TaskLog(userId, 0, "P1", currentTask.ToString(), Player1Area.transform, collabType, boundsSize);
     }
     
     void logUsersMovements()
@@ -211,6 +226,10 @@ public class TaskManager : MonoBehaviour
     {
         if(dominantplayer == "P2")
         {
+            if (currentTaskLog!=null)
+            {
+                currentTaskLog.addTimeInteracting("P2", Time.realtimeSinceStartup);
+            }
             dominantplayer = "P1";
             currentTaskState = TaskState.Player2Dominant;
             //hidecurrenttask
@@ -224,6 +243,10 @@ public class TaskManager : MonoBehaviour
         currentTask++;
         ShufflePossiblePositionsArray();
         initializePartsForTask();
+
+
+        currentTaskLog = new TaskLog(userId,0, dominantplayer, currentTask.ToString(), Player1Area.transform, collabType, boundsSize);
+        
     }
 
     void initializeTask()
