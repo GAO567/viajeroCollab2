@@ -40,7 +40,7 @@ public class WireareaDrawer : MonoBehaviour
 
             if (headPosP2Local.x > BoundsSize.x / 2.0f || headPosP2Local.y > BoundsSize.y / 2.0f || headPosP2Local.z > BoundsSize.z / 2.0f)
             {
-                print("im here mf");
+               /// print("im here mf");
             }
         }
     }
@@ -80,7 +80,7 @@ public class WireareaDrawer : MonoBehaviour
         float sizeZ = BoundsSize1.z;
         if (lineRenderer)
         {
-            print("entrou aqui = " + sizeX + "," + sizeY + "," + sizeZ + ")");
+            //print("entrou aqui = " + sizeX + "," + sizeY + "," + sizeZ + ")");
             //bottom Cube
             lineRenderer.positionCount = 18;
             lineRenderer.SetPosition(0, transform.TransformPoint(new Vector3(sizeX / 2.0f, -sizeY / 2.0f, -sizeZ / 2.0f)));
