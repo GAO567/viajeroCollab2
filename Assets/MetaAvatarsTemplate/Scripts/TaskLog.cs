@@ -52,6 +52,7 @@ public class TaskLog
     float totalTime = 0;
     float startTime = 0;
     public float startTimeOutsideBoundsP2;
+    private int numberOfBoundViolationsP2;
 
     public TaskLog(int userId, int trialNumber, string dominantPlayer, string puzzleId, Transform areaDominantPlayer, CollabType collabType, Vector3 boundsSize)
     {
