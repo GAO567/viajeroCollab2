@@ -53,7 +53,7 @@ public class WireareaDrawer : MonoBehaviour
 
         if (taskManager )
         {
-            taskManager.incrementBoundaryViolations();
+            //taskManager.incrementBoundaryViolations();
             //taskManager.collisionStarted(this.Id, collider.gameObject.name, timeWhenCollisionStarted);
 
             // tTask.incrementCollisions(this.Id,collider.gameObject.name);
