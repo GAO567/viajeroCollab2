@@ -35,7 +35,10 @@ public class TaskManager : MonoBehaviour
     [SerializeField] GameObject userHead;
     [SerializeField] List<GameObject> puzzleObjects;
     [SerializeField] GameObject rootPossiblePositionsForPuzzle;
+    [SerializeField] GameObject distractorsRoot;
     List<GameObject> listPossiblePositionsForPuzzle;
+    List<GameObject> currentBlueprint;
+
 
     List<TaskLog> logTasks;
     List<GameObject> objectPartsForThisTask;
@@ -211,10 +214,33 @@ public class TaskManager : MonoBehaviour
 
         int numberOfDistractorsToAdd = listPossiblePositionsForPuzzle.Count - objectPartsForThisTask.Count;
 
-        for(int j = objectPartsForThisTask.Count - 1; j < listPossiblePositionsForPuzzle.Count; j++)
+        if (distractorsRoot)
         {
-            //add some distractors to the scene
+
+            List<GameObject> listDistractors1 = new List<GameObject>();
+            List<int> auxIndex = new List<int>();
+            List<GameObject> listAux = new List<GameObject>();
+
+            for (int i = 0; i < distractorsRoot.transform.childCount; i++)
+            {
+                distractorsRoot.transform.GetChild(i).gameObject.SetActive(false);
+                listDistractors1.Add(distractorsRoot.transform.GetChild(i).gameObject);
+                auxIndex.Add(i); 
+            }
+
+            //shuffle
+
+            var random = new System.Random();
+            auxIndex = auxIndex.OrderBy(x => random.Next()).ToList();
+
+            for (int j = objectPartsForThisTask.Count - 1; j < objectPartsForThisTask.Count; j++)
+            {
+                //add some distractors to the scene
+                objectPartsForThisTask[j].transform.position = listDistractors1[auxIndex[j]].transform.position;// listPossiblePositionsForPuzzle[i].transform.position;
+                objectPartsForThisTask[j].transform.rotation = listDistractors1[auxIndex[j]].transform.rotation;
+            }
         }
+        
 
         //objectPartsForThisTask = puzzleObjects[currentTask].transform.GetComponentsInChildren<PuzzlePart>().gameObject;
 
