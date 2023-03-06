@@ -25,10 +25,14 @@ public class TaskLog
 
     float amounttimeDominantInteracting = 0;
     float amounttimePassiveInteracting = 0;
+
+    int numberOfBoundViolationsP1 = 0;
+
+    public float startTimeOutsideBoundsP1 = 0;
     
 
     public string headerTaskFile = "UserId,TrialNumber,dominantPlayer,"+ Utils.vecNameToString("centerAreaDominantPlayerPos")+","+ Utils.vecNameToString("centerAreaDominantPlayerRot")+","+
-                                    Utils.vecNameToString ("boundsSize") + "\n";
+                                    Utils.vecNameToString ("boundsSize") + ",numberOfBoundViolations"   + "\n";
 
     Vector3 boundsSize = Vector3.one;
     private Vector3 centerPosArea;
@@ -42,6 +46,13 @@ public class TaskLog
     List<GameObject> bluePrintParts;
     private Vector3 centerRotArea;
 
+    float timeOutsideBoundsP1 = 0;
+    float timeOutsideBoundsP2 = 0;
+
+    float totalTime = 0;
+    float startTime = 0;
+    public float startTimeOutsideBoundsP2;
+
     public TaskLog(int userId, int trialNumber, string dominantPlayer, string puzzleId, Transform areaDominantPlayer, CollabType collabType, Vector3 boundsSize)
     {
         this.dominantPlayer = dominantPlayer;
@@ -51,6 +62,7 @@ public class TaskLog
         this.boundsSize = boundsSize;
         this.centerPosArea = areaDominantPlayer.transform.position;
         this.centerRotArea = areaDominantPlayer.transform.eulerAngles;
+        this.startTime = Time.realtimeSinceStartup;
     }
 
     public string toLogString()
@@ -58,7 +70,7 @@ public class TaskLog
         string logStr = "";
 
         logStr = userId + "," + trialNumber + "," + dominantPlayer + "," + puzzleId + "," + Utils.vector3ToString(centerPosArea) + "," + Utils.vector3ToString(centerRotArea) + "," + collabType.ToString() +
-            "," + Utils.vector3ToString(boundsSize);
+            "," + Utils.vector3ToString(boundsSize) + "," +numberOfBoundViolationsP1 +","+ timeOutsideBoundsP1 + "," + totalTime  ;
         if(bluePrintParts != null && objParts != null)
         {
             logStr += "," + objParts.Count;//add the number of parts to make sure we have the right amount
@@ -99,6 +111,33 @@ public class TaskLog
     public void setBlueprintParts(ref List<GameObject> obj)
     {
         bluePrintParts = obj;
+    }
+
+    public  void incrementBoundViolationsP1()
+    {
+        numberOfBoundViolationsP1++;
+    }
+
+    public void incrementBoundViolationsP2()
+    {
+        numberOfBoundViolationsP2++;
+    }
+
+    public void incrementTimeOutsideBoundsP1(float timeOutsideBounds)
+    {
+        this.timeOutsideBoundsP1 += timeOutsideBounds - startTimeOutsideBoundsP1;
+        startTimeOutsideBoundsP1 = 0;// timeOutsideBounds;
+    }
+
+    public void incrementTimeOutsideBoundsP2(float timeOutsideBounds)
+    {
+        this.timeOutsideBoundsP2 += timeOutsideBounds - startTimeOutsideBoundsP2;
+        startTimeOutsideBoundsP2 = 0;// timeOutsideBounds;
+    }
+
+    public void endTask()
+    {
+        totalTime = Time.realtimeSinceStartup - startTime;
     }
     
     //string headerTaskFile = "UserId,CurrentGainLevel,InitMovementTime,TargetPressedTime,ReachTime,TargetReleasedTime,SlidingTaskTime,TotalTime";

@@ -8,29 +8,73 @@ public class WireareaDrawer : MonoBehaviour
     [SerializeField] LineRenderer lineRenderer;
     [SerializeField] Vector3 stuff;
     [SerializeField] float viewportDepth;
+    [SerializeField] GameObject objToCollide;
 
     GameObject topRightGO;
     GameObject topLeftGO;
     GameObject bottomRightGO;
     GameObject bottomLeftGO;
 
-    public Vector3 BoundsSize1 { get => BoundsSize; set => BoundsSize = value; }
+    
 
+    TaskManager taskManager;
+    private float timeWhenCollisionStarted;
+
+    public Vector3 BoundsSize1 { get => BoundsSize; set => BoundsSize = value; }
+    float startTime = 0;
     // Start is called before the first frame update
     void Start()
     {
         if (lineRenderer)
             lineRenderer.positionCount = 8;// (16);
+        taskManager = GameObject.Find("TaskManager").GetComponent<TaskManager>();
+        
+    }
 
-       
+    public void checkCollision()
+    {
+        if (objToCollide)
+        {
+            Vector3 headPosP2Local = this.transform.InverseTransformPoint(objToCollide.transform.position);
+            headPosP2Local = new Vector3(Mathf.Abs(headPosP2Local.x), Mathf.Abs(headPosP2Local.y), Mathf.Abs(headPosP2Local.z));
+
+            if (headPosP2Local.x > BoundsSize.x / 2.0f || headPosP2Local.y > BoundsSize.y / 2.0f || headPosP2Local.z > BoundsSize.z / 2.0f)
+            {
+                print("im here mf");
+            }
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        timeWhenCollisionStarted = Time.realtimeSinceStartup;
+
+        startTime = Time.realtimeSinceStartup;
+
+        if (taskManager )
+        {
+            taskManager.incrementBoundaryViolations();
+            //taskManager.collisionStarted(this.Id, collider.gameObject.name, timeWhenCollisionStarted);
+
+            // tTask.incrementCollisions(this.Id,collider.gameObject.name);
+        }
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        //print("stay");
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if(taskManager)
+            taskManager.incrementTimeOutsideBounds(Time.realtimeSinceStartup - startTime);
     }
 
     // Update is called once per frame
     void Update()
     {
         Camera _camera = Camera.main;
-
-        
         float sizeX = BoundsSize1.x;
         float sizeY = BoundsSize1.y;
         float sizeZ = BoundsSize1.z;

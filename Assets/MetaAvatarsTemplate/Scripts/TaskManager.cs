@@ -75,6 +75,14 @@ public class TaskManager : MonoBehaviour
     public string player1InteractionStr = "";
     private string player2InteractionStr;
 
+
+    Dictionary<string, List<ActiveCollision>> activeCollisions;
+    List<FinishedCollision> finishedCollisions;
+    Dictionary<string, FinishedCollision> finishedCollisionsAux;
+
+    bool outsideBoundsLastFrameP1 = false;
+    private bool outsideBoundsLastFrameP2 = false;
+
     public GameObject getInteractPart(string player)
     {
         return objP1;
@@ -170,6 +178,24 @@ public class TaskManager : MonoBehaviour
 
     }
 
+    public void incrementTimeOutsideBounds(float time)
+    {
+        if (currentTaskLog!=null)
+        {
+            currentTaskLog.incrementTimeOutsideBoundsP1(time);
+        }
+    }
+
+    public void incrementBoundaryViolations(string player)
+    {
+        if (currentTaskLog != null)
+        {
+            if (player == "P1")
+                currentTaskLog.incrementBoundViolationsP1();
+            else
+                currentTaskLog.incrementBoundViolationsP2();
+        }
+    }
 
     void ShufflePossiblePositionsArray()
     {
@@ -248,13 +274,136 @@ public class TaskManager : MonoBehaviour
     }
 
 
+
+    Vector3 calculateBoundaryViolation()
+    {
+        Vector3 violation = new Vector3();
+        if (headPosP1 && rightHandPosP1 && leftHandPosP1)
+        {
+            //we dont care about the Y
+            Vector3 headPosP1Local = Player1Area.transform.InverseTransformPoint(headPosP1.transform.position);
+            Vector3 rightHandPosP1Local = Player1Area.transform.InverseTransformPoint(rightHandPosP1.transform.position);
+            Vector3 leftHandPosP1Local = Player1Area.transform.InverseTransformPoint(leftHandPosP1.transform.position);
+
+            headPosP1Local = new Vector3(Mathf.Abs(headPosP1Local.x), Mathf.Abs(headPosP1Local.y), Mathf.Abs(headPosP1Local.z));
+            rightHandPosP1Local = new Vector3(Mathf.Abs(rightHandPosP1Local.x), Mathf.Abs(rightHandPosP1Local.y), Mathf.Abs(rightHandPosP1Local.z));
+            leftHandPosP1Local = new Vector3(Mathf.Abs(leftHandPosP1Local.x), Mathf.Abs(leftHandPosP1Local.y), Mathf.Abs(leftHandPosP1Local.z));
+
+            float delta = Time.deltaTime;
+            if (!outsideBoundsLastFrameP1)
+            {
+
+            }
+            if(headPosP1Local.x > boundsSize.x/2.0f || headPosP1Local.y > boundsSize.y / 2.0f || headPosP1Local.z > boundsSize.z / 2.0f)
+            {
+                if (!outsideBoundsLastFrameP1)
+                {
+                    outsideBoundsLastFrameP1 = true;
+                    currentTaskLog.startTimeOutsideBoundsP1 = Time.realtimeSinceStartup;
+                    currentTaskLog.incrementBoundViolationsP1();
+                }
+                //currentTaskLog.incrementTimeOutsideBounds(Time.deltaTime);
+                //
+            }
+            else if (rightHandPosP1Local.x > boundsSize.x / 2.0f || rightHandPosP1Local.y > boundsSize.y / 2.0f || rightHandPosP1Local.z > boundsSize.z / 2.0f)
+            {
+                if (!outsideBoundsLastFrameP1)
+                {
+                    outsideBoundsLastFrameP1 = true;
+                    currentTaskLog.startTimeOutsideBoundsP1 = Time.realtimeSinceStartup;
+                    currentTaskLog.incrementBoundViolationsP1();
+                }
+                //currentTaskLog.incrementTimeOutsideBounds(Time.deltaTime);
+                //
+            }
+            else if (leftHandPosP1Local.x > boundsSize.x / 2.0f || leftHandPosP1Local.y > boundsSize.y / 2.0f || leftHandPosP1Local.z > boundsSize.z / 2.0f)
+            {
+                if (!outsideBoundsLastFrameP1)
+                {
+                    outsideBoundsLastFrameP1 = true;
+                    currentTaskLog.startTimeOutsideBoundsP1 = Time.realtimeSinceStartup;
+                    currentTaskLog.incrementBoundViolationsP1();
+                }
+                //currentTaskLog.incrementTimeOutsideBounds(Time.deltaTime);
+                //
+            }
+            else
+            {
+                if (outsideBoundsLastFrameP1)
+                {
+                    currentTaskLog.incrementTimeOutsideBoundsP1(Time.realtimeSinceStartup);
+                }
+            }
+
+
+        }
+
+        if(headPosP2 && rightHandPosP2 && leftHandPosP2)
+        {
+            //we dont care about the Y
+            Vector3 headPosP2Local = Player1Area.transform.InverseTransformPoint(headPosP2.transform.position);
+            Vector3 rightHandPosP2Local = Player1Area.transform.InverseTransformPoint(rightHandPosP2.transform.position);
+            Vector3 leftHandPosP2Local = Player1Area.transform.InverseTransformPoint(leftHandPosP2.transform.position);
+
+            headPosP2Local = new Vector3(Mathf.Abs(headPosP2Local.x), Mathf.Abs(headPosP2Local.y), Mathf.Abs(headPosP2Local.z));
+            rightHandPosP2Local = new Vector3(Mathf.Abs(rightHandPosP2Local.x), Mathf.Abs(rightHandPosP2Local.y), Mathf.Abs(rightHandPosP2Local.z));
+            leftHandPosP2Local = new Vector3(Mathf.Abs(leftHandPosP2Local.x), Mathf.Abs(leftHandPosP2Local.y), Mathf.Abs(leftHandPosP2Local.z));
+
+            float delta = Time.deltaTime;
+            if (headPosP2Local.x > boundsSize.x / 2.0f || headPosP2Local.y > boundsSize.y / 2.0f || headPosP2Local.z > boundsSize.z / 2.0f)
+            {
+                if (!outsideBoundsLastFrameP2)
+                {
+                    outsideBoundsLastFrameP2 = true;
+                    currentTaskLog.startTimeOutsideBoundsP2 = Time.realtimeSinceStartup;
+                    currentTaskLog.incrementBoundViolationsP2();
+                }
+                //currentTaskLog.incrementTimeOutsideBounds(Time.deltaTime);
+                //
+            }
+            else if(rightHandPosP2Local.x > boundsSize.x / 2.0f || rightHandPosP2Local.y > boundsSize.y / 2.0f || rightHandPosP2Local.z > boundsSize.z / 2.0f)
+            {
+                if (!outsideBoundsLastFrameP2)
+                {
+                    outsideBoundsLastFrameP2 = true;
+                    currentTaskLog.startTimeOutsideBoundsP2 = Time.realtimeSinceStartup;
+                    currentTaskLog.incrementBoundViolationsP2();
+                }
+                //currentTaskLog.incrementTimeOutsideBounds(Time.deltaTime);
+                //
+            }
+            else if (leftHandPosP2Local.x > boundsSize.x / 2.0f || leftHandPosP2Local.y > boundsSize.y / 2.0f || leftHandPosP2Local.z > boundsSize.z / 2.0f)
+            {
+                if (!outsideBoundsLastFrameP2)
+                {
+                    outsideBoundsLastFrameP2 = true;
+                    currentTaskLog.startTimeOutsideBoundsP2 = Time.realtimeSinceStartup;
+                    currentTaskLog.incrementBoundViolationsP2();
+                }
+                //currentTaskLog.incrementTimeOutsideBounds(Time.deltaTime);
+                //
+            }
+            else
+            {
+                if (outsideBoundsLastFrameP2)
+                {
+                    currentTaskLog.incrementTimeOutsideBoundsP2(Time.realtimeSinceStartup);
+                }
+                outsideBoundsLastFrameP2 = false;
+            }
+
+        }
+        return violation;
+    }
+
     void nextPuzzle()
     {
         if(dominantplayer == "P2")
         {
             if (currentTaskLog!=null)
             {
-                currentTaskLog.addTimeInteracting("P2", Time.realtimeSinceStartup);
+                //currentTaskLog.addTimeInteracting("P2", Time.realtimeSinceStartup);
+                currentTaskLog.endTask();
             }
             dominantplayer = "P1";
             currentTaskState = TaskState.Player2Dominant;
@@ -262,6 +411,11 @@ public class TaskManager : MonoBehaviour
         }
         else
         {
+            if (currentTaskLog != null)
+            {
+                //currentTaskLog.addTimeInteracting("P2", Time.realtimeSinceStartup);
+                currentTaskLog.endTask();
+            }
             dominantplayer = "P2";
             currentTaskState = TaskState.Player1Dominant;
             //hidecurrenttask
