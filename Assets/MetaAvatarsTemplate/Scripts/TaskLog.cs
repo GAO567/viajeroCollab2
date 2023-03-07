@@ -119,8 +119,6 @@ public class TaskLog
         lastFrameBoundaryViolation = new bool[6];
         violationNumber = new int[6];
 
-
-
     }
 
     public string toLogString()
