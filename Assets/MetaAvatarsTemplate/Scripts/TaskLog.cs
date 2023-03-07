@@ -62,6 +62,46 @@ public class TaskLog
     public float startTimeOutsideBoundsP2;
     private int numberOfBoundViolationsP2;
 
+    BoundaryViolation[] boundaryViolationArray;
+
+    public float[] shortestDistances;
+    public bool[] lastFrameBoundaryViolation;
+    public int[] violationNumber;
+    public float[] timeOutsideBounds;
+
+
+    public void addShortestDistance(int index, float value)
+    {
+        if (value > shortestDistances[index])
+            shortestDistances[index] = value;
+    }
+
+    public void setLastFrameBoundaryViolation(int index,bool value)
+    {
+        lastFrameBoundaryViolation[index] = value;
+    }
+
+    public bool getLastFrameBoundaryViolation(int index)
+    {
+        return lastFrameBoundaryViolation[index];
+    }
+
+    public void incrementViolationNumber(int index)
+    {
+        violationNumber[index]++;
+    }
+
+    public void incrementTimeOutsideBounds(int index, float time)
+    {
+        if (lastFrameBoundaryViolation[index]) 
+                timeOutsideBounds[index] += time;
+    }
+
+    public void endBoundaryViolation(int index)
+    {
+        //
+    }
+
 
     public TaskLog(int userId, int trialNumber, string dominantPlayer, string puzzleId, Transform areaDominantPlayer, CollabType collabType, Vector3 boundsSize)
     {
@@ -74,9 +114,16 @@ public class TaskLog
         this.centerRotArea = areaDominantPlayer.transform.eulerAngles;
         this.startTime = Time.realtimeSinceStartup;
 
-        collisionsPerJoint = new Dictionary<string, ActiveCollision>();
-        activeCollisions = new Dictionary<string, List<ActiveCollision>>();
-        finishedCollisions = new List<FinishedCollision>();
+        shortestDistances = new float[6];// Dictionary<string, float>();
+        lastFrameBoundaryViolation = new bool[6];
+        violationNumber = new int[6];
+
+        for (int i = 0; i < 6; i++)
+        {
+            boundaryViolationArray[i] = new BoundaryViolation();
+        }
+
+
     }
 
     public string toLogString()

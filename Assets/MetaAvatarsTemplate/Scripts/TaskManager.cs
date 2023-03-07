@@ -22,6 +22,10 @@ public enum TaskState
     Idle, Connected, BothConnected, Player1Dominant, Player2Dominant, InteractingWithObject, EndTask
 };
 
+public enum Bodypart
+{
+    HeadP1, rightHandP1, leftHandP1, HeadP2, rightHandP2, leftHandP2
+};
 
 
 public class TaskManager : MonoBehaviour
@@ -121,7 +125,7 @@ public class TaskManager : MonoBehaviour
     
     void logUsersMovements()
     {
-        if(currentTaskState > TaskState.Connected)
+        if(currentTaskState > TaskState.Connected && !debug) 
         {
             string violatingP1 = "NoViolationP1";
             if (currentTaskLog.startTimeOutsideBoundsP1 > 0)
@@ -132,7 +136,7 @@ public class TaskManager : MonoBehaviour
                 violatingP2 = "ViolationP2";
             }
 
-            player1InteractionStr += userId + "," + currentTask + "," + (dominantplayer == "P1" ? true : false) + "," + violatingP1 + ","+  Utils.vector3ToString(Player1Area.transform.position)+ "," + Utils.vector3ToString(Player1Area.transform.eulerAngles) +  ","
+            player1InteractionStr += userId + "," + Time.realtimeSinceStartup + "," + currentTask + "," + (dominantplayer == "P1" ? true : false) + "," + violatingP1 + ","+  Utils.vector3ToString(Player1Area.transform.position)+ "," + Utils.vector3ToString(Player1Area.transform.eulerAngles) +  ","
                                     + Utils.vector3ToString(headPosP1.position) + "," + Utils.vector3ToString(headPosP1.eulerAngles) + Utils.vector3ToString(rightHandPosP1.position) + "," + Utils.vector3ToString(rightHandPosP1.eulerAngles) +
                                      Utils.vector3ToString(leftHandPosP1.position) + "," + Utils.vector3ToString(leftHandPosP1.eulerAngles);
             if (player1Interacting && getInteractPart("P1"))
@@ -151,7 +155,7 @@ public class TaskManager : MonoBehaviour
                 player1InteractionStr = "";
             }
 
-            player2InteractionStr += userId + "," + currentTask + "," + (dominantplayer == "P2" ? true : false) + "," + violatingP2 + ","+ Utils.vector3ToString(Player2Area.transform.position) + "," + Utils.vector3ToString(Player2Area.transform.eulerAngles) + ","
+            player2InteractionStr += userId + ","+ Time.realtimeSinceStartup + "," + currentTask + "," + (dominantplayer == "P2" ? true : false) + "," + violatingP2 + ","+ Utils.vector3ToString(Player2Area.transform.position) + "," + Utils.vector3ToString(Player2Area.transform.eulerAngles) + ","
                                     + Utils.vector3ToString(headPosP2.position) + "," + Utils.vector3ToString(headPosP2.eulerAngles) + Utils.vector3ToString(rightHandPosP2.position) + "," + Utils.vector3ToString(rightHandPosP2.eulerAngles) +
                                      Utils.vector3ToString(leftHandPosP2.position) + "," + Utils.vector3ToString(leftHandPosP2.eulerAngles);
             if (player2Interacting && getInteractPart("P2"))
@@ -333,39 +337,75 @@ public class TaskManager : MonoBehaviour
             }
             if(headPosP1Local.x > boundsSize.x/2.0f || headPosP1Local.y > boundsSize.y / 2.0f || headPosP1Local.z > boundsSize.z / 2.0f)
             {
+                outsideBoundsLastFrameP1 = currentTaskLog.lastFrameBoundaryViolation[(int)Bodypart.HeadP1];
+                float distance = Vector3.Distance(Vector3.zero, headPosP1Local);
                 if (!outsideBoundsLastFrameP1)
                 {
                     outsideBoundsLastFrameP1 = true;
                     currentTaskLog.startTimeOutsideBoundsP1 = Time.realtimeSinceStartup;
                     currentTaskLog.incrementBoundViolationsP1();
 
+                    currentTaskLog.violationNumber[(int)Bodypart.HeadP1]++;
+                    currentTaskLog.shortestDistances[(int)Bodypart.HeadP1] = distance;
+                    currentTaskLog.lastFrameBoundaryViolation[(int)Bodypart.HeadP1] = true;
+
+
                     //if(currentTaskLog.)
                 }
                 else
                 {
-
+                    if(distance > currentTaskLog.shortestDistances[(int)Bodypart.HeadP1])
+                    {
+                        currentTaskLog.shortestDistances[(int)Bodypart.HeadP1] = distance;
+                    }
                 }
                 //currentTaskLog.incrementTimeOutsideBounds(Time.deltaTime);
                 //
             }
             else if (rightHandPosP1Local.x > boundsSize.x / 2.0f || rightHandPosP1Local.y > boundsSize.y / 2.0f || rightHandPosP1Local.z > boundsSize.z / 2.0f)
             {
+                float distance = Vector3.Distance(Vector3.zero, rightHandPosP1Local);
+
+                outsideBoundsLastFrameP1 = currentTaskLog.lastFrameBoundaryViolation[(int)Bodypart.rightHandP1];
                 if (!outsideBoundsLastFrameP1)
                 {
                     outsideBoundsLastFrameP1 = true;
                     currentTaskLog.startTimeOutsideBoundsP1 = Time.realtimeSinceStartup;
                     currentTaskLog.incrementBoundViolationsP1();
+                    currentTaskLog.violationNumber[(int)Bodypart.rightHandP1]++;
+                    currentTaskLog.shortestDistances[(int)Bodypart.rightHandP1] = distance;
+                    currentTaskLog.lastFrameBoundaryViolation[(int)Bodypart.rightHandP1] = true;
+                }
+                else
+                {
+                    if (distance > currentTaskLog.shortestDistances[(int)Bodypart.rightHandP1])
+                    {
+                        currentTaskLog.shortestDistances[(int)Bodypart.rightHandP1] = distance;
+                    }
                 }
                 //currentTaskLog.incrementTimeOutsideBounds(Time.deltaTime);
                 //
             }
             else if (leftHandPosP1Local.x > boundsSize.x / 2.0f || leftHandPosP1Local.y > boundsSize.y / 2.0f || leftHandPosP1Local.z > boundsSize.z / 2.0f)
             {
+                float distance = Vector3.Distance(Vector3.zero, leftHandPosP1Local);
+                outsideBoundsLastFrameP1 = currentTaskLog.lastFrameBoundaryViolation[(int)Bodypart.leftHandP1];
                 if (!outsideBoundsLastFrameP1)
                 {
                     outsideBoundsLastFrameP1 = true;
                     currentTaskLog.startTimeOutsideBoundsP1 = Time.realtimeSinceStartup;
                     currentTaskLog.incrementBoundViolationsP1();
+
+                    currentTaskLog.violationNumber[(int)Bodypart.leftHandP1]++;
+                    currentTaskLog.shortestDistances[(int)Bodypart.leftHandP1] = distance;
+                    currentTaskLog.lastFrameBoundaryViolation[(int)Bodypart.leftHandP1] = true;
+                }
+                else
+                {
+                    if (distance > currentTaskLog.shortestDistances[(int)Bodypart.leftHandP1])
+                    {
+                        currentTaskLog.shortestDistances[(int)Bodypart.leftHandP1] = distance;
+                    }
                 }
                 //currentTaskLog.incrementTimeOutsideBounds(Time.deltaTime);
                 //
@@ -395,39 +435,77 @@ public class TaskManager : MonoBehaviour
             float delta = Time.deltaTime;
             if (headPosP2Local.x > boundsSize.x / 2.0f || headPosP2Local.y > boundsSize.y / 2.0f || headPosP2Local.z > boundsSize.z / 2.0f)
             {
+                float distance = Vector3.Distance(Vector3.zero, headPosP2Local);
+                outsideBoundsLastFrameP1 = currentTaskLog.lastFrameBoundaryViolation[(int)Bodypart.HeadP2];
                 if (!outsideBoundsLastFrameP2)
                 {
                     outsideBoundsLastFrameP2 = true;
                     currentTaskLog.startTimeOutsideBoundsP2 = Time.realtimeSinceStartup;
                     currentTaskLog.incrementBoundViolationsP2();
+                    currentTaskLog.violationNumber[(int)Bodypart.HeadP2]++;
+                    currentTaskLog.shortestDistances[(int)Bodypart.HeadP2] = distance;
+                    currentTaskLog.lastFrameBoundaryViolation[(int)Bodypart.HeadP2] = true;
+
+                }
+                else
+                {
+                    if (distance > currentTaskLog.shortestDistances[(int)Bodypart.HeadP2])
+                    {
+                        currentTaskLog.shortestDistances[(int)Bodypart.HeadP2] = distance;
+                    }
                 }
                 //currentTaskLog.incrementTimeOutsideBounds(Time.deltaTime);
                 //
             }
             else if(rightHandPosP2Local.x > boundsSize.x / 2.0f || rightHandPosP2Local.y > boundsSize.y / 2.0f || rightHandPosP2Local.z > boundsSize.z / 2.0f)
             {
+                float distance = Vector3.Distance(Vector3.zero, rightHandPosP2Local);
+                outsideBoundsLastFrameP1 = currentTaskLog.lastFrameBoundaryViolation[(int)Bodypart.rightHandP2];
                 if (!outsideBoundsLastFrameP2)
                 {
                     outsideBoundsLastFrameP2 = true;
                     currentTaskLog.startTimeOutsideBoundsP2 = Time.realtimeSinceStartup;
                     currentTaskLog.incrementBoundViolationsP2();
+                    currentTaskLog.violationNumber[(int)Bodypart.rightHandP2]++;
+                    currentTaskLog.shortestDistances[(int)Bodypart.rightHandP2] = distance;
+                    currentTaskLog.lastFrameBoundaryViolation[(int)Bodypart.rightHandP2] = true;
+                }
+                else
+                {
+                    if (distance > currentTaskLog.shortestDistances[(int)Bodypart.rightHandP2])
+                    {
+                        currentTaskLog.shortestDistances[(int)Bodypart.rightHandP2] = distance;
+                    }
                 }
                 //currentTaskLog.incrementTimeOutsideBounds(Time.deltaTime);
                 //
             }
             else if (leftHandPosP2Local.x > boundsSize.x / 2.0f || leftHandPosP2Local.y > boundsSize.y / 2.0f || leftHandPosP2Local.z > boundsSize.z / 2.0f)
             {
+                float distance = Vector3.Distance(Vector3.zero, leftHandPosP2Local);
+                outsideBoundsLastFrameP1 = currentTaskLog.lastFrameBoundaryViolation[(int)Bodypart.leftHandP2];
                 if (!outsideBoundsLastFrameP2)
                 {
                     outsideBoundsLastFrameP2 = true;
                     currentTaskLog.startTimeOutsideBoundsP2 = Time.realtimeSinceStartup;
                     currentTaskLog.incrementBoundViolationsP2();
+                    currentTaskLog.violationNumber[(int)Bodypart.leftHandP2]++;
+                    currentTaskLog.shortestDistances[(int)Bodypart.leftHandP2] = distance;
+                    currentTaskLog.lastFrameBoundaryViolation[(int)Bodypart.leftHandP2] = true;
+                }
+                else
+                {
+                    if (distance > currentTaskLog.shortestDistances[(int)Bodypart.leftHandP2])
+                    {
+                        currentTaskLog.shortestDistances[(int)Bodypart.leftHandP2] = distance;
+                    }
                 }
                 //currentTaskLog.incrementTimeOutsideBounds(Time.deltaTime);
                 //
             }
             else
             {
+                outsideBoundsLastFrameP2 = currentTaskLog.lastFrameBoundaryViolation[(int)Bodypart.leftHandP2];
                 if (outsideBoundsLastFrameP2)
                 {
                     currentTaskLog.incrementTimeOutsideBoundsP2(Time.realtimeSinceStartup);
@@ -504,7 +582,15 @@ public class TaskManager : MonoBehaviour
             Debug.DrawRay(userHead.transform.position, userHead.transform.forward, Color.cyan); 
         }*/
     }
+    public void OnDisable()
+    {
+        if (!debug)
+        {
+            CompleteTaskReport();
+            //CompleteHandPathReport();
+        }
 
+    }
     public void CompleteTaskReport()
     {
         //string header = "UserId,CurrentGainLevel,TargetSize,InitMovementTime,TargetPressedTime,ReachTime,TargetReleasedTime,numberErrorsFirstTarget,numberErrorsFinalTarget,SlidingTaskTime,TotalTime,ErrorFirstTime,ErrorSecondTime\n";
@@ -549,7 +635,5 @@ public class TaskManager : MonoBehaviour
             //System.IO.File.WriteAllText(pathDirectory + "test.txt", logTaskStr);
             //printToFile
         }
-    }
-
-
+    
 }
