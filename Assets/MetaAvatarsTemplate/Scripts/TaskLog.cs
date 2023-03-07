@@ -29,7 +29,15 @@ public class TaskLog
     int numberOfBoundViolationsP1 = 0;
 
     public float startTimeOutsideBoundsP1 = 0;
-    
+
+    public Dictionary<string, List<ActiveCollision>> activeCollisions;
+    public List<FinishedCollision> finishedCollisions;
+    public Dictionary<string, FinishedCollision> finishedCollisionsAux;
+
+    public FinishedCollision finishedAux;
+
+    public Dictionary<string, ActiveCollision> collisionsPerJoint;
+
 
     public string headerTaskFile = "UserId,TrialNumber,dominantPlayer,"+ Utils.vecNameToString("centerAreaDominantPlayerPos")+","+ Utils.vecNameToString("centerAreaDominantPlayerRot")+","+
                                     Utils.vecNameToString ("boundsSize") + ",numberOfBoundViolations"   + "\n";
@@ -54,6 +62,7 @@ public class TaskLog
     public float startTimeOutsideBoundsP2;
     private int numberOfBoundViolationsP2;
 
+
     public TaskLog(int userId, int trialNumber, string dominantPlayer, string puzzleId, Transform areaDominantPlayer, CollabType collabType, Vector3 boundsSize)
     {
         this.dominantPlayer = dominantPlayer;
@@ -64,6 +73,10 @@ public class TaskLog
         this.centerPosArea = areaDominantPlayer.transform.position;
         this.centerRotArea = areaDominantPlayer.transform.eulerAngles;
         this.startTime = Time.realtimeSinceStartup;
+
+        collisionsPerJoint = new Dictionary<string, ActiveCollision>();
+        activeCollisions = new Dictionary<string, List<ActiveCollision>>();
+        finishedCollisions = new List<FinishedCollision>();
     }
 
     public string toLogString()

@@ -11,7 +11,6 @@ public class ActiveCollision  {
 
     public int collisionCount = 0;//martelada para coisas
 
-
     public ActiveCollision(string jointName)
     {
         this.jointName = jointName;

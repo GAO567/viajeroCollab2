@@ -23,15 +23,15 @@ public enum TaskState
 };
 
 
+
 public class TaskManager : MonoBehaviour
 {
-   
-
     public int userId = 0;
     public CollabType collabType = CollabType.FacetoFaceIntersect;
     public Vector3 boundsSize = new Vector3(0.6f,1.0f,0.8f);
-    [SerializeField] GameObject Player1Area;
-    [SerializeField] GameObject Player2Area;
+    [SerializeField] bool debug = false;
+    public  GameObject Player1Area;
+    public  GameObject Player2Area;
     [SerializeField] GameObject userHead;
     [SerializeField] List<GameObject> puzzleObjects;
     [SerializeField] GameObject rootPossiblePositionsForPuzzle;
@@ -39,11 +39,11 @@ public class TaskManager : MonoBehaviour
     List<GameObject> listPossiblePositionsForPuzzle;
     List<GameObject> currentBlueprint;
 
+    string pathDirectory = "";
 
     List<TaskLog> logTasks;
     List<GameObject> objectPartsForThisTask;
     TaskLog currentTaskLog;
-    string pathDirectory;
     int currentTask = 0;
 
     List<float[]> conditionsByUserId;
@@ -58,6 +58,8 @@ public class TaskManager : MonoBehaviour
     Transform headPosP2;
     Transform leftHandPosP2;
     Transform rightHandPosP2;
+
+
 
     bool player1Interacting = false;
     bool player2Interacting = false;
@@ -76,9 +78,13 @@ public class TaskManager : MonoBehaviour
     private string player2InteractionStr;
 
 
+
+
     Dictionary<string, List<ActiveCollision>> activeCollisions;
     List<FinishedCollision> finishedCollisions;
     Dictionary<string, FinishedCollision> finishedCollisionsAux;
+
+    bool taskStarted = false;
 
     bool outsideBoundsLastFrameP1 = false;
     private bool outsideBoundsLastFrameP2 = false;
@@ -117,16 +123,27 @@ public class TaskManager : MonoBehaviour
     {
         if(currentTaskState > TaskState.Connected)
         {
-            player1InteractionStr += userId + "," + currentTask + "," + (dominantplayer == "P1" ? true : false) + "," + Utils.vector3ToString(Player1Area.transform.position)+ "," + Utils.vector3ToString(Player1Area.transform.eulerAngles) +  ","
+            string violatingP1 = "NoViolationP1";
+            if (currentTaskLog.startTimeOutsideBoundsP1 > 0)
+                violatingP1 = "ViolationP1";
+            string violatingP2 = "NoViolationP2";
+            if(currentTaskLog.startTimeOutsideBoundsP2 > 0)
+            {
+                violatingP2 = "ViolationP2";
+            }
+
+            player1InteractionStr += userId + "," + currentTask + "," + (dominantplayer == "P1" ? true : false) + "," + violatingP1 + ","+  Utils.vector3ToString(Player1Area.transform.position)+ "," + Utils.vector3ToString(Player1Area.transform.eulerAngles) +  ","
                                     + Utils.vector3ToString(headPosP1.position) + "," + Utils.vector3ToString(headPosP1.eulerAngles) + Utils.vector3ToString(rightHandPosP1.position) + "," + Utils.vector3ToString(rightHandPosP1.eulerAngles) +
                                      Utils.vector3ToString(leftHandPosP1.position) + "," + Utils.vector3ToString(leftHandPosP1.eulerAngles);
             if (player1Interacting && getInteractPart("P1"))
             {
                 player1InteractionStr += "," + Utils.vector3ToString(getInteractPart("P1").transform.position) + "," + Utils.vector3ToString(getInteractPart("P1").transform.eulerAngles) + "\n";
+                System.IO.File.AppendAllText(pathDirectory + "MovementReportP1_" + collabType.ToString() + ".csv", player1InteractionStr);
+
             }
 
 
-            if(player1InteractionStr.Length > 200)
+            if (player1InteractionStr.Length > 200)
             {
                 //flush to file
 
@@ -134,7 +151,7 @@ public class TaskManager : MonoBehaviour
                 player1InteractionStr = "";
             }
 
-            player2InteractionStr += userId + "," + currentTask + "," + (dominantplayer == "P2" ? true : false) + "," + Utils.vector3ToString(Player2Area.transform.position) + "," + Utils.vector3ToString(Player2Area.transform.eulerAngles) + ","
+            player2InteractionStr += userId + "," + currentTask + "," + (dominantplayer == "P2" ? true : false) + "," + violatingP2 + ","+ Utils.vector3ToString(Player2Area.transform.position) + "," + Utils.vector3ToString(Player2Area.transform.eulerAngles) + ","
                                     + Utils.vector3ToString(headPosP2.position) + "," + Utils.vector3ToString(headPosP2.eulerAngles) + Utils.vector3ToString(rightHandPosP2.position) + "," + Utils.vector3ToString(rightHandPosP2.eulerAngles) +
                                      Utils.vector3ToString(leftHandPosP2.position) + "," + Utils.vector3ToString(leftHandPosP2.eulerAngles);
             if (player2Interacting && getInteractPart("P2"))
@@ -146,6 +163,8 @@ public class TaskManager : MonoBehaviour
             if (player2InteractionStr.Length > 200)
             {
                 //flush to file
+                System.IO.File.AppendAllText(pathDirectory + "MovementReportP2_" + collabType.ToString() + ".csv", player2InteractionStr);
+
                 player2InteractionStr = "";
             }
 
@@ -158,16 +177,26 @@ public class TaskManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        int[] arr = { 1, 2, 3, 4, 5 };
 
-        var random = new System.Random();
-        arr = arr.OrderBy(x => random.Next()).ToArray();
-        foreach (var i in arr)
+        PathDirectory = Directory.GetCurrentDirectory() + "\\LogFiles";
+
+        int i = 0;
+        while (Directory.Exists(PathDirectory + "\\user" + userId + "_" + i + "\\"))
         {
-            print("number "+i);
+            i++;
         }
 
-        
+        PathDirectory += "\\user" + userId + "_" + i;// + travelTechnique.ToString();// + "/";
+
+        PathDirectory += "\\";
+
+        if (!Directory.Exists(PathDirectory))
+        {
+            System.IO.Directory.CreateDirectory(PathDirectory);
+        }
+
+        logTasks = new List<TaskLog>();
+        //se nao houver diretorios
     }
 
     // Update is called once per frame
@@ -175,7 +204,15 @@ public class TaskManager : MonoBehaviour
     {
         //calculateAngle();
 
+        if(Input.GetKeyDown(KeyCode.S) && !taskStarted)
+        {
+            initTask();
+        }
 
+        if(Input.GetKeyDown(KeyCode.N) && taskStarted)
+        {
+            nextPuzzle();
+        }
     }
 
     public void incrementTimeOutsideBounds(float time)
@@ -301,6 +338,12 @@ public class TaskManager : MonoBehaviour
                     outsideBoundsLastFrameP1 = true;
                     currentTaskLog.startTimeOutsideBoundsP1 = Time.realtimeSinceStartup;
                     currentTaskLog.incrementBoundViolationsP1();
+
+                    //if(currentTaskLog.)
+                }
+                else
+                {
+
                 }
                 //currentTaskLog.incrementTimeOutsideBounds(Time.deltaTime);
                 //
@@ -474,34 +517,34 @@ public class TaskManager : MonoBehaviour
         //string retargettingStr = retargettingOption.ToString();
         if (logTasks != null)
         {
-            /* foreach (TaskLog tLog in logTasks)
+             foreach (TaskLog tLog in logTasks)
              {
                  logTaskStr += tLog.toLogString();
              }
-             if (!File.Exists(pathDirectory + "TaskReport_" + retargettingStr + "_" + surfaceOrientation + ".csv"))
+             if (!File.Exists(pathDirectory + "TaskReport_" + collabType.ToString() + ".csv"))
              {
-                 System.IO.File.AppendAllText(pathDirectory + "TaskReport_" + retargettingStr + "_" + surfaceOrientation + ".csv", logTaskStr);
-                 System.IO.StreamWriter file = new System.IO.StreamWriter(pathDirectory + "TaskReport.csv");
+                 System.IO.File.AppendAllText(pathDirectory + "TaskReport_" + collabType.ToString() + ".csv", logTaskStr);
+                 /*System.IO.StreamWriter file = new System.IO.StreamWriter(pathDirectory + "TaskReport.csv");
                  file.WriteLine(logTaskStr);
-                 file.Close();
-        }
+                 file.Close();*/
+              }
         else
             {
-                System.IO.File.AppendAllText(pathDirectory + "TaskReport_" + retargettingStr + "_" + surfaceOrientation + ".csv", logTaskStr);
+                System.IO.File.AppendAllText(pathDirectory + "TaskReport_" + collabType.ToString() + ".csv", logTaskStr);
 
-        
-                while (File.Exists(pathDirectory + "TaskReport_" + i + ".csv"))
+                int i = 0;
+                while (File.Exists(pathDirectory + "TaskReport_" + collabType.ToString() + i + ".csv"))
                 {
                     i++;
                 }
-                logTaskStr += "#TaskTotalTime=" + (endTime - startTime);
-                System.IO.File.WriteAllText(pathDirectory + "TaskReport_" + i + ".csv", logTaskStr);
+                //logTaskStr += "#TaskTotalTime=" + (endTime - startTime);
+                System.IO.File.WriteAllText(pathDirectory + "TaskReport_" + collabType.ToString() + ".csv", logTaskStr);
                 /*System.IO.StreamWriter file = new System.IO.StreamWriter(pathDirectory + "TaskReport_0.csv");
                 file.Write(logTaskStr);
-                file.Close();
+                file.Close();*/
             }
     }
-    */
+    
 
             //System.IO.File.WriteAllText(pathDirectory + "test.txt", logTaskStr);
             //printToFile
