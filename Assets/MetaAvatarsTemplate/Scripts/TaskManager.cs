@@ -83,10 +83,8 @@ public class TaskManager : MonoBehaviour
 
 
 
-
-    Dictionary<string, List<ActiveCollision>> activeCollisions;
-    List<FinishedCollision> finishedCollisions;
-    Dictionary<string, FinishedCollision> finishedCollisionsAux;
+    Dictionary<Bodypart, BoundaryViolation> listActiveViolations = new Dictionary<Bodypart, BoundaryViolation>();
+    List<BoundaryViolation> finishedViolations = new List<BoundaryViolation>();
 
     bool taskStarted = false;
 
@@ -217,6 +215,11 @@ public class TaskManager : MonoBehaviour
         {
             nextPuzzle();
         }
+
+        if(!debug)
+        {
+            logUsersMovements();
+        }
     }
 
     public void incrementTimeOutsideBounds(float time)
@@ -322,99 +325,119 @@ public class TaskManager : MonoBehaviour
         if (headPosP1 && rightHandPosP1 && leftHandPosP1)
         {
             //we dont care about the Y
-            Vector3 headPosP1Local = Player1Area.transform.InverseTransformPoint(headPosP1.transform.position);
-            Vector3 rightHandPosP1Local = Player1Area.transform.InverseTransformPoint(rightHandPosP1.transform.position);
-            Vector3 leftHandPosP1Local = Player1Area.transform.InverseTransformPoint(leftHandPosP1.transform.position);
+            Vector3 headP1Local = Player1Area.transform.InverseTransformPoint(headPosP1.transform.position);
+            Vector3 rightHandP1Local = Player1Area.transform.InverseTransformPoint(rightHandPosP1.transform.position);
+            Vector3 leftHandP1Local = Player1Area.transform.InverseTransformPoint(leftHandPosP1.transform.position);
 
-            headPosP1Local = new Vector3(Mathf.Abs(headPosP1Local.x), Mathf.Abs(headPosP1Local.y), Mathf.Abs(headPosP1Local.z));
-            rightHandPosP1Local = new Vector3(Mathf.Abs(rightHandPosP1Local.x), Mathf.Abs(rightHandPosP1Local.y), Mathf.Abs(rightHandPosP1Local.z));
-            leftHandPosP1Local = new Vector3(Mathf.Abs(leftHandPosP1Local.x), Mathf.Abs(leftHandPosP1Local.y), Mathf.Abs(leftHandPosP1Local.z));
+            headP1Local = new Vector3(Mathf.Abs(headP1Local.x), Mathf.Abs(headP1Local.y), Mathf.Abs(headP1Local.z));
+            rightHandP1Local = new Vector3(Mathf.Abs(rightHandP1Local.x), Mathf.Abs(rightHandP1Local.y), Mathf.Abs(rightHandP1Local.z));
+            leftHandP1Local = new Vector3(Mathf.Abs(leftHandP1Local.x), Mathf.Abs(leftHandP1Local.y), Mathf.Abs(leftHandP1Local.z));
 
             float delta = Time.deltaTime;
             if (!outsideBoundsLastFrameP1)
             {
 
             }
-            if(headPosP1Local.x > boundsSize.x/2.0f || headPosP1Local.y > boundsSize.y / 2.0f || headPosP1Local.z > boundsSize.z / 2.0f)
+
+            Bodypart activeBodyPart = Bodypart.HeadP1;
+            if(headP1Local.x > boundsSize.x/2.0f || headP1Local.y > boundsSize.y / 2.0f || headP1Local.z > boundsSize.z / 2.0f)
             {
-                outsideBoundsLastFrameP1 = currentTaskLog.lastFrameBoundaryViolation[(int)Bodypart.HeadP1];
-                float distance = Vector3.Distance(Vector3.zero, headPosP1Local);
-                if (!outsideBoundsLastFrameP1)
+                float distance = Vector3.Distance(Vector3.zero, headP1Local);
+                if (!listActiveViolations.ContainsKey(activeBodyPart))
                 {
-                    outsideBoundsLastFrameP1 = true;
-                    currentTaskLog.startTimeOutsideBoundsP1 = Time.realtimeSinceStartup;
-                    currentTaskLog.incrementBoundViolationsP1();
-
-                    currentTaskLog.violationNumber[(int)Bodypart.HeadP1]++;
-                    currentTaskLog.shortestDistances[(int)Bodypart.HeadP1] = distance;
-                    currentTaskLog.lastFrameBoundaryViolation[(int)Bodypart.HeadP1] = true;
-
-
-                    //if(currentTaskLog.)
+                    listActiveViolations[activeBodyPart] = new BoundaryViolation(activeBodyPart, Time.realtimeSinceStartup,distance);
+                    currentTaskLog.incrementViolationNumber((int)activeBodyPart);
                 }
                 else
                 {
-                    if(distance > currentTaskLog.shortestDistances[(int)Bodypart.HeadP1])
+                    if(distance > listActiveViolations[activeBodyPart].distance)
                     {
-                        currentTaskLog.shortestDistances[(int)Bodypart.HeadP1] = distance;
+                        listActiveViolations[activeBodyPart].distance = distance;
                     }
                 }
                 //currentTaskLog.incrementTimeOutsideBounds(Time.deltaTime);
                 //
             }
-            else if (rightHandPosP1Local.x > boundsSize.x / 2.0f || rightHandPosP1Local.y > boundsSize.y / 2.0f || rightHandPosP1Local.z > boundsSize.z / 2.0f)
+            else if(headP1Local.x < boundsSize.x / 2.0f || headP1Local.y < boundsSize.y / 2.0f || headP1Local.z < boundsSize.z / 2.0f)
             {
-                float distance = Vector3.Distance(Vector3.zero, rightHandPosP1Local);
-
-                outsideBoundsLastFrameP1 = currentTaskLog.lastFrameBoundaryViolation[(int)Bodypart.rightHandP1];
-                if (!outsideBoundsLastFrameP1)
+                if (listActiveViolations.ContainsKey(activeBodyPart))
                 {
-                    outsideBoundsLastFrameP1 = true;
-                    currentTaskLog.startTimeOutsideBoundsP1 = Time.realtimeSinceStartup;
-                    currentTaskLog.incrementBoundViolationsP1();
-                    currentTaskLog.violationNumber[(int)Bodypart.rightHandP1]++;
-                    currentTaskLog.shortestDistances[(int)Bodypart.rightHandP1] = distance;
-                    currentTaskLog.lastFrameBoundaryViolation[(int)Bodypart.rightHandP1] = true;
+                    BoundaryViolation finished = listActiveViolations[activeBodyPart];// new BoundaryViolation()
+                    listActiveViolations.Remove(activeBodyPart);
+                    finished.timestampEnd = Time.realtimeSinceStartup;
+                    finishedViolations.Add(finished);
                 }
                 else
                 {
-                    if (distance > currentTaskLog.shortestDistances[(int)Bodypart.rightHandP1])
+                    //do nothing
+                }
+            }
+
+            activeBodyPart = Bodypart.rightHandP1;
+            if (rightHandP1Local.x > boundsSize.x / 2.0f || rightHandP1Local.y > boundsSize.y / 2.0f || rightHandP1Local.z > boundsSize.z / 2.0f)
+            {
+                float distance = Vector3.Distance(Vector3.zero, rightHandP1Local);
+                if (!listActiveViolations.ContainsKey(activeBodyPart))
+                {
+                    listActiveViolations[activeBodyPart] = new BoundaryViolation(activeBodyPart, Time.realtimeSinceStartup, distance);
+                    currentTaskLog.incrementViolationNumber((int)activeBodyPart);
+                }
+                else
+                {
+                    if (distance > listActiveViolations[activeBodyPart].distance)
                     {
-                        currentTaskLog.shortestDistances[(int)Bodypart.rightHandP1] = distance;
+                        listActiveViolations[activeBodyPart].distance = distance;
                     }
                 }
                 //currentTaskLog.incrementTimeOutsideBounds(Time.deltaTime);
                 //
             }
-            else if (leftHandPosP1Local.x > boundsSize.x / 2.0f || leftHandPosP1Local.y > boundsSize.y / 2.0f || leftHandPosP1Local.z > boundsSize.z / 2.0f)
+            else if (rightHandP1Local.x < boundsSize.x / 2.0f || rightHandP1Local.y < boundsSize.y / 2.0f || rightHandP1Local.z < boundsSize.z / 2.0f)
             {
-                float distance = Vector3.Distance(Vector3.zero, leftHandPosP1Local);
-                outsideBoundsLastFrameP1 = currentTaskLog.lastFrameBoundaryViolation[(int)Bodypart.leftHandP1];
-                if (!outsideBoundsLastFrameP1)
+                if (listActiveViolations.ContainsKey(activeBodyPart))
                 {
-                    outsideBoundsLastFrameP1 = true;
-                    currentTaskLog.startTimeOutsideBoundsP1 = Time.realtimeSinceStartup;
-                    currentTaskLog.incrementBoundViolationsP1();
-
-                    currentTaskLog.violationNumber[(int)Bodypart.leftHandP1]++;
-                    currentTaskLog.shortestDistances[(int)Bodypart.leftHandP1] = distance;
-                    currentTaskLog.lastFrameBoundaryViolation[(int)Bodypart.leftHandP1] = true;
+                    BoundaryViolation finished = listActiveViolations[activeBodyPart];// new BoundaryViolation()
+                    listActiveViolations.Remove(activeBodyPart);
+                    finished.timestampEnd = Time.realtimeSinceStartup;
+                    finishedViolations.Add(finished);
                 }
                 else
                 {
-                    if (distance > currentTaskLog.shortestDistances[(int)Bodypart.leftHandP1])
+                    //do nothing
+                }
+            }
+
+            activeBodyPart = Bodypart.leftHandP1;
+            if (leftHandP1Local.x > boundsSize.x / 2.0f || leftHandP1Local.y > boundsSize.y / 2.0f || leftHandP1Local.z > boundsSize.z / 2.0f)
+            {
+                float distance = Vector3.Distance(Vector3.zero, leftHandP1Local);
+                if (!listActiveViolations.ContainsKey(activeBodyPart))
+                {
+                    listActiveViolations[activeBodyPart] = new BoundaryViolation(activeBodyPart, Time.realtimeSinceStartup, distance);
+                    currentTaskLog.incrementViolationNumber((int)activeBodyPart);
+                }
+                else
+                {
+                    if (distance > listActiveViolations[activeBodyPart].distance)
                     {
-                        currentTaskLog.shortestDistances[(int)Bodypart.leftHandP1] = distance;
+                        listActiveViolations[activeBodyPart].distance = distance;
                     }
                 }
                 //currentTaskLog.incrementTimeOutsideBounds(Time.deltaTime);
                 //
             }
-            else
+            else if (leftHandP1Local.x < boundsSize.x / 2.0f || leftHandP1Local.y < boundsSize.y / 2.0f || leftHandP1Local.z < boundsSize.z / 2.0f)
             {
-                if (outsideBoundsLastFrameP1)
+                if (listActiveViolations.ContainsKey(activeBodyPart))
                 {
-                    currentTaskLog.incrementTimeOutsideBoundsP1(Time.realtimeSinceStartup);
+                    BoundaryViolation finished = listActiveViolations[activeBodyPart];// new BoundaryViolation()
+                    listActiveViolations.Remove(activeBodyPart);
+                    finished.timestampEnd = Time.realtimeSinceStartup;
+                    finishedViolations.Add(finished);
+                }
+                else
+                {
+                    //do nothing
                 }
             }
 
@@ -424,94 +447,119 @@ public class TaskManager : MonoBehaviour
         if(headPosP2 && rightHandPosP2 && leftHandPosP2)
         {
             //we dont care about the Y
-            Vector3 headPosP2Local = Player1Area.transform.InverseTransformPoint(headPosP2.transform.position);
-            Vector3 rightHandPosP2Local = Player1Area.transform.InverseTransformPoint(rightHandPosP2.transform.position);
-            Vector3 leftHandPosP2Local = Player1Area.transform.InverseTransformPoint(leftHandPosP2.transform.position);
+            Vector3 headP2Local = Player1Area.transform.InverseTransformPoint(headPosP2.transform.position);
+            Vector3 rightHandP2Local = Player1Area.transform.InverseTransformPoint(rightHandPosP2.transform.position);
+            Vector3 leftHandP2Local = Player1Area.transform.InverseTransformPoint(leftHandPosP2.transform.position);
 
-            headPosP2Local = new Vector3(Mathf.Abs(headPosP2Local.x), Mathf.Abs(headPosP2Local.y), Mathf.Abs(headPosP2Local.z));
-            rightHandPosP2Local = new Vector3(Mathf.Abs(rightHandPosP2Local.x), Mathf.Abs(rightHandPosP2Local.y), Mathf.Abs(rightHandPosP2Local.z));
-            leftHandPosP2Local = new Vector3(Mathf.Abs(leftHandPosP2Local.x), Mathf.Abs(leftHandPosP2Local.y), Mathf.Abs(leftHandPosP2Local.z));
+            headP2Local = new Vector3(Mathf.Abs(headP2Local.x), Mathf.Abs(headP2Local.y), Mathf.Abs(headP2Local.z));
+            rightHandP2Local = new Vector3(Mathf.Abs(rightHandP2Local.x), Mathf.Abs(rightHandP2Local.y), Mathf.Abs(rightHandP2Local.z));
+            leftHandP2Local = new Vector3(Mathf.Abs(leftHandP2Local.x), Mathf.Abs(leftHandP2Local.y), Mathf.Abs(leftHandP2Local.z));
 
             float delta = Time.deltaTime;
-            if (headPosP2Local.x > boundsSize.x / 2.0f || headPosP2Local.y > boundsSize.y / 2.0f || headPosP2Local.z > boundsSize.z / 2.0f)
-            {
-                float distance = Vector3.Distance(Vector3.zero, headPosP2Local);
-                outsideBoundsLastFrameP1 = currentTaskLog.lastFrameBoundaryViolation[(int)Bodypart.HeadP2];
-                if (!outsideBoundsLastFrameP2)
-                {
-                    outsideBoundsLastFrameP2 = true;
-                    currentTaskLog.startTimeOutsideBoundsP2 = Time.realtimeSinceStartup;
-                    currentTaskLog.incrementBoundViolationsP2();
-                    currentTaskLog.violationNumber[(int)Bodypart.HeadP2]++;
-                    currentTaskLog.shortestDistances[(int)Bodypart.HeadP2] = distance;
-                    currentTaskLog.lastFrameBoundaryViolation[(int)Bodypart.HeadP2] = true;
 
+
+            Bodypart activeBodyPart = Bodypart.HeadP2;
+            if (headP2Local.x > boundsSize.x / 2.0f || headP2Local.y > boundsSize.y / 2.0f || headP2Local.z > boundsSize.z / 2.0f)
+            {
+                float distance = Vector3.Distance(Vector3.zero, headP2Local);
+                if (!listActiveViolations.ContainsKey(activeBodyPart))
+                {
+                    listActiveViolations[activeBodyPart] = new BoundaryViolation(activeBodyPart, Time.realtimeSinceStartup, distance);
+                    currentTaskLog.incrementViolationNumber((int)activeBodyPart);
                 }
                 else
                 {
-                    if (distance > currentTaskLog.shortestDistances[(int)Bodypart.HeadP2])
+                    if (distance > listActiveViolations[activeBodyPart].distance)
                     {
-                        currentTaskLog.shortestDistances[(int)Bodypart.HeadP2] = distance;
+                        listActiveViolations[activeBodyPart].distance = distance;
                     }
                 }
                 //currentTaskLog.incrementTimeOutsideBounds(Time.deltaTime);
                 //
             }
-            else if(rightHandPosP2Local.x > boundsSize.x / 2.0f || rightHandPosP2Local.y > boundsSize.y / 2.0f || rightHandPosP2Local.z > boundsSize.z / 2.0f)
+            else if (headP2Local.x < boundsSize.x / 2.0f || headP2Local.y < boundsSize.y / 2.0f || headP2Local.z < boundsSize.z / 2.0f)
             {
-                float distance = Vector3.Distance(Vector3.zero, rightHandPosP2Local);
-                outsideBoundsLastFrameP1 = currentTaskLog.lastFrameBoundaryViolation[(int)Bodypart.rightHandP2];
-                if (!outsideBoundsLastFrameP2)
+                if (listActiveViolations.ContainsKey(activeBodyPart))
                 {
-                    outsideBoundsLastFrameP2 = true;
-                    currentTaskLog.startTimeOutsideBoundsP2 = Time.realtimeSinceStartup;
-                    currentTaskLog.incrementBoundViolationsP2();
-                    currentTaskLog.violationNumber[(int)Bodypart.rightHandP2]++;
-                    currentTaskLog.shortestDistances[(int)Bodypart.rightHandP2] = distance;
-                    currentTaskLog.lastFrameBoundaryViolation[(int)Bodypart.rightHandP2] = true;
+                    BoundaryViolation finished = listActiveViolations[activeBodyPart];// new BoundaryViolation()
+                    listActiveViolations.Remove(activeBodyPart);
+                    finished.timestampEnd = Time.realtimeSinceStartup;
+                    finishedViolations.Add(finished);
                 }
                 else
                 {
-                    if (distance > currentTaskLog.shortestDistances[(int)Bodypart.rightHandP2])
+                    //do nothing
+                }
+            }
+
+            activeBodyPart = Bodypart.rightHandP2;
+            if (rightHandP2Local.x > boundsSize.x / 2.0f || rightHandP2Local.y > boundsSize.y / 2.0f || rightHandP2Local.z > boundsSize.z / 2.0f)
+            {
+                float distance = Vector3.Distance(Vector3.zero, rightHandP2Local);
+                if (!listActiveViolations.ContainsKey(activeBodyPart))
+                {
+                    listActiveViolations[activeBodyPart] = new BoundaryViolation(activeBodyPart, Time.realtimeSinceStartup, distance);
+                    currentTaskLog.incrementViolationNumber((int)activeBodyPart);
+                }
+                else
+                {
+                    if (distance > listActiveViolations[activeBodyPart].distance)
                     {
-                        currentTaskLog.shortestDistances[(int)Bodypart.rightHandP2] = distance;
+                        listActiveViolations[activeBodyPart].distance = distance;
                     }
                 }
                 //currentTaskLog.incrementTimeOutsideBounds(Time.deltaTime);
                 //
             }
-            else if (leftHandPosP2Local.x > boundsSize.x / 2.0f || leftHandPosP2Local.y > boundsSize.y / 2.0f || leftHandPosP2Local.z > boundsSize.z / 2.0f)
+            else if (rightHandP2Local.x < boundsSize.x / 2.0f || rightHandP2Local.y < boundsSize.y / 2.0f || rightHandP2Local.z < boundsSize.z / 2.0f)
             {
-                float distance = Vector3.Distance(Vector3.zero, leftHandPosP2Local);
-                outsideBoundsLastFrameP1 = currentTaskLog.lastFrameBoundaryViolation[(int)Bodypart.leftHandP2];
-                if (!outsideBoundsLastFrameP2)
+                if (listActiveViolations.ContainsKey(activeBodyPart))
                 {
-                    outsideBoundsLastFrameP2 = true;
-                    currentTaskLog.startTimeOutsideBoundsP2 = Time.realtimeSinceStartup;
-                    currentTaskLog.incrementBoundViolationsP2();
-                    currentTaskLog.violationNumber[(int)Bodypart.leftHandP2]++;
-                    currentTaskLog.shortestDistances[(int)Bodypart.leftHandP2] = distance;
-                    currentTaskLog.lastFrameBoundaryViolation[(int)Bodypart.leftHandP2] = true;
+                    BoundaryViolation finished = listActiveViolations[activeBodyPart];// new BoundaryViolation()
+                    listActiveViolations.Remove(activeBodyPart);
+                    finished.timestampEnd = Time.realtimeSinceStartup;
+                    finishedViolations.Add(finished);
                 }
                 else
                 {
-                    if (distance > currentTaskLog.shortestDistances[(int)Bodypart.leftHandP2])
+                    //do nothing
+                }
+            }
+
+            activeBodyPart = Bodypart.leftHandP2;
+            if (leftHandP2Local.x > boundsSize.x / 2.0f || leftHandP2Local.y > boundsSize.y / 2.0f || leftHandP2Local.z > boundsSize.z / 2.0f)
+            {
+                float distance = Vector3.Distance(Vector3.zero, leftHandP2Local);
+                if (!listActiveViolations.ContainsKey(activeBodyPart))
+                {
+                    listActiveViolations[activeBodyPart] = new BoundaryViolation(activeBodyPart, Time.realtimeSinceStartup, distance);
+                    currentTaskLog.incrementViolationNumber((int)activeBodyPart);
+                }
+                else
+                {
+                    if (distance > listActiveViolations[activeBodyPart].distance)
                     {
-                        currentTaskLog.shortestDistances[(int)Bodypart.leftHandP2] = distance;
+                        listActiveViolations[activeBodyPart].distance = distance;
                     }
                 }
                 //currentTaskLog.incrementTimeOutsideBounds(Time.deltaTime);
                 //
             }
-            else
+            else if (leftHandP2Local.x < boundsSize.x / 2.0f || leftHandP2Local.y < boundsSize.y / 2.0f || leftHandP2Local.z < boundsSize.z / 2.0f)
             {
-                outsideBoundsLastFrameP2 = currentTaskLog.lastFrameBoundaryViolation[(int)Bodypart.leftHandP2];
-                if (outsideBoundsLastFrameP2)
+                if (listActiveViolations.ContainsKey(activeBodyPart))
                 {
-                    currentTaskLog.incrementTimeOutsideBoundsP2(Time.realtimeSinceStartup);
+                    BoundaryViolation finished = listActiveViolations[activeBodyPart];// new BoundaryViolation()
+                    listActiveViolations.Remove(activeBodyPart);
+                    finished.timestampEnd = Time.realtimeSinceStartup;
+                    finishedViolations.Add(finished);
                 }
-                outsideBoundsLastFrameP2 = false;
+                else
+                {
+                    //do nothing
+                }
             }
+
 
         }
         return violation;

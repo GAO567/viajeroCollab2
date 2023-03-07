@@ -62,7 +62,8 @@ public class TaskLog
     public float startTimeOutsideBoundsP2;
     private int numberOfBoundViolationsP2;
 
-    BoundaryViolation[] boundaryViolationArray;
+    List<BoundaryViolation> activeBoundaryViolations;
+    List<BoundaryViolation> finishedBoundaryViolations;
 
     public float[] shortestDistances;
     public bool[] lastFrameBoundaryViolation;
@@ -118,10 +119,6 @@ public class TaskLog
         lastFrameBoundaryViolation = new bool[6];
         violationNumber = new int[6];
 
-        for (int i = 0; i < 6; i++)
-        {
-            boundaryViolationArray[i] = new BoundaryViolation();
-        }
 
 
     }

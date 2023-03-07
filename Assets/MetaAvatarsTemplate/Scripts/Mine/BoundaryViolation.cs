@@ -4,21 +4,22 @@ using UnityEngine;
 
 public class BoundaryViolation 
 {
-
+    Bodypart bPart = 0;
     bool active = false;
     float timestampInit = 0;
-    float timestampEnd = 0;
+    public float timestampEnd = 0;
     float shortestDistance = 0;
+    public float distance = 0;
 
-    // Start is called before the first frame update
-    void Start()
+    public BoundaryViolation(Bodypart bPart, float timeInit, float distance)
     {
-        
+        this.bPart = bPart;
+        this.timestampInit = timeInit;
+        this.distance = distance;
     }
 
-    // Update is called once per frame
-    void Update()
+    void incrementBoundaryViolations()
     {
-        
+
     }
 }
