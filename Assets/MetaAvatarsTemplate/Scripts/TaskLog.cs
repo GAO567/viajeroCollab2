@@ -124,8 +124,8 @@ public class TaskLog
     public string toLogString()
     {
         string logStr = "";
-
-        logStr = userId + "," + trialNumber + "," + dominantPlayer + "," + puzzleId + "," + Utils.vector3ToString(centerPosArea) + "," + Utils.vector3ToString(centerRotArea) + "," + collabType.ToString() +
+        logStr = headerTaskFile;
+        logStr += userId + "," + trialNumber + "," + dominantPlayer + "," + puzzleId + "," + Utils.vector3ToString(centerPosArea) + "," + Utils.vector3ToString(centerRotArea) + "," + collabType.ToString() +
             "," + Utils.vector3ToString(boundsSize) + "," +numberOfBoundViolationsP1 +","+ timeOutsideBoundsP1 + "," + totalTime  ;
         if(bluePrintParts != null && objParts != null)
         {

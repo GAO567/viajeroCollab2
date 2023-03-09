@@ -55,18 +55,21 @@ public class TaskManager : MonoBehaviour
     public float angleBetween;
     private string dominantplayer;
 
-    Transform headPosP1;
-    Transform rightHandPosP1;
-    Transform leftHandPosP1;
+    GameObject headPosP1;
+    GameObject rightHandPosP1;
+    GameObject leftHandPosP1;
 
-    Transform headPosP2;
-    Transform leftHandPosP2;
-    Transform rightHandPosP2;
+    GameObject headPosP2;
+    GameObject leftHandPosP2;
+    GameObject rightHandPosP2;
 
 
 
     bool player1Interacting = false;
     bool player2Interacting = false;
+
+    string[] headerStrTaskLog = new string[2];
+    string[] headerStrMovement = new string[2];
 
     GameObject objP1;// = new GameObject("partBeingInteracted");
     GameObject objP2;// = new G
@@ -90,6 +93,39 @@ public class TaskManager : MonoBehaviour
 
     bool outsideBoundsLastFrameP1 = false;
     private bool outsideBoundsLastFrameP2 = false;
+
+    void setHeaders()
+    {
+        headerStrMovement[0] =  "userId,timestamp,collabType,currentTask,dominantPlayer,isViolatingBoundary," + Utils.vecNameToString("Player1AreaCenter") + "," + Utils.vecNameToString("Player1AreaRot")
+                                + Utils.vecNameToString("headPosP1") + "," + Utils.vecNameToString("headRotP1") + "," + Utils.vecNameToString("rightHandPosP1") + Utils.vecNameToString("rightHandRotP1")
+                                 + Utils.vecNameToString("leftHandPosP1") + "," + Utils.vecNameToString("leftHandRotP1") + "\n";
+        ;
+        headerStrMovement[1] = "";
+
+        headerStrTaskLog[0] =  "userId,currentTask,dominantPlayer," + Utils.vecNameToString("centerBoundsPosP1") + "," + Utils.vecNameToString("centerAreaRotP1") + "," +
+                                                Utils.vecNameToString("headPosP1") + "," + Utils.vecNameToString("headRotP1") + "," + Utils.vecNameToString("rightHandPosP1") + Utils.vecNameToString("rightHandRotP1") + "," +
+                                                Utils.vecNameToString("leftHandPosP1") + Utils.vecNameToString("leftHandRotP1") + "partId," + Utils.vecNameToString("objInteractedPosP1") + "," + Utils.vecNameToString("objInteractedRot") + "\n";
+
+        headerStrTaskLog[1] = "userId,currentTask,dominantPlayer," + Utils.vecNameToString("centerBoundsPosP2") + "," + Utils.vecNameToString("centerAreaRotP2") + "," +
+                                               Utils.vecNameToString("headP2Pos") + "," + Utils.vecNameToString("headP2Rot") + "," + Utils.vecNameToString("rightHandP2Pos") + Utils.vecNameToString("rightHandP2Rot") + "," +
+                                               Utils.vecNameToString("leftHandP2Pos") + Utils.vecNameToString("leftHandP2Rot") + "partId," + Utils.vecNameToString("objInteractedPos") + "," + Utils.vecNameToString("objInteractedRot") + "\n";
+
+
+    }
+
+    public void setPlayer1(GameObject headP1, GameObject rightHandP1, GameObject leftHandP1)
+    {
+        headPosP1 = headP1;
+        rightHandPosP1 = rightHandP1;
+        leftHandPosP1 = leftHandP1;
+    }
+
+    public void  setPlayer2(GameObject headP2, GameObject rightHandP2, GameObject leftHandP2)
+    {
+        headPosP2 = headP2;
+        rightHandPosP2 = rightHandP2;
+        leftHandPosP2 = leftHandP2;
+    }
 
     public GameObject getInteractPart(string player)
     {
@@ -123,39 +159,44 @@ public class TaskManager : MonoBehaviour
     
     void logUsersMovements()
     {
-        if(currentTaskState > TaskState.Connected && !debug) 
+        if (currentTaskState > TaskState.Connected && !debug)
         {
             string violatingP1 = "NoViolationP1";
             if (currentTaskLog.startTimeOutsideBoundsP1 > 0)
                 violatingP1 = "ViolationP1";
             string violatingP2 = "NoViolationP2";
-            if(currentTaskLog.startTimeOutsideBoundsP2 > 0)
+            if (currentTaskLog.startTimeOutsideBoundsP2 > 0)
             {
                 violatingP2 = "ViolationP2";
             }
-
-            player1InteractionStr += userId + "," + Time.realtimeSinceStartup + "," + currentTask + "," + (dominantplayer == "P1" ? true : false) + "," + violatingP1 + ","+  Utils.vector3ToString(Player1Area.transform.position)+ "," + Utils.vector3ToString(Player1Area.transform.eulerAngles) +  ","
-                                    + Utils.vector3ToString(headPosP1.position) + "," + Utils.vector3ToString(headPosP1.eulerAngles) + Utils.vector3ToString(rightHandPosP1.position) + "," + Utils.vector3ToString(rightHandPosP1.eulerAngles) +
-                                     Utils.vector3ToString(leftHandPosP1.position) + "," + Utils.vector3ToString(leftHandPosP1.eulerAngles);
+            player1InteractionStr += userId + "," + collabType.ToString() + "," + Time.realtimeSinceStartup + "," + currentTask + "," + (dominantplayer == "P1" ? true : false) + "," + violatingP1 + ","+  Utils.vector3ToString(Player1Area.transform.position)+ "," + Utils.vector3ToString(Player1Area.transform.eulerAngles) +  ","
+                                    + Utils.vector3ToString(headPosP1.transform.position) + "," + Utils.vector3ToString(headPosP1.transform.eulerAngles) + Utils.vector3ToString(rightHandPosP1.transform.position) + "," + Utils.vector3ToString(rightHandPosP1.transform.eulerAngles) +
+                                     Utils.vector3ToString(leftHandPosP1.transform.position) + "," + Utils.vector3ToString(leftHandPosP1.transform.eulerAngles);
             if (player1Interacting && getInteractPart("P1"))
             {
                 player1InteractionStr += "," + Utils.vector3ToString(getInteractPart("P1").transform.position) + "," + Utils.vector3ToString(getInteractPart("P1").transform.eulerAngles) + "\n";
-                System.IO.File.AppendAllText(pathDirectory + "MovementReportP1_" + collabType.ToString() + ".csv", player1InteractionStr);
-
+               
             }
-
 
             if (player1InteractionStr.Length > 200)
             {
                 //flush to file
+                System.IO.File.AppendAllText(pathDirectory + "MovementReportP1_" + collabType.ToString() + ".csv", player1InteractionStr);
 
                 //   System.IO.File.AppendAllText(pathDirectory + "handMovement_" + retargettingStr + "_" + surfaceOrientation.ToString() + ".csv", handMovementLogStr);
                 player1InteractionStr = "";
             }
 
-            player2InteractionStr += userId + ","+ Time.realtimeSinceStartup + "," + currentTask + "," + (dominantplayer == "P2" ? true : false) + "," + violatingP2 + ","+ Utils.vector3ToString(Player2Area.transform.position) + "," + Utils.vector3ToString(Player2Area.transform.eulerAngles) + ","
-                                    + Utils.vector3ToString(headPosP2.position) + "," + Utils.vector3ToString(headPosP2.eulerAngles) + Utils.vector3ToString(rightHandPosP2.position) + "," + Utils.vector3ToString(rightHandPosP2.eulerAngles) +
-                                     Utils.vector3ToString(leftHandPosP2.position) + "," + Utils.vector3ToString(leftHandPosP2.eulerAngles);
+
+
+            string header2q = "userId,timestamp,collabType,currentTask,dominantPlayer,isViolatingBoundary," + Utils.vecNameToString("Player1AreaCenter") + "," + Utils.vecNameToString("Player1AreaRot")
+                                + Utils.vecNameToString("headPosP2") + "," + Utils.vecNameToString("headRotP2") + "," + Utils.vecNameToString("rightHandPosP2") + Utils.vecNameToString("rightHandRotP2")
+                                 + Utils.vecNameToString("leftHandPosP2") + "," + Utils.vecNameToString("leftHandRotP2") + "\n";
+
+
+            player2InteractionStr += userId + ","+ collabType.ToString() + "," + Time.realtimeSinceStartup + "," + currentTask + "," + (dominantplayer == "P2" ? true : false) + "," + violatingP2 + ","+ Utils.vector3ToString(Player2Area.transform.position) + "," + Utils.vector3ToString(Player2Area.transform.eulerAngles) + ","
+                                    + Utils.vector3ToString(headPosP2.transform.position) + "," + Utils.vector3ToString(headPosP2.transform.eulerAngles) + Utils.vector3ToString(rightHandPosP2.transform.position) + "," + Utils.vector3ToString(rightHandPosP2.transform.eulerAngles) +
+                                     Utils.vector3ToString(leftHandPosP2.transform.position) + "," + Utils.vector3ToString(leftHandPosP2.transform.eulerAngles);
             if (player2Interacting && getInteractPart("P2"))
             {
                 player2InteractionStr += "," + Utils.vector3ToString(getInteractPart("P2").transform.position) + "," + Utils.vector3ToString(getInteractPart("P2").transform.eulerAngles) + "\n";
