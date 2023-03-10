@@ -31,6 +31,9 @@ public class PuzzleGenerator : MonoBehaviour
 
     List<Color> listColors;
 
+    [SerializeField]
+    Material mat;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -49,10 +52,16 @@ public class PuzzleGenerator : MonoBehaviour
     {
         GameObject partsRoot = new GameObject("partsRoot");
         GameObject distractorRoot = new GameObject("distractorRoot");
+
+        GameObject objAux = new GameObject(""); 
+        objAux.transform.position = dominantPlayerPos.transform.position;
+        objAux.transform.rotation = dominantPlayerPos.transform.rotation;
         List<int> auxIndex = new List<int>();
         for(int i = 0; i < numberPieces; i++)
         {
             GameObject obj = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            obj.GetComponent<MeshRenderer>().material = mat;
+            obj.GetComponent<MeshRenderer>().material.color = new Color(0.0f, 0.0f, 1.0f);
             obj.transform.localScale = new Vector3(0.04f, 0.04f, 0.04f);
             obj.name = "piece" + i;
             obj.transform.parent = partsRoot.transform;
@@ -65,6 +74,7 @@ public class PuzzleGenerator : MonoBehaviour
         {
             GameObject obj = GameObject.CreatePrimitive(PrimitiveType.Sphere);
             //obj.AddComponent<M>().color = new Color(1.0f, 0.0f, 0.0f);
+            obj.GetComponent<MeshRenderer>().material.color = new Color(1.0f, 0.0f, 0.0f);
             obj.transform.localScale = new Vector3(0.04f, 0.04f, 0.04f);
             obj.name = "distractor" + i;
             obj.transform.parent = distractorRoot.transform;
@@ -84,21 +94,28 @@ public class PuzzleGenerator : MonoBehaviour
         int countIndexArray = 0; 
         for(float f = -135;  f < 135.0f ; f += angleIncrement)
         {
-            dominantPlayerPos.transform.localEulerAngles = new Vector3(0, f, 0);
+            objAux.transform.localEulerAngles = new Vector3(0, f, 0);
 
             GameObject obj = parts[auxIndex[countIndexArray]];
 
-            obj.transform.position = dominantPlayerPos.transform.TransformPoint(new Vector3(UnityEngine.Random.Range(0.1f,0.2f), UnityEngine.Random.Range(0.0f, 0.25f), UnityEngine.Random.Range(0.3f,0.5f)));//generate y according to proxemics and z randomly
+            obj.transform.position = objAux.transform.TransformPoint(new Vector3(UnityEngine.Random.Range(0.1f,0.2f), UnityEngine.Random.Range(0.0f, 0.25f), UnityEngine.Random.Range(0.7f,1.8f)));//generate y according to proxemics and z randomly
 
             countIndexArray++;
         }
 
+        Destroy(objAux);
         if (taskManager)
         {
             
         }
 
 
+
+    }
+
+
+    void generatePuzzle(List<GameObject> distractors, List<GameObject> parts, GameObject rootObject, CollabType type)
+    {
 
     }
 
@@ -135,7 +152,7 @@ public class PuzzleGenerator : MonoBehaviour
 
             GameObject obj = parts[auxIndex[countIndexArray]];
 
-            obj.transform.position = dominantPlayerPos.transform.TransformPoint(new Vector3(UnityEngine.Random.Range(0.1f, 0.2f), UnityEngine.Random.Range(0.0f, 0.25f), UnityEngine.Random.Range(0.3f, 0.5f)));//generate y according to proxemics and z randomly
+            obj.transform.position = objAux.transform.TransformPoint(new Vector3(UnityEngine.Random.Range(0.1f, 0.2f), UnityEngine.Random.Range(0.0f, 0.25f), UnityEngine.Random.Range(0.3f, 0.5f)));//generate y according to proxemics and z randomly
 
             countIndexArray++;
         }
