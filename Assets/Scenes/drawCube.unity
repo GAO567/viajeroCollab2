@@ -1708,7 +1708,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 443051204}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 900937aa053b214498d57a1e3c88ccef, type: 3}
   m_Name: 
@@ -2666,6 +2666,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5105967770613804093, guid: b93a77997e12cb14297c5eae93339bbc, type: 3}
   m_PrefabInstance: {fileID: 1392963406}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &575154393 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3740924918551086293, guid: e57afd8b22d9e0a498d728e4003daab6, type: 3}
+  m_PrefabInstance: {fileID: 3740924918544453913}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &579542276
 GameObject:
   m_ObjectHideFlags: 0
@@ -2972,7 +2977,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 7d81753335d7fc142ab816c441f9367c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -10355,7 +10360,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   numberPieces: 12
   numberDistractors: 15
-  dominantPlayerPos: {fileID: 1536636604}
+  dominantPlayerPos: {fileID: 575154393}
+  mat: {fileID: 2100000, guid: a6e9117b930b55f4d88fa084f3c56817, type: 2}
 --- !u!4 &2016956407
 Transform:
   m_ObjectHideFlags: 0
