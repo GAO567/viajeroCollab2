@@ -29,9 +29,17 @@ public class PuzzleGenerator : MonoBehaviour
 
     TaskManager taskManager;
 
+    List<Color> listColors;
+
     // Start is called before the first frame update
     void Start()
     {
+        listColors = new List<Color>();
+        listColors.Add(new Color(1.0f, 0.0f, 0.0f));
+        listColors.Add(new Color(0.0f, 1.0f, 0.0f));
+        listColors.Add(new Color(0.0f, 0.0f, 1.0f));
+        listColors.Add(new Color(1.0f, 1.0f, 0.0f));
+        listColors.Add(new Color(0.0f, 1.0f, 1.0f));
         //taskManager = GameObject.Find("TaskManager").GetComponent<TaskManager>();
         generatePuzzle();
     }
@@ -56,6 +64,7 @@ public class PuzzleGenerator : MonoBehaviour
         for (int i=0;i< numberDistractors; i++)
         {
             GameObject obj = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            obj.GetComponent<Material>().color = new Color(1.0f, 0.0f, 0.0f);
             obj.transform.localScale = new Vector3(0.04f, 0.04f, 0.04f);
             obj.name = "distractor" + i;
             obj.transform.parent = distractorRoot.transform;
@@ -86,7 +95,7 @@ public class PuzzleGenerator : MonoBehaviour
 
         if (taskManager)
         {
-
+            
         }
 
 
