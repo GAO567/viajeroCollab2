@@ -107,6 +107,8 @@ public class PuzzleGenerator : MonoBehaviour
     {
         List<int> auxIndex = new List<int>();
         var random = new System.Random();
+        numberDistractors = distractors.Count;
+        numberPieces = parts.Count;
 
         GameObject objAux = new GameObject("");
         objAux.transform.position = rootObject.transform.position;
