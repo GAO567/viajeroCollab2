@@ -157,6 +157,7 @@ public class TaskManager : MonoBehaviour
         currentTaskLog = new TaskLog(userId, 0, "P1", currentTask.ToString(), Player1Area.transform, collabType, boundsSize);
     }
     
+
     void logUsersMovements()
     {
         if (currentTaskState > TaskState.Connected && !debug)
