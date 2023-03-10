@@ -94,6 +94,9 @@ public class TaskManager : MonoBehaviour
     bool outsideBoundsLastFrameP1 = false;
     private bool outsideBoundsLastFrameP2 = false;
 
+
+    
+
     void setHeaders()
     {
         headerStrMovement[0] =  "userId,timestamp,collabType,currentTask,dominantPlayer,isViolatingBoundary," + Utils.vecNameToString("Player1AreaCenter") + "," + Utils.vecNameToString("Player1AreaRot")
