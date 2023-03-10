@@ -64,7 +64,7 @@ public class PuzzleGenerator : MonoBehaviour
         for (int i=0;i< numberDistractors; i++)
         {
             GameObject obj = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            obj.GetComponent<Material>().color = new Color(1.0f, 0.0f, 0.0f);
+            //obj.AddComponent<M>().color = new Color(1.0f, 0.0f, 0.0f);
             obj.transform.localScale = new Vector3(0.04f, 0.04f, 0.04f);
             obj.name = "distractor" + i;
             obj.transform.parent = distractorRoot.transform;
@@ -98,6 +98,51 @@ public class PuzzleGenerator : MonoBehaviour
             
         }
 
+
+
+    }
+
+
+    void generatePuzzle(List<GameObject> distractors, List<GameObject> parts, GameObject rootObject)
+    {
+        List<int> auxIndex = new List<int>();
+        var random = new System.Random();
+
+        GameObject objAux = new GameObject("");
+        objAux.transform.position = rootObject.transform.position;
+        objAux.transform.rotation = rootObject.transform.rotation;
+        for (int i = 0; i < (numberDistractors + numberPieces); i++)
+        {
+            auxIndex.Add(i);
+        }
+
+        for(int i = 0;i < distractors.Count; i++)
+        {
+            parts.Add(parts[i]);
+        }
+
+        auxIndex = auxIndex.OrderBy(x => random.Next()).ToList();
+        float piecesPerQuadrant = (numberPieces + numberDistractors) / 3.0f;
+        float angleIncrement = 90.0f / piecesPerQuadrant;
+
+        //left Quadrant
+        int countIndexArray = 0;
+        for (float f = -135; f < 135.0f; f += angleIncrement)
+        {
+            objAux.transform.localEulerAngles = new Vector3(0, f, 0);
+
+            GameObject obj = parts[auxIndex[countIndexArray]];
+
+            obj.transform.position = dominantPlayerPos.transform.TransformPoint(new Vector3(UnityEngine.Random.Range(0.1f, 0.2f), UnityEngine.Random.Range(0.0f, 0.25f), UnityEngine.Random.Range(0.3f, 0.5f)));//generate y according to proxemics and z randomly
+
+            countIndexArray++;
+        }
+
+        Destroy(objAux);
+        if (taskManager)
+        {
+
+        }
 
 
     }
