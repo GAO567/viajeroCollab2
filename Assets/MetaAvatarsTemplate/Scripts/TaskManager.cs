@@ -656,12 +656,7 @@ public class TaskManager : MonoBehaviour
                 Player2Area.transform.localPosition = new Vector3(0, 0, 0.49f);
                 Player2Area.transform.localEulerAngles = new Vector3(0, 0, 0);
 
-                GameObject goPlayer1 = new GameObject();
-                goPlayer1.transform.localPosition = new Vector3(-0.013f, 0.197f, 0.058f);
-
-                GameObject traytablePlayer1 = new GameObject();
-                traytablePlayer1.transform.localPosition = new Vector3(0.003f, -0.137f, 0.243f);
-                traytablePlayer1.transform.localScale = new Vector3(0.5137f, 0.019f, 0.29f);
+               
             }
             else if (collabType == CollabType.FaceToFaceNoIntersect)
             {
@@ -683,7 +678,7 @@ public class TaskManager : MonoBehaviour
             }
             else if (collabType == CollabType.CoupledView)
             {
-                Player1Area.transform.localPosition = new Vector3(0.233f, 0, 0.423f);
+                Player1Area.transform.localPosition = new Vector3(0.709f, 0, 0.453f);
                 Player1Area.transform.localEulerAngles = new Vector3(0, 0, 0);
                 Player2Area.transform.localPosition = new Vector3(0, 116.0f, 0);
                 Player2Area.transform.localEulerAngles = new Vector3(0, 0, 0);

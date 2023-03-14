@@ -1721,8 +1721,8 @@ MonoBehaviour:
   Player2Area: {fileID: 3740924918544453914}
   userHead: {fileID: 0}
   puzzleObjects: []
-  rootPossiblePositionsForPuzzle: {fileID: 0}
-  distractorsRoot: {fileID: 0}
+  rootPossiblePositionsForPuzzle: {fileID: 264372739}
+  distractorsRoot: {fileID: 1147395697}
   angleBetween: 0
   currentTaskState: 0
   headerPlayer1Interaction: 'userId,currentTask,dominantPlayer,centerBoundsPosX,centerBoundsPosY,centerBoundsPosZ,centerAreaRotX,centerAreaRotY,centerAreaRotZ,headPosX,headPosY,headPosZ,headRotX,headRotY,headRotZ,rightHandPosX,rightHandPosY,rightHandPosZrightHandRotX,rightHandRotY,rightHandRotZ,leftHandPosX,leftHandPosY,leftHandPosZleftHandRotX,leftHandRotY,leftHandRotZpartId,objInteractedPosX,objInteractedPosY,objInteractedPosZ,objInteractedRotX,objInteractedRotY,objInteractedRotZ
