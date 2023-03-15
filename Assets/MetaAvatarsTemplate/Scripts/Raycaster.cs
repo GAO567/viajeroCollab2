@@ -12,6 +12,8 @@ public class Raycaster : MonoBehaviour
     {
         LTouch, RTouch, Keyboard
     };
+
+
     [SerializeField] DeviceType deviceType = DeviceType.Keyboard;
     [SerializeField] LineRenderer lineRenderer;
     [SerializeField] Color colorOfRay;

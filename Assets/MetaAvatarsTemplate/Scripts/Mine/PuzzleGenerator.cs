@@ -62,7 +62,7 @@ public class PuzzleGenerator : MonoBehaviour
             GameObject obj = GameObject.CreatePrimitive(PrimitiveType.Cube);
             obj.GetComponent<MeshRenderer>().material = mat;
             obj.GetComponent<MeshRenderer>().material.color = new Color(0.0f, 0.0f, 1.0f);
-            obj.transform.localScale = new Vector3(0.04f, 0.04f, 0.04f);
+            obj.transform.localScale = new Vector3(0.06f, 0.06f, 0.06f);
             obj.name = "piece" + i;
             obj.transform.parent = partsRoot.transform;
             parts.Add(obj);
