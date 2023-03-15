@@ -66,6 +66,10 @@ public class PuzzleGenerator : MonoBehaviour
             obj.name = "piece" + i;
             obj.transform.parent = partsRoot.transform;
             parts.Add(obj);
+
+            obj.GetComponent<Photon.Pun.PhotonTransformView>().m_SynchronizePosition = true;
+            obj.GetComponent<Photon.Pun.PhotonTransformView>().m_SynchronizeRotation = true;
+            obj.GetComponent<Photon.Pun.PhotonTransformView>().m_SynchronizeScale = true;
             //auxIndex.Add(i);
         }
 
@@ -78,6 +82,11 @@ public class PuzzleGenerator : MonoBehaviour
             obj.transform.localScale = new Vector3(0.04f, 0.04f, 0.04f);
             obj.name = "distractor" + i;
             obj.transform.parent = distractorRoot.transform;
+            obj.AddComponent<Photon.Pun.PhotonTransformView>();
+            obj.GetComponent<Photon.Pun.PhotonTransformView>().m_SynchronizePosition = true;
+            obj.GetComponent<Photon.Pun.PhotonTransformView>().m_SynchronizeRotation = true;
+            obj.GetComponent<Photon.Pun.PhotonTransformView>().m_SynchronizeScale = true;
+
             parts.Add(obj);
         }
 
