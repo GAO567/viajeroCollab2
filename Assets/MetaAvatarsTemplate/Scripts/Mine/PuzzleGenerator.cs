@@ -34,6 +34,11 @@ public class PuzzleGenerator : MonoBehaviour
     [SerializeField]
     Material mat;
 
+    [SerializeField]
+    GameObject rootForObjects;
+
+    List<GameObject> objs = new List<GameObject>();
+
     // Start is called before the first frame update
     void Start()
     {
@@ -44,7 +49,9 @@ public class PuzzleGenerator : MonoBehaviour
         listColors.Add(new Color(1.0f, 1.0f, 0.0f));
         listColors.Add(new Color(0.0f, 1.0f, 1.0f));
         //taskManager = GameObject.Find("TaskManager").GetComponent<TaskManager>();
-        generatePuzzle();
+        //generatePuzzle();
+
+        generateBlueprint(new Vector3(0, 0, 0), 6, 4, 3, 0.09f);
     }
 
 
@@ -115,7 +122,7 @@ public class PuzzleGenerator : MonoBehaviour
         Destroy(objAux);
         if (taskManager)
         {
-            
+            generateBlueprint(new Vector3(0, 0, 0), 6, 3, 3, 0.09f);
         }
 
 
@@ -175,10 +182,94 @@ public class PuzzleGenerator : MonoBehaviour
 
     }
 
+
+
+    void generateBlueprint(Vector3 offset, int width,int height, int depth, float sizeCube)
+    {
+        GameObject obj = GameObject.Find("rootPieces");
+        bool jaTavaCriado = false;
+        if (parts != null)
+        {
+
+            parts = new List<GameObject>();
+            jaTavaCriado = false;
+        }
+        else
+        {
+            obj = new GameObject("rootPieces");
+            jaTavaCriado = true;
+        }
+
+
+        if (rootForObjects)
+        {
+            obj.transform.position = rootForObjects.transform.position;
+
+
+
+
+            for(int i = 0; i < rootForObjects.transform.childCount; i++)
+            {
+                objs.Add(rootForObjects.transform.GetChild(i).gameObject);
+
+                Material mat = rootForObjects.transform.GetChild(i).gameObject.GetComponent<MeshRenderer>().material;
+                mat.color = new Color(1,1,1,0.3f);
+
+                GameObject duplicate = GameObject.Instantiate(rootForObjects.transform.GetChild(i).gameObject);
+
+                mat = duplicate.GetComponent<MeshRenderer>().material;
+                mat.color = new Color(1, 1, 1, 1.0f);
+                duplicate.transform.parent = obj.transform;
+                parts.Add(duplicate);
+
+                //mat.shader.
+            }
+        }
+        //parts = rj;
+
+        List<int> auxIndex = new List<int>();
+        var random = new System.Random();
+        Vector3[] array = new Vector3[width * height * depth];
+        for(int i = 0; i < width; i++)
+        {
+            for(int j = 0; j < height; j++)
+            {
+                for(int z = 0; z < depth; z++)
+                {
+                    array[i* height*depth + j * depth + z] = new Vector3((sizeCube / 2.0f) + (sizeCube * i), (sizeCube / 2.0f) + (sizeCube * j), (sizeCube / 2.0f) + (sizeCube * z));
+                    array[i * height * depth + j * depth + z] += offset;
+                    auxIndex.Add(i * height * depth + j * depth + z); 
+                }
+                /*
+                array[numberColumns * i + j] = new Vector3((sizeCube / 2.0f) + (sizeCube * i), (sizeCube / 2.0f) + (sizeCube * i), 0.04f);
+                array[numberColumns * i + j] += offset;*/
+
+            }
+        }
+        auxIndex = auxIndex.OrderBy(x => random.Next()).ToList();
+        Vector3[] auxList = array;
+
+        for(int i = 0; i < array.Length; i++)
+        {
+            array[i] = auxList[auxIndex[i]]; 
+        }
+
+        int a = 0;
+        for(int i = 0; i < array.Length; i++)
+        {
+            a = i % objs.Count;
+            objs[a].transform.localPosition = array[i];
+            a++;
+        }
+    }
+
     // Update is called once per frame
     void Update()
     {
-        
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            generateBlueprint(new Vector3(0, 0, 0), 6, 4, 3, 0.09f);
+        }
     }
 
 
