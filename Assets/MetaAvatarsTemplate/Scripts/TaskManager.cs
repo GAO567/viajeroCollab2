@@ -30,9 +30,11 @@ public enum Bodypart
 
 public class TaskManager : MonoBehaviour
 {
+    [SerializeField] int totalNumberTasks = 4;
     public int userId = 0;
     public CollabType collabType = CollabType.FacetoFaceIntersect;
     public Vector3 boundsSize = new Vector3(0.6f,1.0f,0.8f);
+
     [SerializeField] bool debug = false;
     public  GameObject Player1Area;
     public  GameObject Player2Area;
@@ -166,6 +168,7 @@ public class TaskManager : MonoBehaviour
         }
 
         currentTaskLog = new TaskLog(userId, 0, "P1", currentTask.ToString(), Player1Area.transform, collabType, boundsSize);
+        generator.generatePuzzle(false, true, Player1Area);
     }
     
 
@@ -616,6 +619,11 @@ public class TaskManager : MonoBehaviour
 
     void nextPuzzle()
     {
+
+        currentTask++;
+        if (currentTask > totalNumberTasks)
+            return;
+
         GameObject dominantArea;
         GameObject dominantRootPuzzle;
         if(dominantplayer == "P2")
@@ -644,7 +652,8 @@ public class TaskManager : MonoBehaviour
             dominantRootPuzzle = transformRootForP2Blueprint;
             //hidecurrenttask
         }
-        currentTask++;
+
+        
         generator.generateBlueprint(new Vector3(0, 0, 0), 6, 4, 3, 0.09f, dominantRootPuzzle);
         generator.generatePuzzle(false, false, dominantArea);
 
