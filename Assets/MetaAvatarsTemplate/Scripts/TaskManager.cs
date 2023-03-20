@@ -36,10 +36,13 @@ public class TaskManager : MonoBehaviour
     [SerializeField] bool debug = false;
     public  GameObject Player1Area;
     public  GameObject Player2Area;
+    [SerializeField] PuzzleGenerator generator;
     [SerializeField] GameObject userHead;
-    [SerializeField] List<GameObject> puzzleObjects;
-    [SerializeField] GameObject rootPossiblePositionsForPuzzle;
-    [SerializeField] GameObject distractorsRoot;
+    List<GameObject> puzzleObjects;
+    public List<GameObject> blueprintObjects = new List<GameObject>();
+
+    public GameObject rootPossiblePositionsForPuzzle;
+    public GameObject distractorsRoot;
     List<GameObject> listPossiblePositionsForPuzzle;
     List<GameObject> currentBlueprint;
 
@@ -50,6 +53,7 @@ public class TaskManager : MonoBehaviour
     TaskLog currentTaskLog;
     int currentTask = 0;
 
+
     List<float[]> conditionsByUserId;
     //List<TaskCondition[]> taskConditionsByUserId;
     public float angleBetween;
@@ -58,10 +62,14 @@ public class TaskManager : MonoBehaviour
     GameObject headPosP1;
     GameObject rightHandPosP1;
     GameObject leftHandPosP1;
+    GameObject transformRootForP1Blueprint;
 
     GameObject headPosP2;
     GameObject leftHandPosP2;
     GameObject rightHandPosP2;
+    GameObject transformRootForP2Blueprint;
+    
+    GameObject rootForObjects;
 
 
 
@@ -84,7 +92,7 @@ public class TaskManager : MonoBehaviour
     public string player1InteractionStr = "";
     private string player2InteractionStr;
 
-
+    
 
     Dictionary<Bodypart, BoundaryViolation> listActiveViolations = new Dictionary<Bodypart, BoundaryViolation>();
     List<BoundaryViolation> finishedViolations = new List<BoundaryViolation>();
@@ -95,7 +103,7 @@ public class TaskManager : MonoBehaviour
     private bool outsideBoundsLastFrameP2 = false;
 
 
-    
+   
 
     void setHeaders()
     {
@@ -141,8 +149,8 @@ public class TaskManager : MonoBehaviour
 
         dominantplayer = "P1";
 
-        ShufflePossiblePositionsArray();
-        initializePartsForTask();
+        //ShufflePossiblePositionsArray();
+        //initializePartsForTask();
 
         if (Player1Area)
         {
@@ -243,6 +251,7 @@ public class TaskManager : MonoBehaviour
         }
 
         logTasks = new List<TaskLog>();
+        initializeTask();
         //se nao houver diretorios
     }
 
@@ -285,84 +294,79 @@ public class TaskManager : MonoBehaviour
                 currentTaskLog.incrementBoundViolationsP2();
         }
     }
-
-    void ShufflePossiblePositionsArray()
+    //not in use
+    void generateParts()
     {
+        rootForObjects = new GameObject("rootForObjects");
         if (rootPossiblePositionsForPuzzle)
         {
-            List<int> auxIndex = new List<int>();
-            listPossiblePositionsForPuzzle = new List<GameObject>();
-            List<GameObject> listAux = new List<GameObject>();
-            for (int i = 0; i < rootPossiblePositionsForPuzzle.transform.childCount; i++)
+            rootForObjects.transform.parent = rootPossiblePositionsForPuzzle.transform;
+            rootForObjects.transform.localPosition = Vector3.zero;
+               // obj.transform.position = rootForObjects.transform.position;
+
+            puzzleObjects = new List<GameObject>();
+            for (int i = 0; i < rootForObjects.transform.childCount; i++)
             {
-                listPossiblePositionsForPuzzle.Add(rootPossiblePositionsForPuzzle.transform.GetChild(i).gameObject);
-                auxIndex.Add(i);
-            }
-            var random = new System.Random();
-            auxIndex = auxIndex.OrderBy(x => random.Next()).ToList();
-            listAux = listPossiblePositionsForPuzzle;
-            for(int i = 0;i < auxIndex.Count; i++)
-            {
-                listPossiblePositionsForPuzzle[auxIndex[i]] = listAux[i];
+                blueprintObjects.Add(rootForObjects.transform.GetChild(i).gameObject);
+
+                Material mat = rootForObjects.transform.GetChild(i).gameObject.GetComponent<MeshRenderer>().material;
+                mat.color = new Color(1, 1, 1, 0.3f);
+
+                GameObject duplicate = GameObject.Instantiate(rootForObjects.transform.GetChild(i).gameObject);
+
+                mat = duplicate.GetComponent<MeshRenderer>().material;
+                mat.color = new Color(1, 1, 1, 1.0f);
+                duplicate.transform.parent = rootForObjects.transform;
+                puzzleObjects.Add(duplicate);
+
+                //mat.shader.
             }
         }
     }
 
 
-    void initializePartsForTask()
+    
+
+    void generateBlueprint(Vector3 offset, int width,int height, int depth, float sizeCube)
     {
-        ShufflePossiblePositionsArray();
 
-        int numberOfObjects = 20;
-        int count = 0;
-        objectPartsForThisTask = new List<GameObject>();
-        for(int i = 0; i < puzzleObjects[currentTask].transform.childCount; i++)
+        List<int> auxIndex = new List<int>();
+        var random = new System.Random();
+        Vector3[] array = new Vector3[width * height * depth];
+        for (int i = 0; i < width; i++)
         {
-            objectPartsForThisTask.Add(puzzleObjects[currentTask].transform.GetChild(i).gameObject); 
-        }
-
-        for(int i = 0; i < objectPartsForThisTask.Count; i++)
-        {
-            objectPartsForThisTask[i].transform.position = listPossiblePositionsForPuzzle[i].transform.position;
-            objectPartsForThisTask[i].transform.rotation = listPossiblePositionsForPuzzle[i].transform.rotation;
-        }
-
-        int numberOfDistractorsToAdd = listPossiblePositionsForPuzzle.Count - objectPartsForThisTask.Count;
-
-        if (distractorsRoot)
-        {
-
-            List<GameObject> listDistractors1 = new List<GameObject>();
-            List<int> auxIndex = new List<int>();
-            List<GameObject> listAux = new List<GameObject>();
-
-            for (int i = 0; i < distractorsRoot.transform.childCount; i++)
+            for (int j = 0; j < height; j++)
             {
-                distractorsRoot.transform.GetChild(i).gameObject.SetActive(false);
-                listDistractors1.Add(distractorsRoot.transform.GetChild(i).gameObject);
-                auxIndex.Add(i); 
-            }
+                for (int z = 0; z < depth; z++)
+                {
+                    array[i * height * depth + j * depth + z] = new Vector3((sizeCube / 2.0f) + (sizeCube * i), (sizeCube / 2.0f) + (sizeCube * j), (sizeCube / 2.0f) + (sizeCube * z));
+                    array[i * height * depth + j * depth + z] += offset;
+                    auxIndex.Add(i * height * depth + j * depth + z);
+                }
+                /*
+                array[numberColumns * i + j] = new Vector3((sizeCube / 2.0f) + (sizeCube * i), (sizeCube / 2.0f) + (sizeCube * i), 0.04f);
+                array[numberColumns * i + j] += offset;*/
 
-            //shuffle
-
-            var random = new System.Random();
-            auxIndex = auxIndex.OrderBy(x => random.Next()).ToList();
-
-            for (int j = objectPartsForThisTask.Count - 1; j < objectPartsForThisTask.Count; j++)
-            {
-                //add some distractors to the scene
-                objectPartsForThisTask[j].transform.position = listDistractors1[auxIndex[j]].transform.position;// listPossiblePositionsForPuzzle[i].transform.position;
-                objectPartsForThisTask[j].transform.rotation = listDistractors1[auxIndex[j]].transform.rotation;
             }
         }
-        
+        auxIndex = auxIndex.OrderBy(x => random.Next()).ToList();
+        Vector3[] auxList = array;
 
-        //objectPartsForThisTask = puzzleObjects[currentTask].transform.GetComponentsInChildren<PuzzlePart>().gameObject;
+        for (int i = 0; i < array.Length; i++)
+        {
+            array[i] = auxList[auxIndex[i]];
+        }
 
-
+        int a = 0;
+        for (int i = 0; i < array.Length; i++)
+        {
+            a = i % blueprintObjects.Count;
+            blueprintObjects[a].transform.localPosition = array[i];
+            a++;
+        }
     }
 
-
+   
 
     Vector3 calculateBoundaryViolation()
     {
@@ -612,6 +616,8 @@ public class TaskManager : MonoBehaviour
 
     void nextPuzzle()
     {
+        GameObject dominantArea;
+        GameObject dominantRootPuzzle;
         if(dominantplayer == "P2")
         {
             if (currentTaskLog!=null)
@@ -621,6 +627,8 @@ public class TaskManager : MonoBehaviour
             }
             dominantplayer = "P1";
             currentTaskState = TaskState.Player2Dominant;
+            dominantArea = Player1Area.gameObject;
+            dominantRootPuzzle = transformRootForP1Blueprint;
             //hidecurrenttask
         }
         else
@@ -632,12 +640,13 @@ public class TaskManager : MonoBehaviour
             }
             dominantplayer = "P2";
             currentTaskState = TaskState.Player1Dominant;
+            dominantArea = Player2Area;
+            dominantRootPuzzle = transformRootForP2Blueprint;
             //hidecurrenttask
         }
         currentTask++;
-        ShufflePossiblePositionsArray();
-        initializePartsForTask();
-
+        generator.generateBlueprint(new Vector3(0, 0, 0), 6, 4, 3, 0.09f, dominantRootPuzzle);
+        generator.generatePuzzle(false, false, dominantArea);
 
         currentTaskLog = new TaskLog(userId,0, dominantplayer, currentTask.ToString(), Player1Area.transform, collabType, boundsSize);
         
@@ -654,7 +663,7 @@ public class TaskManager : MonoBehaviour
                 Player1Area.transform.localPosition = new Vector3(0, 0, 0);
                 Player1Area.transform.localEulerAngles = new Vector3(0, 0, 0);
                 Player2Area.transform.localPosition = new Vector3(0, 0, 0.49f);
-                Player2Area.transform.localEulerAngles = new Vector3(0, 0, 0);
+                Player2Area.transform.localEulerAngles = new Vector3(0, 180, 0);
 
                
             }
@@ -662,8 +671,8 @@ public class TaskManager : MonoBehaviour
             {
                 Player1Area.transform.localPosition = new Vector3(0, 0, 0);
                 Player1Area.transform.localEulerAngles = new Vector3(0, 0, 0);
-                Player2Area.transform.localPosition = new Vector3(0, 0, 0.631f);
-                Player2Area.transform.localEulerAngles = new Vector3(0, 0, 0);
+                Player2Area.transform.localPosition = new Vector3(0, 0, 0.814f);
+                Player2Area.transform.localEulerAngles = new Vector3(0, 180, 0);
 
 
                 
@@ -673,43 +682,55 @@ public class TaskManager : MonoBehaviour
             {
                 Player1Area.transform.localPosition = new Vector3(0, 0, 0);
                 Player1Area.transform.localEulerAngles = new Vector3(0, 0, 0);
-                Player2Area.transform.localPosition = new Vector3(0, 0, 0);
-                Player2Area.transform.localEulerAngles = new Vector3(0, 0, 0);
+                Player2Area.transform.localPosition = new Vector3(0.233f, 0, 0.423f);
+                Player2Area.transform.localEulerAngles = new Vector3(0, 116.0f, 0);
             }
             else if (collabType == CollabType.CoupledView)
             {
-                Player1Area.transform.localPosition = new Vector3(0.709f, 0, 0.453f);
+                Player1Area.transform.localPosition = new Vector3(0, 0, 0);
                 Player1Area.transform.localEulerAngles = new Vector3(0, 0, 0);
-                Player2Area.transform.localPosition = new Vector3(0, 116.0f, 0);
+                Player2Area.transform.localPosition = new Vector3(0, 0 , 0);
                 Player2Area.transform.localEulerAngles = new Vector3(0, 0, 0);
             }
             else if(collabType == CollabType.SideBySide)
             {
                 Player1Area.transform.localPosition = new Vector3(0, 0, 0);
-                Player1Area.transform.localEulerAngles = new Vector3(0.59f, 0, 0);
-                Player2Area.transform.localPosition = new Vector3(0, 0, 0);
+                Player1Area.transform.localEulerAngles = new Vector3(0, 0, 0);
+                Player2Area.transform.localPosition = new Vector3(0.59f, 0, 0);
                 Player2Area.transform.localEulerAngles = new Vector3(0, 0, 0);
             }
 
-            GameObject goPlayer1 = new GameObject();
+            GameObject goPlayer1 = new GameObject("Player1Head");
             goPlayer1.transform.parent = Player1Area.transform;
             goPlayer1.transform.localPosition = Vector3.zero;
             goPlayer1.transform.localPosition = new Vector3(-0.013f, 0.197f, 0.058f);
 
-            GameObject traytablePlayer1 = new GameObject();
+            GameObject traytablePlayer1 = GameObject.CreatePrimitive(PrimitiveType.Cube);// new GameObject("TraytableP1");
             traytablePlayer1.transform.parent = Player1Area.transform;
             traytablePlayer1.transform.localPosition = new Vector3(0.003f, -0.137f, 0.243f);
             traytablePlayer1.transform.localScale = new Vector3(0.5137f, 0.019f, 0.29f);
+            traytablePlayer1.name = "TraytableP1";
+            GameObject rootObjForPuzzlesP1 = new GameObject("rootForObjsP1");
+            rootObjForPuzzlesP1.transform.parent = Player1Area.transform;
+            rootObjForPuzzlesP1.transform.localPosition = new Vector3(-0.243f, -0.095f , 0.104f);
+            this.transformRootForP1Blueprint = rootObjForPuzzlesP1; 
 
-            GameObject goPlayer2 = new GameObject();
+            GameObject goPlayer2 = new GameObject("Player2Head");
             goPlayer2.transform.parent = Player2Area.transform;
             goPlayer2.transform.localPosition = Vector3.zero;
             goPlayer2.transform.localPosition = new Vector3(-0.013f, 0.197f, 0.058f);
-
-            GameObject traytablePlayer2 = new GameObject();
-            traytablePlayer2.transform.parent = Player1Area.transform;
-            traytablePlayer2.transform.localPosition = new Vector3(0.003f, -0.137f, 0.243f);
-            traytablePlayer2.transform.localScale = new Vector3(0.5137f, 0.019f, 0.29f);
+            
+            if(collabType != CollabType.FaceToFaceNoIntersect || collabType != CollabType.CoupledView) { 
+                GameObject traytablePlayer2 = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                traytablePlayer2.transform.name = "TraytableP2";
+                traytablePlayer2.transform.parent = Player2Area.transform;
+                traytablePlayer2.transform.localPosition = new Vector3(0.003f, -0.137f, 0.243f);
+                traytablePlayer2.transform.localScale = new Vector3(0.5137f, 0.019f, 0.29f);
+            }
+            GameObject rootObjForPuzzlesP2 = new GameObject("rootForObjsP2");
+            rootObjForPuzzlesP2.transform.parent = Player2Area.transform;
+            rootObjForPuzzlesP2.transform.localPosition = new Vector3(-0.243f, -0.095f, 0.104f);
+            this.transformRootForP2Blueprint = rootObjForPuzzlesP2;
         }
     }
     void calculateAngle()

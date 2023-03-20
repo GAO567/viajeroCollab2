@@ -51,53 +51,58 @@ public class PuzzleGenerator : MonoBehaviour
         //taskManager = GameObject.Find("TaskManager").GetComponent<TaskManager>();
         //generatePuzzle();
 
-        generateBlueprint(new Vector3(0, 0, 0), 6, 4, 3, 0.09f);
+        generateBlueprint(new Vector3(0, 0, 0), 6, 4, 3, 0.09f, null);
+        generatePuzzle(false, true,dominantPlayerPos);
     }
 
 
-    void generatePuzzle()
+    public void generatePuzzle(bool usePrimitives,bool generate,GameObject headObj)
     {
         GameObject partsRoot = new GameObject("partsRoot");
         GameObject distractorRoot = new GameObject("distractorRoot");
 
         GameObject objAux = new GameObject(""); 
-        objAux.transform.position = dominantPlayerPos.transform.position;
-        objAux.transform.rotation = dominantPlayerPos.transform.rotation;
+        objAux.transform.position = headObj.transform.position;
+        objAux.transform.rotation = headObj.transform.rotation;
         List<int> auxIndex = new List<int>();
-        for(int i = 0; i < numberPieces; i++)
-        {
-            GameObject obj = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            obj.GetComponent<MeshRenderer>().material = mat;
-            obj.GetComponent<MeshRenderer>().material.color = new Color(0.0f, 0.0f, 1.0f);
-            obj.transform.localScale = new Vector3(0.06f, 0.06f, 0.06f);
-            obj.name = "piece" + i;
-            obj.transform.parent = partsRoot.transform;
-            parts.Add(obj);
+        if (usePrimitives)
+        { 
+            for(int i = 0; i < numberPieces; i++)
+            {
+                GameObject obj = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                obj.GetComponent<MeshRenderer>().material = mat;
+                obj.GetComponent<MeshRenderer>().material.color = new Color(0.0f, 0.0f, 1.0f);
+                obj.transform.localScale = new Vector3(0.06f, 0.06f, 0.06f);
+                obj.name = "piece" + i;
+                obj.transform.parent = partsRoot.transform;
 
-            obj.GetComponent<Photon.Pun.PhotonTransformView>().m_SynchronizePosition = true;
-            obj.GetComponent<Photon.Pun.PhotonTransformView>().m_SynchronizeRotation = true;
-            obj.GetComponent<Photon.Pun.PhotonTransformView>().m_SynchronizeScale = true;
-            //auxIndex.Add(i);
+                parts.Add(obj);
+
+                obj.GetComponent<Photon.Pun.PhotonTransformView>().m_SynchronizePosition = true;
+                obj.GetComponent<Photon.Pun.PhotonTransformView>().m_SynchronizeRotation = true;
+                obj.GetComponent<Photon.Pun.PhotonTransformView>().m_SynchronizeScale = true;
+                //auxIndex.Add(i);
+            }
         }
-
         var random = new System.Random();
-        for (int i=0;i< numberDistractors; i++)
-        {
-            GameObject obj = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            //obj.AddComponent<M>().color = new Color(1.0f, 0.0f, 0.0f);
-            obj.GetComponent<MeshRenderer>().material.color = new Color(1.0f, 0.0f, 0.0f);
-            obj.transform.localScale = new Vector3(0.04f, 0.04f, 0.04f);
-            obj.name = "distractor" + i;
-            obj.transform.parent = distractorRoot.transform;
-            obj.AddComponent<Photon.Pun.PhotonTransformView>();
-            obj.GetComponent<Photon.Pun.PhotonTransformView>().m_SynchronizePosition = true;
-            obj.GetComponent<Photon.Pun.PhotonTransformView>().m_SynchronizeRotation = true;
-            obj.GetComponent<Photon.Pun.PhotonTransformView>().m_SynchronizeScale = true;
+        if (generate) { 
+            for (int i=0;i< numberDistractors; i++)
+            {
+                GameObject obj = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                //obj.AddComponent<M>().color = new Color(1.0f, 0.0f, 0.0f);
+                obj.GetComponent<MeshRenderer>().material.color = new Color(1.0f, 0.0f, 0.0f);
+                obj.transform.localScale = new Vector3(0.06f, 0.06f, 0.06f);
+                obj.name = "distractor" + i;
+                obj.transform.parent = distractorRoot.transform;
+                obj.AddComponent<Photon.Pun.PhotonTransformView>();
+                obj.GetComponent<Photon.Pun.PhotonTransformView>().m_SynchronizePosition = true;
+                obj.GetComponent<Photon.Pun.PhotonTransformView>().m_SynchronizeRotation = true;
+                obj.GetComponent<Photon.Pun.PhotonTransformView>().m_SynchronizeScale = true;
 
-            parts.Add(obj);
+                parts.Add(obj);
+            }
         }
-
-        for(int i =0;i < (numberDistractors + numberPieces); i++)
+        for (int i =0;i < (numberDistractors + numberPieces); i++)
         {
             auxIndex.Add(i);
         }
@@ -120,23 +125,13 @@ public class PuzzleGenerator : MonoBehaviour
         }
 
         Destroy(objAux);
-        if (taskManager)
-        {
-            generateBlueprint(new Vector3(0, 0, 0), 6, 3, 3, 0.09f);
-        }
-
-
-
     }
 
 
-    void generatePuzzle(List<GameObject> distractors, List<GameObject> parts, GameObject rootObject, CollabType type)
-    {
-
-    }
+    
 
 
-    void generatePuzzle(List<GameObject> distractors, List<GameObject> parts, GameObject rootObject)
+    public void generatePuzzle(List<GameObject> distractors, List<GameObject> parts, GameObject rootObject,bool generate)
     {
         List<int> auxIndex = new List<int>();
         var random = new System.Random();
@@ -184,29 +179,29 @@ public class PuzzleGenerator : MonoBehaviour
 
 
 
-    void generateBlueprint(Vector3 offset, int width,int height, int depth, float sizeCube)
+    public void generateBlueprint(Vector3 offset, int width,int height, int depth, float sizeCube, GameObject root)
     {
         GameObject obj = GameObject.Find("rootPieces");
         bool jaTavaCriado = false;
-        if (parts != null)
-        {
 
+        if (obj==null)
+        {
             parts = new List<GameObject>();
-            jaTavaCriado = false;
+            obj = new GameObject("rootPieces");
         }
         else
         {
-            obj = new GameObject("rootPieces");
             jaTavaCriado = true;
         }
 
+        if (root)
+        {
+            rootForObjects.transform.position = root.transform.position;
+        }
 
-        if (rootForObjects)
+        if (rootForObjects && !jaTavaCriado)
         {
             obj.transform.position = rootForObjects.transform.position;
-
-
-
 
             for(int i = 0; i < rootForObjects.transform.childCount; i++)
             {
@@ -268,7 +263,8 @@ public class PuzzleGenerator : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.R))
         {
-            generateBlueprint(new Vector3(0, 0, 0), 6, 4, 3, 0.09f);
+            generateBlueprint(new Vector3(0, 0, 0), 6, 4, 3, 0.09f, null);
+            generatePuzzle(false, false,dominantPlayerPos);
         }
     }
 
