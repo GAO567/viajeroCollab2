@@ -168,13 +168,15 @@ public class TaskManager : MonoBehaviour
         }
 
         currentTaskLog = new TaskLog(userId, 0, "P1", currentTask.ToString(), Player1Area.transform, collabType, boundsSize);
+        generator.generateBlueprint(new Vector3(0, 0, 0), 6, 4, 3, 0.09f, transformRootForP1Blueprint);
         generator.generatePuzzle(false, true, Player1Area);
+        taskStarted = true;
     }
     
 
     void logUsersMovements()
     {
-        if (currentTaskState > TaskState.Connected && !debug)
+        if (currentTaskState > TaskState.Connected && debug)
         {
             string violatingP1 = "NoViolationP1";
             if (currentTaskLog.startTimeOutsideBoundsP1 > 0)
@@ -623,7 +625,7 @@ public class TaskManager : MonoBehaviour
         currentTask++;
         if (currentTask > totalNumberTasks)
             return;
-
+        //
         GameObject dominantArea;
         GameObject dominantRootPuzzle;
         if(dominantplayer == "P2")
@@ -728,17 +730,20 @@ public class TaskManager : MonoBehaviour
             goPlayer2.transform.parent = Player2Area.transform;
             goPlayer2.transform.localPosition = Vector3.zero;
             goPlayer2.transform.localPosition = new Vector3(-0.013f, 0.197f, 0.058f);
+            goPlayer2.transform.localEulerAngles = Vector3.zero;
             
             if(collabType != CollabType.FaceToFaceNoIntersect || collabType != CollabType.CoupledView) { 
                 GameObject traytablePlayer2 = GameObject.CreatePrimitive(PrimitiveType.Cube);
                 traytablePlayer2.transform.name = "TraytableP2";
                 traytablePlayer2.transform.parent = Player2Area.transform;
+                traytablePlayer2.transform.localEulerAngles = Vector3.zero;
                 traytablePlayer2.transform.localPosition = new Vector3(0.003f, -0.137f, 0.243f);
                 traytablePlayer2.transform.localScale = new Vector3(0.5137f, 0.019f, 0.29f);
             }
             GameObject rootObjForPuzzlesP2 = new GameObject("rootForObjsP2");
             rootObjForPuzzlesP2.transform.parent = Player2Area.transform;
             rootObjForPuzzlesP2.transform.localPosition = new Vector3(-0.243f, -0.095f, 0.104f);
+            rootObjForPuzzlesP2.transform.localEulerAngles = Vector3.zero;
             this.transformRootForP2Blueprint = rootObjForPuzzlesP2;
         }
     }

@@ -51,15 +51,15 @@ public class PuzzleGenerator : MonoBehaviour
         //taskManager = GameObject.Find("TaskManager").GetComponent<TaskManager>();
         //generatePuzzle();
 
-        generateBlueprint(new Vector3(0, 0, 0), 6, 4, 3, 0.09f, null);
-        generatePuzzle(false, true,dominantPlayerPos);
+        //generateBlueprint(new Vector3(0, 0, 0), 6, 4, 3, 0.09f, null);
+        //generatePuzzle(false, true,dominantPlayerPos);
     }
 
 
     public void generatePuzzle(bool usePrimitives,bool generate,GameObject headObj)
     {
         GameObject partsRoot = new GameObject("partsRoot");
-        GameObject distractorRoot = new GameObject("distractorRoot");
+        GameObject distractorRoot = GameObject.Find("distractorRoot");
 
         GameObject objAux = new GameObject(""); 
         objAux.transform.position = headObj.transform.position;
@@ -94,10 +94,10 @@ public class PuzzleGenerator : MonoBehaviour
                 obj.transform.localScale = new Vector3(0.06f, 0.06f, 0.06f);
                 obj.name = "distractor" + i;
                 obj.transform.parent = distractorRoot.transform;
-                obj.AddComponent<Photon.Pun.PhotonTransformView>();
+               /* obj.AddComponent<Photon.Pun.PhotonTransformView>();
                 obj.GetComponent<Photon.Pun.PhotonTransformView>().m_SynchronizePosition = true;
                 obj.GetComponent<Photon.Pun.PhotonTransformView>().m_SynchronizeRotation = true;
-                obj.GetComponent<Photon.Pun.PhotonTransformView>().m_SynchronizeScale = true;
+                obj.GetComponent<Photon.Pun.PhotonTransformView>().m_SynchronizeScale = true;*/
 
                 parts.Add(obj);
             }
@@ -112,10 +112,11 @@ public class PuzzleGenerator : MonoBehaviour
         float angleIncrement = 90.0f / piecesPerQuadrant;
 
         //left Quadrant
-        int countIndexArray = 0; 
+        int countIndexArray = 0;
+        float initialAngle = objAux.transform.localEulerAngles.y;
         for(float f = -135;  f < 135.0f ; f += angleIncrement)
         {
-            objAux.transform.localEulerAngles = new Vector3(0, f, 0);
+            objAux.transform.localEulerAngles = new Vector3(0, f + initialAngle, 0);
 
             GameObject obj = parts[auxIndex[countIndexArray]];
 
@@ -197,11 +198,13 @@ public class PuzzleGenerator : MonoBehaviour
         if (root)
         {
             rootForObjects.transform.position = root.transform.position;
+            rootForObjects.transform.rotation = root.transform.rotation;
         }
 
         if (rootForObjects && !jaTavaCriado)
         {
             obj.transform.position = rootForObjects.transform.position;
+            obj.transform.rotation = rootForObjects.transform.rotation;
 
             for(int i = 0; i < rootForObjects.transform.childCount; i++)
             {
