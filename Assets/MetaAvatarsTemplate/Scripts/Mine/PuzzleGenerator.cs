@@ -114,9 +114,91 @@ public class PuzzleGenerator : MonoBehaviour
             auxIndex.Add(i);
         }
 
+        List<GameObject> arrayLeftQuadrant = new List<GameObject>();
+        List<GameObject> arrayFrontQuadrant = new List<GameObject>();
+        List<GameObject> arrayRightQuadrant = new List<GameObject>();
+
+        List<GameObject> piecesOfthePuzzle = new List<GameObject>();
+        List<GameObject> distractorsPuzzle = new List<GameObject>();
+
+        List<int> auxIndexPieces = new List<int>();
+        List<int> auxIndexDistractors = new List<int>();
+
+        for(int i = 0; i < numberPieces; i++)
+        {
+            piecesOfthePuzzle.Add(parts[i]);
+        }
+        for(int i = 0;i < numberDistractors; i++)
+        {
+            distractorsPuzzle.Add(parts[i + numberPieces ]);
+        }
+
+        piecesOfthePuzzle = Utils.ShuffleArray(piecesOfthePuzzle);
+        distractorsPuzzle = Utils.ShuffleArray(distractorsPuzzle);
+
+        /*
         auxIndex = auxIndex.OrderBy(x => random.Next()).ToList();
+        auxIndexPieces = auxIndexPieces.OrderBy(x => random.Next()).ToList();
+        auxIndexDistractors = auxIndexDistractors.OrderBy(x => random.Next()).ToList();
+
+        List<GameObject> piecesSorted = piecesOfthePuzzle;
+        List<GameObject> distractorsSorted = distractorsPuzzle;
+
+        for(int i = 0; i < piecesOfthePuzzle.Count; i++)
+        {
+            piecesSorted[i] = piecesOfthePuzzle[auxIndexPieces[i]];
+        }
+
+        for(int i = 0; i < distractorsPuzzle.Count; i++)
+        {
+            distractorsSorted[i] = distractorsPuzzle[auxIndexDistractors[i]];
+        }
+
+        List<GameObject> arrays = piecesSorted;
+        arrays.AddRange(distractorsSorted);//this array has 0...numberPieces-1 <- puzzle pieces AND numberPieces...numberPieces+numberDistractors-1 distractors
+        for(int i = 0; i < (numberDistractors + numberPieces); i += 3)
+        {
+             
+        }*/
+
+
         float piecesPerQuadrant = (numberPieces + numberDistractors) / 3.0f;
         float angleIncrement = 90.0f / piecesPerQuadrant;
+
+        List<GameObject> sortedParts = new List<GameObject>();
+        for(int i = 0; i < numberPieces/3.0f; i++)
+        {
+            sortedParts.Add(piecesOfthePuzzle[i]);
+        }
+
+        for(int i = 0; i < numberDistractors/3; i++)
+        {
+            sortedParts.Add(distractorsPuzzle[i]);
+        }//first quadrant
+
+        for(int i = numberPieces/3;i < 2 * numberPieces / 3; i++)
+        {
+            sortedParts.Add(piecesOfthePuzzle[i]);
+        }
+
+        for (int i = numberDistractors/3; i < 2* numberDistractors / 3; i++)
+        {
+            sortedParts.Add(distractorsPuzzle[i]);
+        }//second quadrant
+
+        for (int i = 2* numberPieces / 3; i <  numberPieces ; i++)
+        {
+            sortedParts.Add(piecesOfthePuzzle[i]);
+        }
+
+        for (int i = 2* numberDistractors / 3; i < numberDistractors ; i++)
+        {
+            sortedParts.Add(distractorsPuzzle[i]);
+        }//second quadrant
+
+
+
+
 
         //left Quadrant
         int countIndexArray = 0;
@@ -124,10 +206,10 @@ public class PuzzleGenerator : MonoBehaviour
         for(float f = -135;  f < 135.0f ; f += angleIncrement)
         {
             objAux.transform.localEulerAngles = new Vector3(0, f + initialAngle, 0);
+            print("countIndexArray" + countIndexArray);
+            GameObject obj = sortedParts[countIndexArray];// parts[auxIndex[countIndexArray]];
 
-            GameObject obj = parts[auxIndex[countIndexArray]];
-
-            obj.transform.position = objAux.transform.TransformPoint(new Vector3(UnityEngine.Random.Range(0.1f,0.2f), UnityEngine.Random.Range(0.0f, 0.25f), UnityEngine.Random.Range(0.7f,1.8f)));//generate y according to proxemics and z randomly
+            obj.transform.position = objAux.transform.TransformPoint(new Vector3(UnityEngine.Random.Range(0.1f,0.2f), UnityEngine.Random.Range(0.0f, 0.25f), UnityEngine.Random.Range(1.3f,2.0f)));//generate y according to proxemics and z randomly
 
             countIndexArray++;
         }
@@ -135,57 +217,6 @@ public class PuzzleGenerator : MonoBehaviour
         Destroy(objAux);
     }
 
-
-
-
-
-    public void generatePuzzle(List<GameObject> distractors, List<GameObject> parts, GameObject rootObject, bool generate)
-    {
-        List<int> auxIndex = new List<int>();
-        var random = new System.Random();
-        numberDistractors = distractors.Count;
-        numberPieces = parts.Count;
-
-        GameObject objAux = new GameObject("");
-        objAux.transform.position = rootObject.transform.position;
-        objAux.transform.rotation = rootObject.transform.rotation;
-        for (int i = 0; i < (numberDistractors + numberPieces); i++)
-        {
-            auxIndex.Add(i);
-        }
-
-        for (int i = 0; i < distractors.Count; i++)
-        {
-            parts.Add(parts[i]);
-        }
-
-        auxIndex = auxIndex.OrderBy(x => random.Next()).ToList();
-        float piecesPerQuadrant = (numberPieces + numberDistractors) / 3.0f;
-        float angleIncrement = 90.0f / piecesPerQuadrant;
-
-        //left Quadrant
-        int countIndexArray = 0;
-        for (float f = -135; f < 135.0f; f += angleIncrement)
-        {
-            objAux.transform.localEulerAngles = new Vector3(0, f, 0);
-
-            GameObject obj = parts[auxIndex[countIndexArray]];
-
-            obj.transform.position = objAux.transform.TransformPoint(new Vector3(UnityEngine.Random.Range(0.1f, 0.2f), UnityEngine.Random.Range(0.0f, 0.25f), UnityEngine.Random.Range(0.3f, 0.5f)));//generate y according to proxemics and z randomly
-
-            countIndexArray++;
-        }
-
-        Destroy(objAux);
-        if (taskManager)
-        {
-
-        }
-
-
-    }
-
-    
 
 
     public void generateBlueprint(Vector3 offset, int width,int height, int depth, float sizeCube, GameObject root)

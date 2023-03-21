@@ -4,6 +4,13 @@ using System.Linq;
 using System;
 using UnityEngine;
 
+using System.IO;
+using System.Security.Cryptography;
+
+using OculusSampleFramework;
+using UnityEngine.UI;
+
+
 public static class Utils
 {
     public static string logVariable(string variableName)
@@ -46,6 +53,28 @@ public static class Utils
         return vecAux;
     }
 
+
+    public static List<GameObject> ShuffleArray(List<GameObject> arrayToShuffle)
+    {
+        List<GameObject> aux = new List<GameObject>();// arrayToShuffle;
+
+        List<int> auxIndex = new List<int>();
+        for(int i = 0; i < arrayToShuffle.Count; i++)
+        {
+            auxIndex.Add(i);
+        }
+
+        var random = new System.Random();
+        auxIndex = auxIndex.OrderBy(x => random.Next()).ToList();
+
+        for(int i = 0;i < arrayToShuffle.Count; i++)
+        {
+            int j = auxIndex[i];
+            aux.Add( arrayToShuffle[auxIndex[i]]) ;
+        }
+
+        return aux;
+    }
 
     public static Vector3 snapToPlane(Transform anchorObj, Transform planeObj, Vector3 lastPositionAnchor, Vector3 currentPosAnchor, Vector3 handDisplacement)
     {

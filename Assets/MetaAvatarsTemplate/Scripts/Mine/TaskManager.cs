@@ -348,47 +348,7 @@ public class TaskManager : MonoBehaviour
 
     
 
-    void generateBlueprint(Vector3 offset, int width,int height, int depth, float sizeCube)
-    {
-
-        List<int> auxIndex = new List<int>();
-        var random = new System.Random();
-        Vector3[] array = new Vector3[width * height * depth];
-        for (int i = 0; i < width; i++)
-        {
-            for (int j = 0; j < height; j++)
-            {
-                for (int z = 0; z < depth; z++)
-                {
-                    array[i * height * depth + j * depth + z] = new Vector3((sizeCube / 2.0f) + (sizeCube * i), (sizeCube / 2.0f) + (sizeCube * j), (sizeCube / 2.0f) + (sizeCube * z));
-                    array[i * height * depth + j * depth + z] += offset;
-                    auxIndex.Add(i * height * depth + j * depth + z);
-                }
-                /*
-                array[numberColumns * i + j] = new Vector3((sizeCube / 2.0f) + (sizeCube * i), (sizeCube / 2.0f) + (sizeCube * i), 0.04f);
-                array[numberColumns * i + j] += offset;*/
-
-            }
-        }
-        auxIndex = auxIndex.OrderBy(x => random.Next()).ToList();
-        Vector3[] auxList = array;
-
-        for (int i = 0; i < array.Length; i++)
-        {
-            array[i] = auxList[auxIndex[i]];
-        }
-
-        int a = 0;
-        for (int i = 0; i < array.Length; i++)
-        {
-            a = i % blueprintObjects.Count;
-            blueprintObjects[a].transform.localPosition = array[i];
-            a++;
-        }
-    }
-
-   
-
+    
     Vector3 calculateBoundaryViolation()
     {
         Vector3 violation = new Vector3();
@@ -668,7 +628,7 @@ public class TaskManager : MonoBehaviour
                 currentTaskLog.endTask();
             }
             dominantplayer = "P1";
-            currentTaskState = TaskState.Player2Dominant;
+            currentTaskState = TaskState.Player1Dominant;
             dominantArea = Player1Area.gameObject;
             dominantRootPuzzle = transformRootForP1Blueprint;
             //hidecurrenttask
@@ -681,7 +641,7 @@ public class TaskManager : MonoBehaviour
                 currentTaskLog.endTask();
             }
             dominantplayer = "P2";
-            currentTaskState = TaskState.Player1Dominant;
+            currentTaskState = TaskState.Player2Dominant;
             dominantArea = Player2Area;
             dominantRootPuzzle = transformRootForP2Blueprint;
             //hidecurrenttask
