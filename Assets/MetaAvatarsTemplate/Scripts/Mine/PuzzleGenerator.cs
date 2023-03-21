@@ -196,7 +196,7 @@ public class PuzzleGenerator : MonoBehaviour
         if (obj==null)
         {
             parts = new List<GameObject>();
-            obj = new GameObject("rootPieces");
+            obj = new GameObject("rootObjects");
         }
         else
         {
