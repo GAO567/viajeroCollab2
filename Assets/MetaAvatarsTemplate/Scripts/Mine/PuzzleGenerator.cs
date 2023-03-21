@@ -39,6 +39,8 @@ public class PuzzleGenerator : MonoBehaviour
 
     List<GameObject> objs = new List<GameObject>();
 
+    int currentPhotonId = 200;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -94,6 +96,11 @@ public class PuzzleGenerator : MonoBehaviour
                 obj.transform.localScale = new Vector3(0.06f, 0.06f, 0.06f);
                 obj.name = "distractor" + i;
                 obj.transform.parent = distractorRoot.transform;
+
+                Photon.Pun.PhotonView view = obj.AddComponent<Photon.Pun.PhotonView>();
+                view.ViewID = currentPhotonId++;
+                Photon.Pun.PhotonTransformView tView = obj.AddComponent<Photon.Pun.PhotonTransformView>();
+                tView.m_SynchronizeScale = true;
                /* obj.AddComponent<Photon.Pun.PhotonTransformView>();
                 obj.GetComponent<Photon.Pun.PhotonTransformView>().m_SynchronizePosition = true;
                 obj.GetComponent<Photon.Pun.PhotonTransformView>().m_SynchronizeRotation = true;
@@ -129,10 +136,10 @@ public class PuzzleGenerator : MonoBehaviour
     }
 
 
-    
 
 
-    public void generatePuzzle(List<GameObject> distractors, List<GameObject> parts, GameObject rootObject,bool generate)
+
+    public void generatePuzzle(List<GameObject> distractors, List<GameObject> parts, GameObject rootObject, bool generate)
     {
         List<int> auxIndex = new List<int>();
         var random = new System.Random();
@@ -147,7 +154,7 @@ public class PuzzleGenerator : MonoBehaviour
             auxIndex.Add(i);
         }
 
-        for(int i = 0;i < distractors.Count; i++)
+        for (int i = 0; i < distractors.Count; i++)
         {
             parts.Add(parts[i]);
         }
@@ -178,11 +185,12 @@ public class PuzzleGenerator : MonoBehaviour
 
     }
 
+    
 
 
     public void generateBlueprint(Vector3 offset, int width,int height, int depth, float sizeCube, GameObject root)
     {
-        GameObject obj = GameObject.Find("rootPieces");
+        GameObject obj = GameObject.Find("rootObjects");
         bool jaTavaCriado = false;
 
         if (obj==null)
@@ -205,6 +213,7 @@ public class PuzzleGenerator : MonoBehaviour
         {
             obj.transform.position = rootForObjects.transform.position;
             obj.transform.rotation = rootForObjects.transform.rotation;
+            obj.transform.parent = rootForObjects.transform.parent;
 
             for(int i = 0; i < rootForObjects.transform.childCount; i++)
             {
@@ -218,11 +227,37 @@ public class PuzzleGenerator : MonoBehaviour
                 mat = duplicate.GetComponent<MeshRenderer>().material;
                 mat.color = new Color(1, 1, 1, 1.0f);
                 duplicate.transform.parent = obj.transform;
+                duplicate.AddComponent<Photon.Pun.PhotonView>().ViewID = currentPhotonId++;
+
+                Photon.Pun.PhotonView view = duplicate.GetComponent<Photon.Pun.PhotonView>();
+                Photon.Pun.PhotonTransformView tView = duplicate.AddComponent<Photon.Pun.PhotonTransformView>();
+                tView.m_SynchronizeScale = true;
+
+
+                view.ViewID = currentPhotonId++;
+                tView.m_SynchronizeScale = true;
+
+                view = rootForObjects.transform.GetChild(i).gameObject.AddComponent<Photon.Pun.PhotonView>();
+                tView = rootForObjects.transform.GetChild(i).gameObject.AddComponent<Photon.Pun.PhotonTransformView>();
+                tView.m_SynchronizeScale = true;
+                
+                view.ViewID = currentPhotonId++;
                 parts.Add(duplicate);
+                
 
                 //mat.shader.
             }
-        }
+        }/*
+        else if(objs.Count == 0)
+        {
+            for(int i = 0; i < obj.transform.childCount; i++)
+            {
+                Material mat = obj.transform.GetChild(i).gameObject.GetComponent<MeshRenderer>().material;
+                mat.color = new Color(1, 1, 1, 1);
+                objs.Add(obj.transform.GetChild(i).gameObject);
+                parts.Add(obj.transform.GetChild(i).gameObject);
+            }
+        }*/
         //parts = rj;
 
         List<int> auxIndex = new List<int>();

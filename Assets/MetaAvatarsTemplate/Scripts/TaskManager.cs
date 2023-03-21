@@ -258,12 +258,12 @@ public class TaskManager : MonoBehaviour
         PathDirectory += "\\user" + userId + "_" + i;// + travelTechnique.ToString();// + "/";
 
         PathDirectory += "\\";
-
-        if (!Directory.Exists(PathDirectory))
-        {
-            System.IO.Directory.CreateDirectory(PathDirectory);
+        if (!debug) { 
+            if (!Directory.Exists(PathDirectory))
+            {
+                System.IO.Directory.CreateDirectory(PathDirectory);
+            }
         }
-
         logTasks = new List<TaskLog>();
         initializeTask();
         //se nao houver diretorios
