@@ -176,7 +176,7 @@ public class TaskManager : MonoBehaviour
 
     void logUsersMovements()
     {
-        if (currentTaskState > TaskState.Connected && debug)
+        if (currentTaskState > TaskState.Connected)
         {
             string violatingP1 = "NoViolationP1";
             if (currentTaskLog.startTimeOutsideBoundsP1 > 0)
@@ -188,11 +188,15 @@ public class TaskManager : MonoBehaviour
             }
             player1InteractionStr += userId + "," + collabType.ToString() + "," + Time.realtimeSinceStartup + "," + currentTask + "," + (dominantplayer == "P1" ? true : false) + "," + violatingP1 + ","+  Utils.vector3ToString(Player1Area.transform.position)+ "," + Utils.vector3ToString(Player1Area.transform.eulerAngles) +  ","
                                     + Utils.vector3ToString(headPosP1.transform.position) + "," + Utils.vector3ToString(headPosP1.transform.eulerAngles) + Utils.vector3ToString(rightHandPosP1.transform.position) + "," + Utils.vector3ToString(rightHandPosP1.transform.eulerAngles) +
-                                     Utils.vector3ToString(leftHandPosP1.transform.position) + "," + Utils.vector3ToString(leftHandPosP1.transform.eulerAngles);
+                                     Utils.vector3ToString(leftHandPosP1.transform.position) + "," + Utils.vector3ToString(leftHandPosP1.transform.eulerAngles );
             if (player1Interacting && getInteractPart("P1"))
             {
                 player1InteractionStr += "," + Utils.vector3ToString(getInteractPart("P1").transform.position) + "," + Utils.vector3ToString(getInteractPart("P1").transform.eulerAngles) + "\n";
                
+            }
+            else
+            {
+                player1InteractionStr += "\n";
             }
 
             if (player1InteractionStr.Length > 200)
@@ -214,9 +218,14 @@ public class TaskManager : MonoBehaviour
             player2InteractionStr += userId + ","+ collabType.ToString() + "," + Time.realtimeSinceStartup + "," + currentTask + "," + (dominantplayer == "P2" ? true : false) + "," + violatingP2 + ","+ Utils.vector3ToString(Player2Area.transform.position) + "," + Utils.vector3ToString(Player2Area.transform.eulerAngles) + ","
                                     + Utils.vector3ToString(headPosP2.transform.position) + "," + Utils.vector3ToString(headPosP2.transform.eulerAngles) + Utils.vector3ToString(rightHandPosP2.transform.position) + "," + Utils.vector3ToString(rightHandPosP2.transform.eulerAngles) +
                                      Utils.vector3ToString(leftHandPosP2.transform.position) + "," + Utils.vector3ToString(leftHandPosP2.transform.eulerAngles);
+            
             if (player2Interacting && getInteractPart("P2"))
             {
                 player2InteractionStr += "," + Utils.vector3ToString(getInteractPart("P2").transform.position) + "," + Utils.vector3ToString(getInteractPart("P2").transform.eulerAngles) + "\n";
+            }
+            else
+            {
+                player2InteractionStr += "\n";
             }
 
 
@@ -625,6 +634,9 @@ public class TaskManager : MonoBehaviour
         currentTask++;
         if (currentTask > totalNumberTasks)
             return;
+
+        currentTaskLog.setTaskEndTime(Time.realtimeSinceStartup);
+        logTasks.Add(currentTaskLog);
         //
         GameObject dominantArea;
         GameObject dominantRootPuzzle;
@@ -685,7 +697,7 @@ public class TaskManager : MonoBehaviour
                 Player2Area.transform.localPosition = new Vector3(0, 0, 0.814f);
                 Player2Area.transform.localEulerAngles = new Vector3(0, 180, 0);
 
-
+                
                 
 
             }
@@ -716,6 +728,14 @@ public class TaskManager : MonoBehaviour
             goPlayer1.transform.localPosition = Vector3.zero;
             goPlayer1.transform.localPosition = new Vector3(-0.013f, 0.197f, 0.058f);
 
+            headPosP1 = goPlayer1;
+            rightHandPosP1 = new GameObject("rightHandP1");
+            leftHandPosP1 = new GameObject("leftHandP1");
+
+            //headPosP1.transform.parent = Player1Area.transform;
+            rightHandPosP1.transform.parent = Player1Area.transform;
+            leftHandPosP1.transform.parent = Player1Area.transform;
+
             GameObject traytablePlayer1 = GameObject.CreatePrimitive(PrimitiveType.Cube);// new GameObject("TraytableP1");
             traytablePlayer1.transform.parent = Player1Area.transform;
             traytablePlayer1.transform.localPosition = new Vector3(0.003f, -0.137f, 0.243f);
@@ -731,8 +751,16 @@ public class TaskManager : MonoBehaviour
             goPlayer2.transform.localPosition = Vector3.zero;
             goPlayer2.transform.localPosition = new Vector3(-0.013f, 0.197f, 0.058f);
             goPlayer2.transform.localEulerAngles = Vector3.zero;
-            
-            if(collabType != CollabType.FaceToFaceNoIntersect || collabType != CollabType.CoupledView) { 
+
+            headPosP2 = goPlayer2;
+            rightHandPosP2 = new GameObject("rightHandP2");
+            leftHandPosP2 = new GameObject("leftHandP2");
+
+            //headPosP1.transform.parent = Player1Area.transform;
+            rightHandPosP2.transform.parent = Player2Area.transform;
+            leftHandPosP2.transform.parent = Player2Area.transform;
+
+            if (collabType != CollabType.FaceToFaceNoIntersect || collabType != CollabType.CoupledView) { 
                 GameObject traytablePlayer2 = GameObject.CreatePrimitive(PrimitiveType.Cube);
                 traytablePlayer2.transform.name = "TraytableP2";
                 traytablePlayer2.transform.parent = Player2Area.transform;
@@ -747,15 +775,24 @@ public class TaskManager : MonoBehaviour
             this.transformRootForP2Blueprint = rootObjForPuzzlesP2;
         }
     }
-    void calculateAngle()
+    string calculateAngle(Vector3 angle)
     {
-       /* if (rootObject && userHead)
+        string state = "Within Gaze Bounds";
+        if(angle.y < 15.0f && angle.y > -15.0f)
         {
-            angleBetween = Vector3.Angle(rootObject.transform.forward, userHead.transform.forward);
-            Debug.DrawRay(rootObject.transform.position, rootObject.transform.forward, Color.blue);
-            Debug.DrawRay(userHead.transform.position, userHead.transform.forward, Color.cyan); 
-        }*/
+            state = "Within Gaze Bounds";
+        }
+        else if(angle.y < 45.0f && angle.y > -45.0f)
+        {
+            state =  "Comfortable but gaze violation";
+        }
+        else
+        {
+            state = "Extreme violation";
+        }
+        return state;
     }
+
     public void OnDisable()
     {
         if (!debug)
