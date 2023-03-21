@@ -10,10 +10,16 @@ public class WireareaDrawer : MonoBehaviour
     [SerializeField] float viewportDepth;
     [SerializeField] GameObject objToCollide;
 
+    [SerializeField] GameObject rightBoundary;
+    [SerializeField] GameObject leftBoundary;
+    [SerializeField] GameObject frontBoundary;
+
     GameObject topRightGO;
     GameObject topLeftGO;
     GameObject bottomRightGO;
     GameObject bottomLeftGO;
+
+    public bool drawBoundaries = false;
 
     
 
@@ -67,10 +73,14 @@ public class WireareaDrawer : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if(taskManager)
+        if (taskManager)
             taskManager.incrementTimeOutsideBounds(Time.realtimeSinceStartup - startTime);
     }
 
+    public void drawBoundary(bool active)
+    {
+        drawBoundaries = active;
+    }
     // Update is called once per frame
     void Update()
     {
@@ -97,6 +107,49 @@ public class WireareaDrawer : MonoBehaviour
             lineRenderer.SetPosition(9, transform.TransformPoint(new Vector3(-sizeX / 2.0f, sizeY / 2.0f, sizeZ / 2.0f)));
             lineRenderer.SetPosition(10, transform.TransformPoint(new Vector3(sizeX / 2.0f, sizeY / 2.0f, sizeZ / 2.0f)));
 
+            if (drawBoundaries)
+            {
+                if (frontBoundary)
+                {
+                    frontBoundary.transform.localPosition = new Vector3(0, 0, sizeZ / 2.0f);
+                    frontBoundary.transform.localScale = new Vector3(sizeX, sizeY, 0.001f);
+                    frontBoundary.transform.localEulerAngles = new Vector3(0, 0, 0);
+                    frontBoundary.SetActive(true);
+                }
+
+                if (rightBoundary)
+                {
+                    rightBoundary.transform.localPosition = new Vector3(sizeX / 2.0f, 0, 0);
+                    rightBoundary.transform.localEulerAngles = new Vector3(0, 90.0f, 0);
+                    rightBoundary.transform.localScale = new Vector3(sizeZ, sizeY, 0.001f);
+                    rightBoundary.SetActive(true);
+                }
+
+                if (leftBoundary)
+                {
+                    leftBoundary.transform.localPosition = new Vector3(-sizeX / 2.0f, 0, 0);
+                    leftBoundary.transform.localEulerAngles = new Vector3(0, 90.0f, 0);
+                    leftBoundary.transform.localScale = new Vector3(sizeZ, sizeY, 0.001f);
+                    leftBoundary.SetActive(true);
+                }
+            }
+            else
+            {
+                if (frontBoundary)
+                {
+                    frontBoundary.SetActive(false);
+                }
+                if (rightBoundary)
+                {
+                    rightBoundary.SetActive(false);
+                }
+                if (leftBoundary)
+                {
+                    leftBoundary.SetActive(false);
+                }
+            }
+           
+
             lineRenderer.SetPosition(11, transform.TransformPoint(new Vector3(sizeX / 2.0f, sizeY / 2.0f, -sizeZ / 2.0f)));
             lineRenderer.SetPosition(12, transform.TransformPoint(new Vector3(sizeX / 2.0f, -sizeY / 2.0f, -sizeZ / 2.0f)));
             lineRenderer.SetPosition(13, transform.TransformPoint(new Vector3(-sizeX / 2.0f, -sizeY / 2.0f, -sizeZ / 2.0f)));
@@ -105,7 +158,7 @@ public class WireareaDrawer : MonoBehaviour
 
             lineRenderer.SetPosition(16, transform.TransformPoint(new Vector3(-sizeX / 2.0f, sizeY / 2.0f, -sizeZ / 2.0f)));
             lineRenderer.SetPosition(17, transform.TransformPoint(new Vector3(-sizeX / 2.0f, sizeY / 2.0f, sizeZ / 2.0f)));
-            
+            drawBoundaries = false;
             /*
             arrayStuff[0] = new Vector3(sizeX / 2.0f, -sizeY / 2.0f, -sizeZ / 2.0f);
             lineRenderer.positionCount = 23;

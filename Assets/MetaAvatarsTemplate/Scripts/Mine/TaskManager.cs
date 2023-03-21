@@ -65,11 +65,13 @@ public class TaskManager : MonoBehaviour
     GameObject rightHandPosP1;
     GameObject leftHandPosP1;
     GameObject transformRootForP1Blueprint;
+    WireareaDrawer boundaryDrawerP1;
 
     GameObject headPosP2;
     GameObject leftHandPosP2;
     GameObject rightHandPosP2;
     GameObject transformRootForP2Blueprint;
+    WireareaDrawer boundaryDrawerP2;
     
     GameObject rootForObjects;
 
@@ -284,7 +286,12 @@ public class TaskManager : MonoBehaviour
             nextPuzzle();
         }
 
-        if(!debug)
+        if(currentTaskState > TaskState.BothConnected)
+        {
+            calculateBoundaryViolation();
+        }
+
+        if(!debug && currentTaskState > TaskState.BothConnected)
         {
             logUsersMovements();
         }
@@ -399,7 +406,7 @@ public class TaskManager : MonoBehaviour
             float delta = Time.deltaTime;
             if (!outsideBoundsLastFrameP1)
             {
-
+                
             }
 
             Bodypart activeBodyPart = Bodypart.HeadP1;
@@ -418,6 +425,7 @@ public class TaskManager : MonoBehaviour
                         listActiveViolations[activeBodyPart].distance = distance;
                     }
                 }
+                boundaryDrawerP1.drawBoundary(true);
                 //currentTaskLog.incrementTimeOutsideBounds(Time.deltaTime);
                 //
             }
@@ -434,6 +442,7 @@ public class TaskManager : MonoBehaviour
                 {
                     //do nothing
                 }
+                boundaryDrawerP1.drawBoundary(false);
             }
 
             activeBodyPart = Bodypart.rightHandP1;
@@ -444,6 +453,7 @@ public class TaskManager : MonoBehaviour
                 {
                     listActiveViolations[activeBodyPart] = new BoundaryViolation(activeBodyPart, Time.realtimeSinceStartup, distance);
                     currentTaskLog.incrementViolationNumber((int)activeBodyPart);
+                    
                 }
                 else
                 {
@@ -452,6 +462,7 @@ public class TaskManager : MonoBehaviour
                         listActiveViolations[activeBodyPart].distance = distance;
                     }
                 }
+                boundaryDrawerP1.drawBoundary(true);
                 //currentTaskLog.incrementTimeOutsideBounds(Time.deltaTime);
                 //
             }
@@ -468,6 +479,7 @@ public class TaskManager : MonoBehaviour
                 {
                     //do nothing
                 }
+                boundaryDrawerP1.drawBoundary(false);
             }
 
             activeBodyPart = Bodypart.leftHandP1;
@@ -486,6 +498,7 @@ public class TaskManager : MonoBehaviour
                         listActiveViolations[activeBodyPart].distance = distance;
                     }
                 }
+                boundaryDrawerP1.drawBoundary(true);
                 //currentTaskLog.incrementTimeOutsideBounds(Time.deltaTime);
                 //
             }
@@ -502,6 +515,7 @@ public class TaskManager : MonoBehaviour
                 {
                     //do nothing
                 }
+                boundaryDrawerP1.drawBoundary(false);
             }
 
 
@@ -537,6 +551,7 @@ public class TaskManager : MonoBehaviour
                         listActiveViolations[activeBodyPart].distance = distance;
                     }
                 }
+                boundaryDrawerP2.drawBoundary(true);
                 //currentTaskLog.incrementTimeOutsideBounds(Time.deltaTime);
                 //
             }
@@ -553,6 +568,7 @@ public class TaskManager : MonoBehaviour
                 {
                     //do nothing
                 }
+                boundaryDrawerP2.drawBoundary(false);
             }
 
             activeBodyPart = Bodypart.rightHandP2;
@@ -571,6 +587,7 @@ public class TaskManager : MonoBehaviour
                         listActiveViolations[activeBodyPart].distance = distance;
                     }
                 }
+                boundaryDrawerP2.drawBoundary(true);
                 //currentTaskLog.incrementTimeOutsideBounds(Time.deltaTime);
                 //
             }
@@ -587,6 +604,7 @@ public class TaskManager : MonoBehaviour
                 {
                     //do nothing
                 }
+                boundaryDrawerP2.drawBoundary(false);
             }
 
             activeBodyPart = Bodypart.leftHandP2;
@@ -605,6 +623,7 @@ public class TaskManager : MonoBehaviour
                         listActiveViolations[activeBodyPart].distance = distance;
                     }
                 }
+                boundaryDrawerP1.drawBoundary(true);
                 //currentTaskLog.incrementTimeOutsideBounds(Time.deltaTime);
                 //
             }
@@ -621,6 +640,7 @@ public class TaskManager : MonoBehaviour
                 {
                     //do nothing
                 }
+                boundaryDrawerP1.drawBoundary(false);
             }
 
 
@@ -731,6 +751,7 @@ public class TaskManager : MonoBehaviour
             headPosP1 = goPlayer1;
             rightHandPosP1 = new GameObject("rightHandP1");
             leftHandPosP1 = new GameObject("leftHandP1");
+            boundaryDrawerP1 = Player1Area.GetComponent<WireareaDrawer>();
 
             //headPosP1.transform.parent = Player1Area.transform;
             rightHandPosP1.transform.parent = Player1Area.transform;
@@ -755,6 +776,7 @@ public class TaskManager : MonoBehaviour
             headPosP2 = goPlayer2;
             rightHandPosP2 = new GameObject("rightHandP2");
             leftHandPosP2 = new GameObject("leftHandP2");
+            boundaryDrawerP2 = Player2Area.GetComponent<WireareaDrawer>();
 
             //headPosP1.transform.parent = Player1Area.transform;
             rightHandPosP2.transform.parent = Player2Area.transform;
