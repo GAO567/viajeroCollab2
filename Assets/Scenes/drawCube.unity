@@ -15679,6 +15679,10 @@ PrefabInstance:
       propertyPath: rightBoundary
       value: 
       objectReference: {fileID: 1913395041}
+    - target: {fileID: 3740924918551086294, guid: e57afd8b22d9e0a498d728e4003daab6, type: 3}
+      propertyPath: drawBoundaries
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3740924919067395299, guid: e57afd8b22d9e0a498d728e4003daab6, type: 3}
       propertyPath: m_LocalRotation.w
       value: 0
@@ -15711,6 +15715,10 @@ PrefabInstance:
       propertyPath: rightBoundary
       value: 
       objectReference: {fileID: 1653223941}
+    - target: {fileID: 3740924919067395301, guid: e57afd8b22d9e0a498d728e4003daab6, type: 3}
+      propertyPath: drawBoundaries
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3740924919582675005, guid: e57afd8b22d9e0a498d728e4003daab6, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

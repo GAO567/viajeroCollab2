@@ -194,7 +194,7 @@ public class PuzzleGenerator : MonoBehaviour
         for (int i = 2* numberDistractors / 3; i < numberDistractors ; i++)
         {
             sortedParts.Add(distractorsPuzzle[i]);
-        }//second quadrant
+        }//third quadrant
 
 
 
