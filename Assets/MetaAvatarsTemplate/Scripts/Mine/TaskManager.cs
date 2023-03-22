@@ -87,6 +87,7 @@ public class TaskManager : MonoBehaviour
     GameObject objP2;// = new G
 
     public string PathDirectory { get => pathDirectory; set => pathDirectory = value; }
+    public bool isRemotePlayer = false;// { get; private set; }
 
     public TaskState currentTaskState = TaskState.Idle;
 
@@ -274,6 +275,8 @@ public class TaskManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (isRemotePlayer)
+            return;
         //calculateAngle();
 
         if(Input.GetKeyDown(KeyCode.S) && !taskStarted)
