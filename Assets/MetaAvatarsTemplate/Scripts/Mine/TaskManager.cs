@@ -249,6 +249,8 @@ public class TaskManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        if (!isRemotePlayer)
+            return;
 
         PathDirectory = Directory.GetCurrentDirectory() + "\\LogFiles";
 
@@ -780,7 +782,7 @@ public class TaskManager : MonoBehaviour
 
     public void OnDisable()
     {
-        if (!debug)
+        if (!debug && !isRemotePlayer)
         {
             CompleteTaskReport();
             //CompleteHandPathReport();
