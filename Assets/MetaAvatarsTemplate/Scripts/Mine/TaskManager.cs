@@ -30,6 +30,8 @@ public enum Bodypart
 
 public class TaskManager : MonoBehaviour
 {
+    [SerializeField] Chiligames.MetaAvatarsPun.NetworkManager networkManager;
+    [SerializeField] Chiligames.MetaAvatarsPun.PlayerManager playerManager;
     [SerializeField] int totalNumberTasks = 4;
     public int userId = 0;
     public CollabType collabType = CollabType.FacetoFaceIntersect;
