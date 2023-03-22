@@ -99,6 +99,8 @@ public class PuzzleGenerator : MonoBehaviour
 
                 Photon.Pun.PhotonView view = obj.AddComponent<Photon.Pun.PhotonView>();
                 view.ViewID = currentPhotonId++;
+                view.OwnershipTransfer = Photon.Pun.OwnershipOption.Takeover;
+
                 Photon.Pun.PhotonTransformView tView = obj.AddComponent<Photon.Pun.PhotonTransformView>();
                 tView.m_SynchronizeScale = true;
                /* obj.AddComponent<Photon.Pun.PhotonTransformView>();
