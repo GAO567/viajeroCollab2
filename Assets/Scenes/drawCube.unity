@@ -2548,6 +2548,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 900937aa053b214498d57a1e3c88ccef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  networkManager: {fileID: 0}
+  playerManager: {fileID: 0}
   totalNumberTasks: 4
   userId: 0
   collabType: 1
@@ -2561,6 +2563,7 @@ MonoBehaviour:
   rootPossiblePositionsForPuzzle: {fileID: 264372739}
   distractorsRoot: {fileID: 1147395697}
   angleBetween: 0
+  isRemotePlayer: 0
   currentTaskState: 0
   headerPlayer1Interaction: 'userId,currentTask,dominantPlayer,centerBoundsPosX,centerBoundsPosY,centerBoundsPosZ,centerAreaRotX,centerAreaRotY,centerAreaRotZ,headPosX,headPosY,headPosZ,headRotX,headRotY,headRotZ,rightHandPosX,rightHandPosY,rightHandPosZrightHandRotX,rightHandRotY,rightHandRotZ,leftHandPosX,leftHandPosY,leftHandPosZleftHandRotX,leftHandRotY,leftHandRotZpartId,objInteractedPosX,objInteractedPosY,objInteractedPosZ,objInteractedRotX,objInteractedRotY,objInteractedRotZ
 
