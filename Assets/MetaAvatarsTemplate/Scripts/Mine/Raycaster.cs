@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using Photon.Pun;
 
 //using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR;
@@ -107,11 +107,16 @@ public class Raycaster : MonoBehaviour
         Vector3 hitPosition = hitObj.transform.position;
         float hitDepth = transform.InverseTransformPoint(hitPosition).z;
 
-        
+        PhotonView photonView = hitObj.transform.gameObject.GetPhotonView();
+
+        if (photonView)
+        {
+            photonView.RequestOwnership();//request ownership of the object
+        }
         
         //hitObj.transform.position = transform.TransformPoint(transform.localPosition.x, transform.localPosition.y, hitDepth);
         
-
+        
         if(deviceType == DeviceType.Keyboard)
         {
             hitObj.transform.parent = this.transform;
