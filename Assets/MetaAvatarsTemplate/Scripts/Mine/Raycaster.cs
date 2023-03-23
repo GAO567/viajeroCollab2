@@ -89,6 +89,11 @@ public class Raycaster : MonoBehaviour
             //Debug.Log("Did Hit");
             Controller_mapping(hit);
 
+            Vector3 hitLocalPos = transform.InverseTransformPoint(hit.transform.position);
+
+            lineRenderer.SetPosition(0, this.gameObject.transform.TransformPoint(0, 0, 0));
+            lineRenderer.SetPosition(1, this.gameObject.transform.TransformPoint(0, 0, hitLocalPos.z));
+
         }
         else
         {
