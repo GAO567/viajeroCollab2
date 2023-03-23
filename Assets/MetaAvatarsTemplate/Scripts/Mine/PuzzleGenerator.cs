@@ -101,13 +101,22 @@ public class PuzzleGenerator : MonoBehaviour
                 view.ViewID = currentPhotonId++;
                 view.OwnershipTransfer = Photon.Pun.OwnershipOption.Takeover;
 
+               
+
+                SphereCollider coll = obj.AddComponent<SphereCollider>();
+                Rigidbody body = obj.AddComponent<Rigidbody>();
+
+                coll.isTrigger = true;
+                body.isKinematic = true;
+                body.useGravity = false;
+
                 Photon.Pun.PhotonTransformView tView = obj.AddComponent<Photon.Pun.PhotonTransformView>();
                 Photon.Pun.PhotonRigidbodyView rView = obj.AddComponent<Photon.Pun.PhotonRigidbodyView>();
                 tView.m_SynchronizeScale = true;
-               /* obj.AddComponent<Photon.Pun.PhotonTransformView>();
-                obj.GetComponent<Photon.Pun.PhotonTransformView>().m_SynchronizePosition = true;
-                obj.GetComponent<Photon.Pun.PhotonTransformView>().m_SynchronizeRotation = true;
-                obj.GetComponent<Photon.Pun.PhotonTransformView>().m_SynchronizeScale = true;*/
+                /* obj.AddComponent<Photon.Pun.PhotonTransformView>();
+                 obj.GetComponent<Photon.Pun.PhotonTransformView>().m_SynchronizePosition = true;
+                 obj.GetComponent<Photon.Pun.PhotonTransformView>().m_SynchronizeRotation = true;
+                 obj.GetComponent<Photon.Pun.PhotonTransformView>().m_SynchronizeScale = true;*/
 
                 parts.Add(obj);
             }
