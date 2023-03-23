@@ -128,7 +128,7 @@ public class WireareaDrawer : MonoBehaviour
                 if (leftBoundary)
                 {
                     leftBoundary.transform.localPosition = new Vector3(-sizeX / 2.0f, 0, 0);
-                    leftBoundary.transform.localEulerAngles = new Vector3(0, 90.0f, 0);
+                    leftBoundary.transform.localEulerAngles = new Vector3(0, -90.0f, 0);
                     leftBoundary.transform.localScale = new Vector3(sizeZ, sizeY, 0.001f);
                     leftBoundary.SetActive(true);
                 }
