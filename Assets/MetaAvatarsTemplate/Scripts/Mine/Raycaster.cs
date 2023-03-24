@@ -52,14 +52,14 @@ public class Raycaster : MonoBehaviour
         {
             controllerActive = OVRInput.Controller.RTouch;
         }
-        else
+        else if(deviceType == DeviceType.LTouch)
         {
             controllerActive = OVRInput.Controller.LTouch;
         }
 
 
         // Bit shift the index of the layer (8) to get a bit mask
-        int layerMask = 1 << 8;
+        int layerMask = 1 << 9;
         // This would cast rays only against colliders in layer 8.
         // But instead we want to collide against everything except layer 8. The ~ operator does this, it inverts a bitmask.
         //layerMask = ~layerMask;
@@ -88,7 +88,7 @@ public class Raycaster : MonoBehaviour
             Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
             //Debug.Log("Did Hit");
             Controller_mapping(hit);
-
+            print("@hit" + hit.transform.gameObject.name);
             Vector3 hitLocalPos = transform.InverseTransformPoint(hit.transform.position);
 
             lineRenderer.SetPosition(0, this.gameObject.transform.TransformPoint(0, 0, 0));
@@ -127,7 +127,7 @@ public class Raycaster : MonoBehaviour
         {
             hitObj.transform.parent = this.transform;
 
-            if (Input.GetKey(KeyCode.DownArrow))
+            if (Input.GetKey(KeyCode.Q))
             {
                 if (hitDepth > lowerThreshold)
                 {
@@ -138,7 +138,7 @@ public class Raycaster : MonoBehaviour
                     //do nothing
                 }
             }
-            else if (Input.GetKey(KeyCode.UpArrow))
+            else if (Input.GetKey(KeyCode.Z))
             {
                 if (hitDepth < upperThreshold)
                 {
