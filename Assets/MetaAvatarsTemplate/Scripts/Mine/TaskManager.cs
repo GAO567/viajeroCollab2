@@ -251,6 +251,14 @@ public class TaskManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        if (Application.isEditor)
+        {
+            print("is editor");
+        }
+        else
+        {
+            print("isNotEditor");
+        }
         if (isRemotePlayer)
             return;
 
