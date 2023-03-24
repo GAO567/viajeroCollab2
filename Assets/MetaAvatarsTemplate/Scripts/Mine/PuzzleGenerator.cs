@@ -111,7 +111,7 @@ public class PuzzleGenerator : MonoBehaviour
                 body.useGravity = false;
 
                 Photon.Pun.PhotonTransformView tView = obj.AddComponent<Photon.Pun.PhotonTransformView>();
-                Photon.Pun.PhotonRigidbodyView rView = obj.AddComponent<Photon.Pun.PhotonRigidbodyView>();
+                //Photon.Pun.PhotonRigidbodyView rView = obj.AddComponent<Photon.Pun.PhotonRigidbodyView>();
                 tView.m_SynchronizeScale = true;
                 /* obj.AddComponent<Photon.Pun.PhotonTransformView>();
                  obj.GetComponent<Photon.Pun.PhotonTransformView>().m_SynchronizePosition = true;
