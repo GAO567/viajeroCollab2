@@ -26,7 +26,7 @@ public class Countdown : MonoBehaviour
             if (timeRemaining > 0)
             {
                 timeRemaining -= Time.deltaTime;
-                
+                Debug.Log("still running!");
             }
             else
             {

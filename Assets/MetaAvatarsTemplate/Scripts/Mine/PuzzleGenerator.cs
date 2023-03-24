@@ -100,7 +100,7 @@ public class PuzzleGenerator : MonoBehaviour
                 Photon.Pun.PhotonView view = obj.AddComponent<Photon.Pun.PhotonView>();
                 view.ViewID = currentPhotonId++;
                 view.OwnershipTransfer = Photon.Pun.OwnershipOption.Takeover;
-
+                view.Synchronization = Photon.Pun.ViewSynchronization.ReliableDeltaCompressed;
                
 
                 SphereCollider coll = obj.AddComponent<SphereCollider>();
