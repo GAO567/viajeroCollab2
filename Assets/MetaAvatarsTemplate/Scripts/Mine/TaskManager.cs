@@ -117,7 +117,7 @@ public class TaskManager : MonoBehaviour
         playerNumber = number;
     }
 
-    //receive the message and set the references 
+    //receive the message and set the references for the gameobjects of the corresponding player (for log purposes) 
     public void setReference(GameObject obj)
     {
         if (playerNumber == 1)
