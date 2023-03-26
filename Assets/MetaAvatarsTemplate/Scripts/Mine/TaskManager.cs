@@ -63,15 +63,15 @@ public class TaskManager : MonoBehaviour
     public float angleBetween;
     private string dominantplayer;
 
-    GameObject headPosP1;
-    GameObject rightHandPosP1;
-    GameObject leftHandPosP1;
+    GameObject headPlayer1;
+    GameObject rightHandPlayer1;
+    GameObject leftHandPlayer1;
     GameObject transformRootForP1Blueprint;
     WireareaDrawer boundaryDrawerP1;
 
-    GameObject headPosP2;
-    GameObject leftHandPosP2;
-    GameObject rightHandPosP2;
+    GameObject headPlayer2;
+    GameObject leftHandPlayer2;
+    GameObject rightHandPlayer2;
     GameObject transformRootForP2Blueprint;
     WireareaDrawer boundaryDrawerP2;
     
@@ -109,8 +109,38 @@ public class TaskManager : MonoBehaviour
     bool outsideBoundsLastFrameP1 = false;
     private bool outsideBoundsLastFrameP2 = false;
 
+    //deals with the player number
+    int playerNumber = 0;
 
-   
+    public void setPlayerNumber(int number)
+    {
+        playerNumber = number;
+    }
+
+    //receive the message and set the references 
+    public void setReference(GameObject obj)
+    {
+        if (playerNumber == 1)
+        {
+            OVRCameraRig player1 = obj.GetComponent<OVRCameraRig>();
+            rightHandPlayer1 = player1.rightControllerAnchor.gameObject;
+            headPlayer1 = player1.centerEyeAnchor.gameObject;
+            leftHandPlayer1 = player1.leftControllerAnchor.gameObject;
+        }
+        else if (playerNumber == 2)
+        {
+            OVRCameraRig player2 = obj.GetComponent<OVRCameraRig>();
+            rightHandPlayer2 = player2.rightControllerAnchor.gameObject;
+            headPlayer2 = player2.centerEyeAnchor.gameObject;
+            leftHandPlayer2 = player2.leftControllerAnchor.gameObject;
+        }
+        else
+        {
+            //do nothing... for now
+        }
+    }
+
+
 
     void setHeaders()
     {
@@ -133,16 +163,16 @@ public class TaskManager : MonoBehaviour
 
     public void setPlayer1(GameObject headP1, GameObject rightHandP1, GameObject leftHandP1)
     {
-        headPosP1 = headP1;
-        rightHandPosP1 = rightHandP1;
-        leftHandPosP1 = leftHandP1;
+        headPlayer1 = headP1;
+        rightHandPlayer1 = rightHandP1;
+        leftHandPlayer1 = leftHandP1;
     }
 
     public void  setPlayer2(GameObject headP2, GameObject rightHandP2, GameObject leftHandP2)
     {
-        headPosP2 = headP2;
-        rightHandPosP2 = rightHandP2;
-        leftHandPosP2 = leftHandP2;
+        headPlayer2 = headP2;
+        rightHandPlayer2 = rightHandP2;
+        leftHandPlayer2 = leftHandP2;
     }
 
     public GameObject getInteractPart(string player)
@@ -192,8 +222,8 @@ public class TaskManager : MonoBehaviour
                 violatingP2 = "ViolationP2";
             }
             player1InteractionStr += userId + "," + collabType.ToString() + "," + Time.realtimeSinceStartup + "," + currentTask + "," + (dominantplayer == "P1" ? true : false) + "," + violatingP1 + ","+  Utils.vector3ToString(Player1Area.transform.position)+ "," + Utils.vector3ToString(Player1Area.transform.eulerAngles) +  ","
-                                    + Utils.vector3ToString(headPosP1.transform.position) + "," + Utils.vector3ToString(headPosP1.transform.eulerAngles) + Utils.vector3ToString(rightHandPosP1.transform.position) + "," + Utils.vector3ToString(rightHandPosP1.transform.eulerAngles) +
-                                     Utils.vector3ToString(leftHandPosP1.transform.position) + "," + Utils.vector3ToString(leftHandPosP1.transform.eulerAngles );
+                                    + Utils.vector3ToString(headPlayer1.transform.position) + "," + Utils.vector3ToString(headPlayer1.transform.eulerAngles) + Utils.vector3ToString(rightHandPlayer1.transform.position) + "," + Utils.vector3ToString(rightHandPlayer1.transform.eulerAngles) +
+                                     Utils.vector3ToString(leftHandPlayer1.transform.position) + "," + Utils.vector3ToString(leftHandPlayer1.transform.eulerAngles );
             if (player1Interacting && getInteractPart("P1"))
             {
                 player1InteractionStr += "," + Utils.vector3ToString(getInteractPart("P1").transform.position) + "," + Utils.vector3ToString(getInteractPart("P1").transform.eulerAngles) + "\n";
@@ -221,8 +251,8 @@ public class TaskManager : MonoBehaviour
 
 
             player2InteractionStr += userId + ","+ collabType.ToString() + "," + Time.realtimeSinceStartup + "," + currentTask + "," + (dominantplayer == "P2" ? true : false) + "," + violatingP2 + ","+ Utils.vector3ToString(Player2Area.transform.position) + "," + Utils.vector3ToString(Player2Area.transform.eulerAngles) + ","
-                                    + Utils.vector3ToString(headPosP2.transform.position) + "," + Utils.vector3ToString(headPosP2.transform.eulerAngles) + Utils.vector3ToString(rightHandPosP2.transform.position) + "," + Utils.vector3ToString(rightHandPosP2.transform.eulerAngles) +
-                                     Utils.vector3ToString(leftHandPosP2.transform.position) + "," + Utils.vector3ToString(leftHandPosP2.transform.eulerAngles);
+                                    + Utils.vector3ToString(headPlayer2.transform.position) + "," + Utils.vector3ToString(headPlayer2.transform.eulerAngles) + Utils.vector3ToString(rightHandPlayer2.transform.position) + "," + Utils.vector3ToString(rightHandPlayer2.transform.eulerAngles) +
+                                     Utils.vector3ToString(leftHandPlayer2.transform.position) + "," + Utils.vector3ToString(leftHandPlayer2.transform.eulerAngles);
             
             if (player2Interacting && getInteractPart("P2"))
             {
@@ -367,12 +397,12 @@ public class TaskManager : MonoBehaviour
     Vector3 calculateBoundaryViolation()
     {
         Vector3 violation = new Vector3();
-        if (headPosP1 && rightHandPosP1 && leftHandPosP1)
+        if (headPlayer1 && rightHandPlayer1 && leftHandPlayer1)
         {
             //we dont care about the Y
-            Vector3 headP1Local = Player1Area.transform.InverseTransformPoint(headPosP1.transform.position);
-            Vector3 rightHandP1Local = Player1Area.transform.InverseTransformPoint(rightHandPosP1.transform.position);
-            Vector3 leftHandP1Local = Player1Area.transform.InverseTransformPoint(leftHandPosP1.transform.position);
+            Vector3 headP1Local = Player1Area.transform.InverseTransformPoint(headPlayer1.transform.position);
+            Vector3 rightHandP1Local = Player1Area.transform.InverseTransformPoint(rightHandPlayer1.transform.position);
+            Vector3 leftHandP1Local = Player1Area.transform.InverseTransformPoint(leftHandPlayer1.transform.position);
 
             headP1Local = new Vector3(Mathf.Abs(headP1Local.x), Mathf.Abs(headP1Local.y), Mathf.Abs(headP1Local.z));
             rightHandP1Local = new Vector3(Mathf.Abs(rightHandP1Local.x), Mathf.Abs(rightHandP1Local.y), Mathf.Abs(rightHandP1Local.z));
@@ -496,12 +526,12 @@ public class TaskManager : MonoBehaviour
 
         }
 
-        if(headPosP2 && rightHandPosP2 && leftHandPosP2)
+        if(headPlayer2 && rightHandPlayer2 && leftHandPlayer2)
         {
             //we dont care about the Y
-            Vector3 headP2Local = Player1Area.transform.InverseTransformPoint(headPosP2.transform.position);
-            Vector3 rightHandP2Local = Player1Area.transform.InverseTransformPoint(rightHandPosP2.transform.position);
-            Vector3 leftHandP2Local = Player1Area.transform.InverseTransformPoint(leftHandPosP2.transform.position);
+            Vector3 headP2Local = Player1Area.transform.InverseTransformPoint(headPlayer2.transform.position);
+            Vector3 rightHandP2Local = Player1Area.transform.InverseTransformPoint(rightHandPlayer2.transform.position);
+            Vector3 leftHandP2Local = Player1Area.transform.InverseTransformPoint(leftHandPlayer2.transform.position);
 
             headP2Local = new Vector3(Mathf.Abs(headP2Local.x), Mathf.Abs(headP2Local.y), Mathf.Abs(headP2Local.z));
             rightHandP2Local = new Vector3(Mathf.Abs(rightHandP2Local.x), Mathf.Abs(rightHandP2Local.y), Mathf.Abs(rightHandP2Local.z));
@@ -723,14 +753,14 @@ public class TaskManager : MonoBehaviour
             goPlayer1.transform.localPosition = Vector3.zero;
             goPlayer1.transform.localPosition = new Vector3(-0.013f, 0.197f, 0.058f);
 
-            headPosP1 = goPlayer1;
-            rightHandPosP1 = new GameObject("rightHandP1");
-            leftHandPosP1 = new GameObject("leftHandP1");
+            headPlayer1 = goPlayer1;
+            rightHandPlayer1 = new GameObject("rightHandP1");
+            leftHandPlayer1 = new GameObject("leftHandP1");
             boundaryDrawerP1 = Player1Area.GetComponent<WireareaDrawer>();
 
             //headPosP1.transform.parent = Player1Area.transform;
-            rightHandPosP1.transform.parent = Player1Area.transform;
-            leftHandPosP1.transform.parent = Player1Area.transform;
+            rightHandPlayer1.transform.parent = Player1Area.transform;
+            leftHandPlayer1.transform.parent = Player1Area.transform;
 
             GameObject traytablePlayer1 = GameObject.CreatePrimitive(PrimitiveType.Cube);// new GameObject("TraytableP1");
             traytablePlayer1.transform.parent = Player1Area.transform;
@@ -748,14 +778,14 @@ public class TaskManager : MonoBehaviour
             goPlayer2.transform.localPosition = new Vector3(-0.013f, 0.197f, 0.058f);
             goPlayer2.transform.localEulerAngles = Vector3.zero;
 
-            headPosP2 = goPlayer2;
-            rightHandPosP2 = new GameObject("rightHandP2");
-            leftHandPosP2 = new GameObject("leftHandP2");
+            headPlayer2 = goPlayer2;
+            rightHandPlayer2 = new GameObject("rightHandP2");
+            leftHandPlayer2 = new GameObject("leftHandP2");
             boundaryDrawerP2 = Player2Area.GetComponent<WireareaDrawer>();
 
             //headPosP1.transform.parent = Player1Area.transform;
-            rightHandPosP2.transform.parent = Player2Area.transform;
-            leftHandPosP2.transform.parent = Player2Area.transform;
+            rightHandPlayer2.transform.parent = Player2Area.transform;
+            leftHandPlayer2.transform.parent = Player2Area.transform;
 
             if (collabType != CollabType.FaceToFaceNoIntersect || collabType != CollabType.CoupledView) { 
                 GameObject traytablePlayer2 = GameObject.CreatePrimitive(PrimitiveType.Cube);
