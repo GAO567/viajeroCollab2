@@ -9,6 +9,13 @@ public class Countdown : MonoBehaviour
     float timeToStartScene = 10.0f;
     [SerializeField]
     float timeRemaining = 10.0f;
+
+    [SerializeField]
+    int id = 0;
+
+    [SerializeField]
+    CollabType collabType = CollabType.FacetoFaceIntersect;
+
     bool timerIsRunning = false;
 
     // Start is called before the first frame update
