@@ -126,6 +126,8 @@ public class TaskManager : MonoBehaviour
             rightHandPlayer1 = player1.rightControllerAnchor.gameObject;
             headPlayer1 = player1.centerEyeAnchor.gameObject;
             leftHandPlayer1 = player1.leftControllerAnchor.gameObject;
+
+            currentTaskState = TaskState.Connected;
         }
         else if (playerNumber == 2)
         {
@@ -133,6 +135,8 @@ public class TaskManager : MonoBehaviour
             rightHandPlayer2 = player2.rightControllerAnchor.gameObject;
             headPlayer2 = player2.centerEyeAnchor.gameObject;
             leftHandPlayer2 = player2.leftControllerAnchor.gameObject;
+
+            currentTaskState = TaskState.BothConnected;
         }
         else
         {

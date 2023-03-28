@@ -4800,7 +4800,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   numberPieces: 12
   numberDistractors: 15
-  dominantPlayerPos: {fileID: 0}
+  dominantPlayerPos: {fileID: 1945103287}
   mat: {fileID: 2100000, guid: a6e9117b930b55f4d88fa084f3c56817, type: 2}
   rootForObjects: {fileID: 1921555860}
 --- !u!1001 &1948101207
