@@ -12,7 +12,7 @@ namespace Chiligames.MetaAvatarsPun
         [SerializeField] StreamLOD streamLOD = StreamLOD.Medium;
         private PhotonView _photonView;
         [SerializeField] List<byte[]> _streamedDataArray = new List<byte[]>();
-
+        [SerializeField] bool useGenericAvatar = false;
         private int _maxBytesToLog = 5;
 
         [SerializeField] float _intervalToSendData = 0.08f;
@@ -204,6 +204,11 @@ namespace Chiligames.MetaAvatarsPun
             if (!HasLocalAvatarConfigured)
             {
                 Debug.Log("No local avatar asset configured");
+                return;
+            }
+
+            if (useGenericAvatar)
+            {
                 return;
             }
 

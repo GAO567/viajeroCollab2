@@ -4608,7 +4608,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 6309347111229875065, guid: 36fe8a8f59c319242b24f5eba959eb8d, type: 3}
       propertyPath: m_Name
-      value: FaceToFaceIntersect (1)
+      value: RootAreas
       objectReference: {fileID: 0}
     - target: {fileID: 6309347111229875065, guid: 36fe8a8f59c319242b24f5eba959eb8d, type: 3}
       propertyPath: m_IsActive

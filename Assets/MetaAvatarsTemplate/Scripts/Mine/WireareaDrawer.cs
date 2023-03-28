@@ -33,7 +33,7 @@ public class WireareaDrawer : MonoBehaviour
     {
         if (lineRenderer)
             lineRenderer.positionCount = 8;// (16);
-        taskManager = GameObject.Find("TaskManager").GetComponent<TaskManager>();
+        taskManager = GameObject.Find("RootAreas").GetComponent<TaskManager>();
         
     }
 
