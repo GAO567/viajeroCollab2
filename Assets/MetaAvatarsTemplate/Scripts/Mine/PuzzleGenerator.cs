@@ -71,7 +71,8 @@ public class PuzzleGenerator : MonoBehaviour
         { 
             for(int i = 0; i < numberPieces; i++)
             {
-                GameObject obj = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                GameObject obj = Photon.Pun.PhotonNetwork.Instantiate("Distractor", new Vector3(), new Quaternion());
+                    //GameObject.CreatePrimitive(PrimitiveType.Cube);
                 obj.GetComponent<MeshRenderer>().material = mat;
                 obj.GetComponent<MeshRenderer>().material.color = new Color(0.0f, 0.0f, 1.0f);
                 obj.transform.localScale = new Vector3(0.06f, 0.06f, 0.06f);
@@ -90,9 +91,9 @@ public class PuzzleGenerator : MonoBehaviour
         if (generate) { 
             for (int i=0;i< numberDistractors; i++)
             {
-                GameObject obj = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                GameObject obj = Photon.Pun.PhotonNetwork.Instantiate("DistractorSphere", new Vector3(), new Quaternion());
                 //obj.AddComponent<M>().color = new Color(1.0f, 0.0f, 0.0f);
-                obj.GetComponent<MeshRenderer>().material.color = new Color(1.0f, 0.0f, 0.0f);
+                //obj.GetComponent<MeshRenderer>().material.color = new Color(1.0f, 0.0f, 0.0f);
                 obj.transform.localScale = new Vector3(0.06f, 0.06f, 0.06f);
                 obj.name = "distractor" + i;
                 obj.transform.parent = distractorRoot.transform;
@@ -171,7 +172,7 @@ public class PuzzleGenerator : MonoBehaviour
         for(int i = 0; i < (numberDistractors + numberPieces); i += 3)
         {
              
-        }*/
+        }*///Photon.Pun.PhotonNetwork.
 
 
         float piecesPerQuadrant = (numberPieces + numberDistractors) / 3.0f;
