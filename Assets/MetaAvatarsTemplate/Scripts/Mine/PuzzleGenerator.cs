@@ -91,25 +91,25 @@ public class PuzzleGenerator : MonoBehaviour
         if (generate) { 
             for (int i=0;i< numberDistractors; i++)
             {
-                GameObject obj = Photon.Pun.PhotonNetwork.Instantiate("DistractorSphere", new Vector3(), new Quaternion());
+                GameObject obj = Photon.Pun.PhotonNetwork.Instantiate("DistractorCube", new Vector3(), new Quaternion());
                 //obj.AddComponent<M>().color = new Color(1.0f, 0.0f, 0.0f);
                 //obj.GetComponent<MeshRenderer>().material.color = new Color(1.0f, 0.0f, 0.0f);
                 obj.transform.localScale = new Vector3(0.06f, 0.06f, 0.06f);
                 obj.name = "distractor" + i;
                 obj.transform.parent = distractorRoot.transform;
 
-                Photon.Pun.PhotonView view = obj.AddComponent<Photon.Pun.PhotonView>();
+                Photon.Pun.PhotonView view = obj.GetComponent<Photon.Pun.PhotonView>();
                 view.ViewID = currentPhotonId++;
                 view.OwnershipTransfer = Photon.Pun.OwnershipOption.Takeover;
                 view.Synchronization = Photon.Pun.ViewSynchronization.ReliableDeltaCompressed;
                
 
-                SphereCollider coll = obj.AddComponent<SphereCollider>();
+                /*SphereCollider coll = obj.AddComponent<SphereCollider>();
                 Rigidbody body = obj.AddComponent<Rigidbody>();
 
                 coll.isTrigger = true;
                 body.isKinematic = true;
-                body.useGravity = false;
+                body.useGravity = false;*/
 
                 Photon.Pun.PhotonTransformView tView = obj.AddComponent<Photon.Pun.PhotonTransformView>();
                 //Photon.Pun.PhotonRigidbodyView rView = obj.AddComponent<Photon.Pun.PhotonRigidbodyView>();
@@ -265,14 +265,15 @@ public class PuzzleGenerator : MonoBehaviour
 
                 Material mat = rootForObjects.transform.GetChild(i).gameObject.GetComponent<MeshRenderer>().material;
                 mat.color = new Color(1,1,1,0.3f);
+                string str = rootForObjects.transform.GetChild(i).gameObject.name + "_root";
 
-                GameObject duplicate = GameObject.Instantiate(rootForObjects.transform.GetChild(i).gameObject);
-
-                mat = duplicate.GetComponent<MeshRenderer>().material;
-                mat.color = new Color(1, 1, 1, 1.0f);
+                GameObject duplicate = Photon.Pun.PhotonNetwork.Instantiate(str, new Vector3(), Quaternion.identity); //.Instantiate(rootForObjects.transform.GetChild(i).gameObject);
+                
+                //mat = duplicate.GetComponent<MeshRenderer>().material;
+                //mat.color = new Color(1, 1, 1, 1.0f);
                 duplicate.transform.parent = obj.transform;
-                duplicate.AddComponent<Photon.Pun.PhotonView>().ViewID = currentPhotonId++;
-
+                //duplicate.AddComponent<Photon.Pun.PhotonView>().ViewID = currentPhotonId++;
+                /*
                 Photon.Pun.PhotonView view = duplicate.GetComponent<Photon.Pun.PhotonView>();
                 Photon.Pun.PhotonTransformView tView = duplicate.AddComponent<Photon.Pun.PhotonTransformView>();
                 tView.m_SynchronizeScale = true;
@@ -285,7 +286,7 @@ public class PuzzleGenerator : MonoBehaviour
                 tView = rootForObjects.transform.GetChild(i).gameObject.AddComponent<Photon.Pun.PhotonTransformView>();
                 tView.m_SynchronizeScale = true;
                 
-                view.ViewID = currentPhotonId++;
+                view.ViewID = currentPhotonId++;*/
                 parts.Add(duplicate);
                 
 
