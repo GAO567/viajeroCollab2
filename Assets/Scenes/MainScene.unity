@@ -3895,7 +3895,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 2c5bdb8651f49e94a9afa14c5d374f19, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5615,6 +5615,10 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: 0.243
       objectReference: {fileID: 0}
+    - target: {fileID: 6309347109429214439, guid: 36fe8a8f59c319242b24f5eba959eb8d, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: f0e40fc865770de4cb1577c051163a9d, type: 2}
     - target: {fileID: 6309347109449812290, guid: 36fe8a8f59c319242b24f5eba959eb8d, type: 3}
       propertyPath: m_Name
       value: Area1Center
