@@ -5830,8 +5830,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 900937aa053b214498d57a1e3c88ccef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  networkManager: {fileID: 0}
-  playerManager: {fileID: 0}
+  networkManager: {fileID: 687736363}
+  playerManager: {fileID: 1310519769}
   totalNumberTasks: 4
   userId: 0
   collabType: 1
