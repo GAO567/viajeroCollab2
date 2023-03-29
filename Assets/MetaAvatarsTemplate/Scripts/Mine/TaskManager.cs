@@ -120,6 +120,7 @@ public class TaskManager : MonoBehaviour
     //receive the message and set the references for the gameobjects of the corresponding player (for log purposes) 
     public void setReference(GameObject obj)
     {
+        print("Player Number" + playerNumber);
         if (playerNumber == 1)
         {
             OVRCameraRig player1 = obj.GetComponent<OVRCameraRig>();
@@ -128,13 +129,44 @@ public class TaskManager : MonoBehaviour
             leftHandPlayer1 = player1.leftControllerAnchor.gameObject;
 
             currentTaskState = TaskState.Connected;
+            
         }
         else if (playerNumber == 2)
         {
+            if(obj.name == "RemoteAvatar")
+            {
+                for(int i = 0; i < obj.transform.childCount; i++)
+                {
+                    /*
+                     *   Joint Head
+                     *   Joint RightHandIndexProximal
+                     *   Joint LeftHandIndexProximal
+                     *   Joint Chest
+                     *   Joint LeftHandWrist
+                     *   Joint RightHandWrist
+                     * 
+                     * 
+                     */
+                    GameObject child = obj.transform.GetChild(i).gameObject;
+                    if(child.name == "Joint Head")
+                    {
+                        headPlayer2 = child;
+                    }
+                    else if(child.name == "Joint RightHandWrist")
+                    {
+                        rightHandPlayer2 = child;
+                    }
+                    else if (child.name == "Joint LeftHandWrist")
+                    {
+                        leftHandPlayer2 = child;
+                    }
+                }
+            }
+            /*
             OVRCameraRig player2 = obj.GetComponent<OVRCameraRig>();
             rightHandPlayer2 = player2.rightControllerAnchor.gameObject;
             headPlayer2 = player2.centerEyeAnchor.gameObject;
-            leftHandPlayer2 = player2.leftControllerAnchor.gameObject;
+            leftHandPlayer2 = player2.leftControllerAnchor.gameObject;*/
 
             currentTaskState = TaskState.BothConnected;
         }
@@ -323,6 +355,27 @@ public class TaskManager : MonoBehaviour
     {
         if (isRemotePlayer)
             return;
+
+        if(currentTaskState == TaskState.Connected)
+        {
+            if (GameObject.Find("RemoteAvatar"))
+            {
+                print("RemoteAvatar");
+            }
+            if (Player2Area)
+            {
+                GameObject spawnPointRemotePlayer = GameObject.Find("RemoteAvatar");
+                if (spawnPointRemotePlayer)
+                {
+                    playerNumber = 2;
+                    setReference(spawnPointRemotePlayer);
+                        print("COME OVER HERE");
+                        currentTaskState = TaskState.BothConnected;
+                }
+            }
+            
+        }
+        //if(Player2Area)
         //calculateAngle();
 
         if(Input.GetKeyDown(KeyCode.S) && !taskStarted)
@@ -752,31 +805,36 @@ public class TaskManager : MonoBehaviour
                 Player2Area.transform.localEulerAngles = new Vector3(0, 0, 0);
             }
 
-            GameObject goPlayer1 = new GameObject("Player1Head");
+            /*GameObject goPlayer1 = new GameObject("Player1Head");
             goPlayer1.transform.parent = Player1Area.transform;
             goPlayer1.transform.localPosition = Vector3.zero;
             goPlayer1.transform.localPosition = new Vector3(-0.013f, 0.197f, 0.058f);
 
             headPlayer1 = goPlayer1;
             rightHandPlayer1 = new GameObject("rightHandP1");
-            leftHandPlayer1 = new GameObject("leftHandP1");
+            leftHandPlayer1 = new GameObject("leftHandP1");*/
             boundaryDrawerP1 = Player1Area.GetComponent<WireareaDrawer>();
 
             //headPosP1.transform.parent = Player1Area.transform;
-            rightHandPlayer1.transform.parent = Player1Area.transform;
-            leftHandPlayer1.transform.parent = Player1Area.transform;
+            //rightHandPlayer1.transform.parent = Player1Area.transform;
+            //leftHandPlayer1.transform.parent = Player1Area.transform;
 
-            GameObject traytablePlayer1 = GameObject.CreatePrimitive(PrimitiveType.Cube);// new GameObject("TraytableP1");
+            GameObject traytablePlayer1 = GameObject.Find("traytableP1");// new GameObject("TraytableP1");
             traytablePlayer1.transform.parent = Player1Area.transform;
             traytablePlayer1.transform.localPosition = new Vector3(0.003f, -0.137f, 0.243f);
             traytablePlayer1.transform.localScale = new Vector3(0.5137f, 0.019f, 0.29f);
             traytablePlayer1.name = "TraytableP1";
-            GameObject rootObjForPuzzlesP1 = new GameObject("rootForObjsP1");
+            //traytablePlayer1.AddComponent<Photon.Pun.PhotonView>();
+            
+            //Photon.Pun.PhotonTransformView pt =  traytablePlayer1.AddComponent<Photon.Pun.PhotonTransformView>();
+            //pt.m_SynchronizeScale = true;
+            //pt.m_UseLocal = false;
+            GameObject rootObjForPuzzlesP1 = GameObject.Find("rootForObjsP1");
             rootObjForPuzzlesP1.transform.parent = Player1Area.transform;
             rootObjForPuzzlesP1.transform.localPosition = new Vector3(-0.243f, -0.095f , 0.104f);
             this.transformRootForP1Blueprint = rootObjForPuzzlesP1; 
 
-            GameObject goPlayer2 = new GameObject("Player2Head");
+            /*GameObject goPlayer2 = new GameObject("Player2Head");
             goPlayer2.transform.parent = Player2Area.transform;
             goPlayer2.transform.localPosition = Vector3.zero;
             goPlayer2.transform.localPosition = new Vector3(-0.013f, 0.197f, 0.058f);
@@ -784,22 +842,26 @@ public class TaskManager : MonoBehaviour
 
             headPlayer2 = goPlayer2;
             rightHandPlayer2 = new GameObject("rightHandP2");
-            leftHandPlayer2 = new GameObject("leftHandP2");
+            leftHandPlayer2 = new GameObject("leftHandP2");*/
             boundaryDrawerP2 = Player2Area.GetComponent<WireareaDrawer>();
 
             //headPosP1.transform.parent = Player1Area.transform;
-            rightHandPlayer2.transform.parent = Player2Area.transform;
-            leftHandPlayer2.transform.parent = Player2Area.transform;
+            //rightHandPlayer2.transform.parent = Player2Area.transform;
+            //leftHandPlayer2.transform.parent = Player2Area.transform;
 
-            if (collabType != CollabType.FaceToFaceNoIntersect || collabType != CollabType.CoupledView) { 
-                GameObject traytablePlayer2 = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            if (collabType != CollabType.FaceToFaceNoIntersect || collabType != CollabType.CoupledView) {
+                GameObject traytablePlayer2 = GameObject.Find("traytableP2");// CreatePrimitive(PrimitiveType.Cube);
                 traytablePlayer2.transform.name = "TraytableP2";
                 traytablePlayer2.transform.parent = Player2Area.transform;
                 traytablePlayer2.transform.localEulerAngles = Vector3.zero;
                 traytablePlayer2.transform.localPosition = new Vector3(0.003f, -0.137f, 0.243f);
                 traytablePlayer2.transform.localScale = new Vector3(0.5137f, 0.019f, 0.29f);
+                traytablePlayer2.AddComponent<Photon.Pun.PhotonView>();
+                //Photon.Pun.PhotonTransformView pt2 = traytablePlayer2.AddComponent<Photon.Pun.PhotonTransformView>();
+                //pt2.m_SynchronizeScale = true;
+                //pt2.m_UseLocal = false;
             }
-            GameObject rootObjForPuzzlesP2 = new GameObject("rootForObjsP2");
+            GameObject rootObjForPuzzlesP2 = GameObject.Find("rootForObjsP2");
             rootObjForPuzzlesP2.transform.parent = Player2Area.transform;
             rootObjForPuzzlesP2.transform.localPosition = new Vector3(-0.243f, -0.095f, 0.104f);
             rootObjForPuzzlesP2.transform.localEulerAngles = Vector3.zero;
