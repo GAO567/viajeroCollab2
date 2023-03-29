@@ -129,7 +129,8 @@ public class TaskManager : MonoBehaviour
             leftHandPlayer1 = player1.leftControllerAnchor.gameObject;
 
             currentTaskState = TaskState.Connected;
-            
+            //Photon.Pun.PhotonNetwork.Instantiate("DistractorCube", new Vector3(1, 0, 0), Quaternion.identity);
+
         }
         else if (playerNumber == 2)
         {
@@ -317,6 +318,8 @@ public class TaskManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
+        
         if (Application.isEditor)
         {
             print("is editor");
