@@ -99,7 +99,7 @@ public class TaskManager : MonoBehaviour
     public string player1InteractionStr = "";
     private string player2InteractionStr;
 
-    string strAccuracy = "UserId,currentTask,collaborationType,NameBlueprintObj,"+ Utils.vecNameToString("blueprintPos") + ",NameUserPlacedObj," + Utils.vecNameToString("UserPlacedPos") + "," + 
+    string logTaskAccuracy = "UserId,currentTask,collaborationType,NameBlueprintObj,"+ Utils.vecNameToString("blueprintPos") + ",NameUserPlacedObj," + Utils.vecNameToString("UserPlacedPos") + "," + 
         "AbsoluteDistance," + Utils.vecNameToString("RelativeDistance");
 
     Dictionary<Bodypart, BoundaryViolation> listActiveViolations = new Dictionary<Bodypart, BoundaryViolation>();
@@ -728,7 +728,7 @@ public class TaskManager : MonoBehaviour
             {
                 float distanceBetweenBlueprintAndUserPlacedObject = Vector3.Distance(blueprintObjects[i].transform.position, obj.transform.position);
                 Vector3 distanceByAxis = obj.transform.position - blueprintObjects[i].transform.position;
-                strAccuracy += userId + "," + currentTask + "," + collabType + "," + blueprintObjects[i].name + ","+ Utils.vector3ToString(blueprintObjects[i].transform.position) + "," 
+                logTaskAccuracy += userId + "," + currentTask + "," + collabType + "," + blueprintObjects[i].name + ","+ Utils.vector3ToString(blueprintObjects[i].transform.position) + "," 
                     +obj.name + Utils.vector3ToString(obj.transform.position) + ","+ obj.name + "," + Utils.vector3ToString(distanceByAxis) + "," + distanceBetweenBlueprintAndUserPlacedObject + "\n" ;
             }
         }
@@ -949,7 +949,9 @@ public class TaskManager : MonoBehaviour
                 file.Write(logTaskStr);
                 file.Close();*/
             }
-    }
+
+            System.IO.File.WriteAllText(pathDirectory + "TaskReportAccuracy_" + collabType.ToString() + ".csv", logTaskAccuracy);
+        }
     
 
             //System.IO.File.WriteAllText(pathDirectory + "test.txt", logTaskStr);
