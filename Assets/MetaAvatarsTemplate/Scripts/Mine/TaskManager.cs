@@ -719,6 +719,18 @@ public class TaskManager : MonoBehaviour
         currentTask++;
         if (currentTask > totalNumberTasks)
             return;
+        string str = "";
+        for(int i = 0;i < blueprintObjects.Count; i++)
+        {
+            GameObject obj = GameObject.Find(blueprintObjects[i].name+"_root");
+            if (obj)
+            {
+                float distanceBetweenBlueprintAndUserPlacedObject = Vector3.Distance(blueprintObjects[i].transform.position, obj.transform.position);
+                Vector3 distanceByAxis = obj.transform.position - blueprintObjects[i].transform.position;
+                str += blueprintObjects[i].name + ","+ Utils.vector3ToString(blueprintObjects[i].transform.position) + "," +obj.name + Utils.vector3ToString(obj.transform.position)
+                    + ","+ obj.name + "," + Utils.vector3ToString(distanceByAxis) + "," + distanceBetweenBlueprintAndUserPlacedObject + "\n" ;
+            }
+        }
 
         currentTaskLog.setTaskEndTime(Time.realtimeSinceStartup);
         logTasks.Add(currentTaskLog);
@@ -923,7 +935,7 @@ public class TaskManager : MonoBehaviour
               }
         else
             {
-                System.IO.File.AppendAllText(pathDirectory + "TaskReport_" + collabType.ToString() + ".csv", logTaskStr);
+                //System.IO.File.AppendAllText(pathDirectory + "TaskReport_" + collabType.ToString() + ".csv", logTaskStr);
 
                 int i = 0;
                 while (File.Exists(pathDirectory + "TaskReport_" + collabType.ToString() + i + ".csv"))
@@ -931,7 +943,7 @@ public class TaskManager : MonoBehaviour
                     i++;
                 }
                 //logTaskStr += "#TaskTotalTime=" + (endTime - startTime);
-                System.IO.File.WriteAllText(pathDirectory + "TaskReport_" + collabType.ToString() + ".csv", logTaskStr);
+                System.IO.File.WriteAllText(pathDirectory + "TaskReport_" + collabType.ToString() + i+".csv", logTaskStr);
                 /*System.IO.StreamWriter file = new System.IO.StreamWriter(pathDirectory + "TaskReport_0.csv");
                 file.Write(logTaskStr);
                 file.Close();*/
