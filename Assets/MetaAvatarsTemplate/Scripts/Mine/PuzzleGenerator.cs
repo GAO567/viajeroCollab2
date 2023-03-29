@@ -37,7 +37,7 @@ public class PuzzleGenerator : MonoBehaviour
     [SerializeField]
     GameObject rootForObjects;
 
-    List<GameObject> objs = new List<GameObject>();
+    List<GameObject> blueprintObjs = new List<GameObject>();
 
     int currentPhotonId = 200;
 
@@ -58,7 +58,7 @@ public class PuzzleGenerator : MonoBehaviour
     }
 
 
-    public void generatePuzzle(bool usePrimitives,bool generate,GameObject headObj)
+    public List<GameObject> generatePuzzle(bool usePrimitives,bool generate,GameObject headObj)
     {
         GameObject partsRoot = new GameObject("partsRoot");
         GameObject distractorRoot = GameObject.Find("distractorRoot");
@@ -226,13 +226,14 @@ public class PuzzleGenerator : MonoBehaviour
 
             countIndexArray++;
         }
-
+       
         Destroy(objAux);
+        return sortedParts;
     }
 
 
 
-    public void generateBlueprint(Vector3 offset, int width,int height, int depth, float sizeCube, GameObject root)
+    public List<GameObject> generateBlueprint(Vector3 offset, int width,int height, int depth, float sizeCube, GameObject root)
     {
         GameObject obj = GameObject.Find("rootObjects");
         bool jaTavaCriado = false;
@@ -261,7 +262,7 @@ public class PuzzleGenerator : MonoBehaviour
 
             for(int i = 0; i < rootForObjects.transform.childCount; i++)
             {
-                objs.Add(rootForObjects.transform.GetChild(i).gameObject);
+                blueprintObjs.Add(rootForObjects.transform.GetChild(i).gameObject);
 
                 Material mat = rootForObjects.transform.GetChild(i).gameObject.GetComponent<MeshRenderer>().material;
                 mat.color = new Color(1,1,1,0.3f);
@@ -335,10 +336,12 @@ public class PuzzleGenerator : MonoBehaviour
         int a = 0;
         for(int i = 0; i < array.Length; i++)
         {
-            a = i % objs.Count;
-            objs[a].transform.localPosition = array[i];
+            a = i % blueprintObjs.Count;
+            blueprintObjs[a].transform.localPosition = array[i];
             a++;
         }
+
+        return blueprintObjs;
     }
 
     // Update is called once per frame

@@ -240,8 +240,8 @@ public class TaskManager : MonoBehaviour
         }
 
         currentTaskLog = new TaskLog(userId, 0, "P1", currentTask.ToString(), Player1Area.transform, collabType, boundsSize);
-        generator.generateBlueprint(new Vector3(0, 0, 0), 6, 4, 3, 0.09f, transformRootForP1Blueprint);
-        generator.generatePuzzle(false, true, Player1Area);
+        blueprintObjects = generator.generateBlueprint(new Vector3(0, 0, 0), 6, 4, 3, 0.09f, transformRootForP1Blueprint);
+        listPossiblePositionsForPuzzle =  generator.generatePuzzle(false, true, Player1Area);
         taskStarted = true;
     }
     
@@ -753,8 +753,8 @@ public class TaskManager : MonoBehaviour
         }
 
         
-        generator.generateBlueprint(new Vector3(0, 0, 0), 6, 4, 3, 0.09f, dominantRootPuzzle);
-        generator.generatePuzzle(false, false, dominantArea);
+        blueprintObjects = generator.generateBlueprint(new Vector3(0, 0, 0), 6, 4, 3, 0.09f, dominantRootPuzzle);
+        listPossiblePositionsForPuzzle = generator.generatePuzzle(false, false, dominantArea);
 
         currentTaskLog = new TaskLog(userId,0, dominantplayer, currentTask.ToString(), Player1Area.transform, collabType, boundsSize);
         
