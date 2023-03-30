@@ -75,10 +75,11 @@ namespace Chiligames.MetaAvatarsPun
                 //OVRCameraRig.transform.parent = spawnPoints[PhotonNetwork.LocalPlayer.ActorNumber - 1].transform;
                 //OVRCameraRig.transform.localPosition = Vector3.zero;
                 //OVRCameraRig.transform.localRotation = Quaternion.identity;
-                OVRCameraRig.transform.position = spawnPoints[PhotonNetwork.LocalPlayer.ActorNumber - 1].transform.position;
-                OVRCameraRig.transform.rotation = spawnPoints[PhotonNetwork.LocalPlayer.ActorNumber - 1].transform.rotation;
+                //OVRCameraRig.transform.position = spawnPoints[PhotonNetwork.LocalPlayer.ActorNumber - 1].transform.position;
+                //OVRCameraRig.transform.rotation = spawnPoints[PhotonNetwork.LocalPlayer.ActorNumber - 1].transform.rotation;
                 OVRCameraRig.transform.parent = spawnPoints[PhotonNetwork.LocalPlayer.ActorNumber - 1].transform;
-
+                OVRCameraRig.transform.localPosition = Vector3.zero;
+                OVRCameraRig.transform.localRotation = Quaternion.identity;
                 spawnPoints[PhotonNetwork.LocalPlayer.ActorNumber - 1].gameObject.SendMessageUpwards("setPlayerNumber", PhotonNetwork.LocalPlayer.ActorNumber);
                 spawnPoints[PhotonNetwork.LocalPlayer.ActorNumber - 1].gameObject.SendMessageUpwards("setReference", OVRCameraRig.gameObject);
                 print("@@@ ACTOR NUMBER = " + PhotonNetwork.LocalPlayer.ActorNumber);
