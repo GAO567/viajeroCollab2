@@ -219,7 +219,7 @@ public class PuzzleGenerator : MonoBehaviour
         for(float f = -135;  f < 135.0f ; f += angleIncrement)
         {
             objAux.transform.localEulerAngles = new Vector3(0, f + initialAngle, 0);
-            print("countIndexArray" + countIndexArray);
+            //print("countIndexArray" + countIndexArray);
             GameObject obj = sortedParts[countIndexArray];// parts[auxIndex[countIndexArray]];
 
             obj.transform.position = objAux.transform.TransformPoint(new Vector3(UnityEngine.Random.Range(0.1f,0.2f), UnityEngine.Random.Range(0.0f, 0.25f), UnityEngine.Random.Range(1.3f,2.0f)));//generate y according to proxemics and z randomly
@@ -309,14 +309,18 @@ public class PuzzleGenerator : MonoBehaviour
         List<int> auxIndex = new List<int>();
         var random = new System.Random();
         Vector3[] array = new Vector3[width * height * depth];
+        GridCell[] arrayCells = new GridCell[width * height * depth];
         for(int i = 0; i < width; i++)
         {
             for(int j = 0; j < height; j++)
             {
                 for(int z = 0; z < depth; z++)
                 {
-                    array[i* height*depth + j * depth + z] = new Vector3((sizeCube / 2.0f) + (sizeCube * i), (sizeCube / 2.0f) + (sizeCube * j), (sizeCube / 2.0f) + (sizeCube * z));
+                    Vector3 auxVec3 = Vector3.zero;
+                    array[i* height*depth + j * depth + z] = auxVec3 = new Vector3((sizeCube / 2.0f) + (sizeCube * i), (sizeCube / 2.0f) + (sizeCube * j), (sizeCube / 2.0f) + (sizeCube * z));
+                    arrayCells[i * height * depth + j * depth + z] = new GridCell(i, j, z, width, height, depth, auxVec3);
                     array[i * height * depth + j * depth + z] += offset;
+                    arrayCells[i * height * depth + j * depth + z].pos += offset;
                     auxIndex.Add(i * height * depth + j * depth + z); 
                 }
                 /*
@@ -326,23 +330,73 @@ public class PuzzleGenerator : MonoBehaviour
             }
         }
         auxIndex = auxIndex.OrderBy(x => random.Next()).ToList();
-        Vector3[] auxList = array;
+        //Vector3[] auxList = array;
+        //GridCell[] auxListCells = arrayCells;
 
-        for(int i = 0; i < array.Length; i++)
+        /*for(int i = 0; i < arrayCells.Length; i++)
         {
-            array[i] = auxList[auxIndex[i]]; 
-        }
+            array[i] = auxList[auxIndex[i]];
+            arrayCells[i] = auxListCells[auxIndex[i]];
+        }*/
 
         int a = 0;
-        for(int i = 0; i < array.Length; i++)
+        Dictionary<int, List<GridCell>> dictionaryPerDepth = new Dictionary<int, List<GridCell>>();
+        for(int i = 0; i < blueprintObjs.Count; i++)
         {
-            a = i % blueprintObjs.Count;
-            blueprintObjs[a].transform.localPosition = array[i];
-            a++;
+            blueprintObjs[i].transform.localPosition = arrayCells[auxIndex[i]].pos;
+            arrayCells[auxIndex[i]].filled = true;
+            int myHeight = arrayCells[auxIndex[i]].z;
+            if (dictionaryPerDepth.ContainsKey(myHeight))
+            {
+                dictionaryPerDepth[myHeight].Add(arrayCells[auxIndex[i]]);
+            }
+            else
+            {
+                dictionaryPerDepth[myHeight] = new List<GridCell>();
+                dictionaryPerDepth[myHeight].Add(arrayCells[auxIndex[i]]);
+            }
         }
+
+        List<GridCell> positionsBlueprint = new List<GridCell>();
+        int changesCount = 0;
+        for(int i = 0; i < depth; i++)
+        {
+            for(int j = 0; j < dictionaryPerDepth[i].Count;j++)
+            {
+                GridCell cell = dictionaryPerDepth[i][j];
+                GridCell auxCell = Utils.nextAvailableCellInPuzzleGrid(arrayCells, cell); 
+                if(cell.id != auxCell.id)
+                {
+                    cell.filled = false;
+                    auxCell.filled = true;
+                    positionsBlueprint.Add(auxCell);
+                    dictionaryPerDepth[i].Remove(cell);
+                    dictionaryPerDepth[auxCell.z].Add(auxCell);
+                    changesCount++;
+                    print("cell " + cell.id + "="+ cell.pos.ToString() + ", " + "aux Cell " + auxCell.id + "" + auxCell.pos.ToString());
+                }
+                else
+                {
+                    positionsBlueprint.Add(cell);
+                }
+            }
+        }
+
+        for(int i = 0; i < positionsBlueprint.Count; i++)
+        {
+            blueprintObjs[i].transform.localPosition = positionsBlueprint[i].pos;
+        }
+
+        
 
         return blueprintObjs;
     }
+
+    int convertFrom3DToSingleIndex(int x, int y, int z,int width, int height, int depth)
+    {
+        return x * height * depth + y * depth + z;
+    }
+
 
     // Update is called once per frame
     void Update()

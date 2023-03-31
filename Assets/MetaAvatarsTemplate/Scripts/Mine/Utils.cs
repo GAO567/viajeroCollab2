@@ -164,4 +164,104 @@ public static class Utils
         return Math.Log((targetsDistance / targetWidth + 1), 2);
     }
 
+
+    public static GridCell nextAvailableCellInPuzzleGrid(GridCell[] arrayCells,GridCell currentCell)
+    {
+        GridCell aux = currentCell;
+
+        
+            int index = currentCell.x * currentCell.height * currentCell.depth + currentCell.y * currentCell.depth + currentCell.z;
+            int indexFront = -1;// currentCell.x * currentCell.height * currentCell.depth + currentCell.y * currentCell.depth + (currentCell.z+1);
+            int indexBack = -1;
+            int indexRight = -1;
+            int indexLeft = -1;
+        int indexUp = -1;
+        int indexDown = -1;
+
+            if(currentCell.z < (currentCell.depth - 1))
+            {
+                indexFront = currentCell.x * currentCell.height * currentCell.depth + currentCell.y * currentCell.depth + (currentCell.z + 1);
+            }
+            if(currentCell.z > 0)
+            {
+                indexBack = currentCell.x * currentCell.height * currentCell.depth + currentCell.y * currentCell.depth + (currentCell.z - 1);
+            }
+            if(currentCell.x > 0)
+            {
+                indexLeft = (currentCell.x -1)* currentCell.height * currentCell.depth + currentCell.y * currentCell.depth + (currentCell.z);
+            }
+            if(currentCell.x < (currentCell.width-1))
+            {
+                indexRight = (currentCell.x +1)* currentCell.height * currentCell.depth + currentCell.y * currentCell.depth + (currentCell.z);
+            }
+
+        if (currentCell.y > 0)
+        {
+            indexDown = (currentCell.x) * currentCell.height * currentCell.depth + (currentCell.y -1) * currentCell.depth + (currentCell.z);
+        }
+        if (currentCell.y < (currentCell.height - 1))
+        {
+            indexUp = (currentCell.x) * currentCell.height * currentCell.depth + (currentCell.y +1)* currentCell.depth + (currentCell.z);
+        }
+
+
+        if (indexFront == -1)
+        {
+            //there is nothing in the front
+            return currentCell;
+        }
+        else
+        {
+            if(arrayCells[indexFront] != null)
+            {
+                if(arrayCells[indexFront].filled == true)
+                {
+                    if (indexRight > -1)
+                    {
+                        if (!arrayCells[indexRight].filled)
+                        {
+                            return arrayCells[indexRight];
+                        }
+
+                    }
+                    if (indexLeft > -1)
+                    {
+                        if (!arrayCells[indexLeft].filled)
+                        {
+                            return arrayCells[indexLeft];
+                        }
+                    }
+                    if(indexUp > -1)
+                    {
+                        if (!arrayCells[indexUp].filled)
+                        {
+                            return arrayCells[indexUp];
+                        }
+                        //have to try the diagonal ones
+                    }
+                    if(indexDown > -1)
+                    {
+                        if (!arrayCells[indexDown].filled)
+                        {
+                            return arrayCells[indexDown];
+                        }
+                    }
+                }
+                else
+                {
+                    return arrayCells[index];
+                }
+            }
+
+        }
+
+
+
+
+            //try
+
+
+        return aux;
+    }
+
 }
