@@ -16,6 +16,8 @@ namespace Chiligames.MetaAvatarsPun
         [SerializeField] string avatarPath = "1";
         private int _maxBytesToLog = 5;
 
+        TaskManager taskManager;
+
         [SerializeField] float _intervalToSendData = 0.08f;
         private float _cycleStartTime = 0;
 
@@ -31,6 +33,7 @@ namespace Chiligames.MetaAvatarsPun
             _photonView = GetComponent<PhotonView>();
             ConfigureAvatar();
             base.Awake();
+            taskManager = GameObject.Find("RootAreas").GetComponent<TaskManager>();
             //After entity is created, we can set the remote avatar to be third person (and have a head!)
             if (!_photonView.IsMine)
             {
@@ -64,6 +67,17 @@ namespace Chiligames.MetaAvatarsPun
                 SetIsLocal(false);
                 _creationInfo.features = CAPI.ovrAvatar2EntityFeatures.Preset_Remote;
                 gameObject.name = "RemoteAvatar";
+                if (taskManager)
+                {
+                    if (taskManager.collabType == CollabType.CoupledView)
+                    {
+                        foreach(MeshRenderer meshR in gameObject.GetComponentsInChildren<MeshRenderer>())
+                        {
+                            meshR.enabled = false;
+                        }
+                    }
+                }
+                
             }
         }
 

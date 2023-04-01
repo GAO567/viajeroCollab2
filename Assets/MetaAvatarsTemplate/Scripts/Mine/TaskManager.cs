@@ -319,7 +319,11 @@ public class TaskManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        int globalCollabType = GlobalVariables.Get<int>("collabType");
+        int id = GlobalVariables.Get<int>("userId");
 
+        userId = id;
+        collabType = (CollabType) globalCollabType;
         
         if (Application.isEditor)
         {
