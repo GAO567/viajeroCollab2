@@ -26,6 +26,7 @@ public class Countdown : MonoBehaviour
     void Start()
     {
         timerIsRunning = true;
+        dropdown.value = (int)collabType;
         
     }
 
