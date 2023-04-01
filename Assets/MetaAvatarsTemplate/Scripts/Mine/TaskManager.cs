@@ -782,7 +782,7 @@ public class TaskManager : MonoBehaviour
         if (Player1Area && Player2Area)
         {
 
-        
+
             if (collabType == CollabType.FacetoFaceIntersect)
             {
                 Player1Area.transform.localPosition = new Vector3(0, 0, 0);
@@ -790,7 +790,7 @@ public class TaskManager : MonoBehaviour
                 Player2Area.transform.localPosition = new Vector3(0, 0, 0.49f);
                 Player2Area.transform.localEulerAngles = new Vector3(0, 180, 0);
 
-               
+
             }
             else if (collabType == CollabType.FaceToFaceNoIntersect)
             {
@@ -799,8 +799,8 @@ public class TaskManager : MonoBehaviour
                 Player2Area.transform.localPosition = new Vector3(0, 0, 0.814f);
                 Player2Area.transform.localEulerAngles = new Vector3(0, 180, 0);
 
-                
-                
+
+
 
             }
             else if (collabType == CollabType.AngledFaceToFace)
@@ -814,10 +814,10 @@ public class TaskManager : MonoBehaviour
             {
                 Player1Area.transform.localPosition = new Vector3(0, 0, 0);
                 Player1Area.transform.localEulerAngles = new Vector3(0, 0, 0);
-                Player2Area.transform.localPosition = new Vector3(0, 0 , 0);
+                Player2Area.transform.localPosition = new Vector3(0, 0, 0);
                 Player2Area.transform.localEulerAngles = new Vector3(0, 0, 0);
             }
-            else if(collabType == CollabType.SideBySide)
+            else if (collabType == CollabType.SideBySide)
             {
                 Player1Area.transform.localPosition = new Vector3(0, 0, 0);
                 Player1Area.transform.localEulerAngles = new Vector3(0, 0, 0);
@@ -845,14 +845,14 @@ public class TaskManager : MonoBehaviour
             traytablePlayer1.transform.localScale = new Vector3(0.5137f, 0.019f, 0.29f);
             traytablePlayer1.name = "TraytableP1";
             //traytablePlayer1.AddComponent<Photon.Pun.PhotonView>();
-            
+
             //Photon.Pun.PhotonTransformView pt =  traytablePlayer1.AddComponent<Photon.Pun.PhotonTransformView>();
             //pt.m_SynchronizeScale = true;
             //pt.m_UseLocal = false;
             GameObject rootObjForPuzzlesP1 = GameObject.Find("rootForObjsP1");
             rootObjForPuzzlesP1.transform.parent = Player1Area.transform;
-            rootObjForPuzzlesP1.transform.localPosition = new Vector3(-0.243f, -0.095f , 0.104f);
-            this.transformRootForP1Blueprint = rootObjForPuzzlesP1; 
+            rootObjForPuzzlesP1.transform.localPosition = new Vector3(-0.243f, -0.095f, 0.104f);
+            this.transformRootForP1Blueprint = rootObjForPuzzlesP1;
 
             /*GameObject goPlayer2 = new GameObject("Player2Head");
             goPlayer2.transform.parent = Player2Area.transform;
@@ -869,7 +869,9 @@ public class TaskManager : MonoBehaviour
             //rightHandPlayer2.transform.parent = Player2Area.transform;
             //leftHandPlayer2.transform.parent = Player2Area.transform;
 
-            if (collabType != CollabType.FaceToFaceNoIntersect || collabType != CollabType.CoupledView) {
+            
+            if (collabType == CollabType.FacetoFaceIntersect || collabType == CollabType.CoupledView)
+            {
                 GameObject traytablePlayer2 = GameObject.Find("traytableP2");// CreatePrimitive(PrimitiveType.Cube);
                 traytablePlayer2.transform.name = "TraytableP2";
                 traytablePlayer2.transform.parent = Player2Area.transform;
@@ -877,6 +879,18 @@ public class TaskManager : MonoBehaviour
                 traytablePlayer2.transform.localPosition = new Vector3(0.003f, -0.137f, 0.243f);
                 traytablePlayer2.transform.localScale = new Vector3(0.5137f, 0.019f, 0.29f);
                 traytablePlayer2.AddComponent<Photon.Pun.PhotonView>();
+                traytablePlayer2.GetComponent<MeshRenderer>().enabled = false;
+            }
+            else 
+            {
+                GameObject traytablePlayer2 = GameObject.Find("traytableP2");// CreatePrimitive(PrimitiveType.Cube);
+                traytablePlayer2.transform.name = "TraytableP2";
+                traytablePlayer2.transform.parent = Player2Area.transform;
+                traytablePlayer2.transform.localEulerAngles = Vector3.zero;
+                traytablePlayer2.transform.localPosition = new Vector3(0.003f, -0.137f, 0.243f);
+                traytablePlayer2.transform.localScale = new Vector3(0.5137f, 0.019f, 0.29f);
+                traytablePlayer2.AddComponent<Photon.Pun.PhotonView>();
+                //traytablePlayer2.GetComponent<MeshRenderer>().enabled = false;
                 //Photon.Pun.PhotonTransformView pt2 = traytablePlayer2.AddComponent<Photon.Pun.PhotonTransformView>();
                 //pt2.m_SynchronizeScale = true;
                 //pt2.m_UseLocal = false;
