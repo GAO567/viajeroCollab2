@@ -39,8 +39,9 @@ public class Countdown : MonoBehaviour
             else
             {
                 Debug.Log("Time has run out!");
-
-                SceneManager.LoadScene("drawCube", LoadSceneMode.Single);
+                GlobalVariables.Set("userId", id);
+                GlobalVariables.Set("CollabType", collabType);
+                SceneManager.LoadScene("MainScene", LoadSceneMode.Single);
                 //
                 timeRemaining = 0;
                 timerIsRunning = false;
