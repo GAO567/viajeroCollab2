@@ -125,6 +125,18 @@ namespace Chiligames.MetaAvatarsPun
                 {
                     yield return null;
                 }
+                if (taskManager)
+                {
+                    if(taskManager.collabType == CollabType.CoupledView)
+                    {
+                        GameObject rootCoupledViewGO = PhotonNetwork.Instantiate("NetworkPlayer", OVRCameraRig.transform.position, OVRCameraRig.transform.rotation);
+                        /*MeshRenderer[] listRenderers = rootCoupledViewGO.GetComponentsInChildren<MeshRenderer>();
+                        foreach(MeshRenderer meshR in listRenderers)
+                        {
+                            meshR.enabled = false;
+                        }*/
+                    }
+                }
                 myAvatarEntity = PhotonNetwork.Instantiate(avatarTestPrefab.name, OVRCameraRig.transform.position, OVRCameraRig.transform.rotation);
             }
             else
