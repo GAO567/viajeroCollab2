@@ -22,6 +22,7 @@ namespace Chiligames.MetaAvatarsPun
         [SerializeField] GameObject photonVoiceSetupPrefab;
 
         [HideInInspector] public ulong userID = 0;
+        [SerializeField] TaskManager taskManager;
 
         bool hasJoinedRoom = false;
         bool userIsEntitled = false;
