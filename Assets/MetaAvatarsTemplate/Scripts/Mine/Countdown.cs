@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class Countdown : MonoBehaviour
 {
@@ -15,6 +16,9 @@ public class Countdown : MonoBehaviour
 
     [SerializeField]
     CollabType collabType = CollabType.FacetoFaceIntersect;
+
+    [SerializeField]
+    TMP_Dropdown dropdown;
 
     bool timerIsRunning = false;
 
@@ -29,6 +33,8 @@ public class Countdown : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        print(""+dropdown.value);
+        collabType = (CollabType) dropdown.value;
         if (timerIsRunning)
         {
             if (timeRemaining > 0)
