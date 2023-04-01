@@ -9089,6 +9089,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: NetworkPlayer
       objectReference: {fileID: 0}
+    - target: {fileID: 6804320437671247300, guid: d570efc86a0803c41892fa0c1342c8ba, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6804320437671247307, guid: d570efc86a0803c41892fa0c1342c8ba, type: 3}
       propertyPath: m_RootOrder
       value: 13

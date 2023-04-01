@@ -15,7 +15,7 @@ EditorBuildSettings:
     path: Assets/Scenes/drawCube.unity
     guid: f14bab71e93443c4ca3f360c7f6e797a
   - enabled: 1
-    path: Assets/Scenes/MainScene.unity
+    path: Assets/Scenes/NetworkScene.unity
     guid: 0d2fe900c229c7b4eab0fafa1f02ae86
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: ac0d40e56fa18a84bb5b9a6d8e5c00a5, type: 2}

@@ -33,7 +33,6 @@ namespace Chiligames.MetaAvatarsPun
             _photonView = GetComponent<PhotonView>();
             ConfigureAvatar();
             base.Awake();
-            taskManager = GameObject.Find("RootAreas").GetComponent<TaskManager>();
             //After entity is created, we can set the remote avatar to be third person (and have a head!)
             if (!_photonView.IsMine)
             {
@@ -61,15 +60,17 @@ namespace Chiligames.MetaAvatarsPun
                 OvrAvatarLipSyncContext lipSyncInput = FindObjectOfType<OvrAvatarLipSyncContext>();
                 SetLipSync(lipSyncInput);
                 gameObject.name = "LocalAvatar";
+                CollabType collabT = (CollabType)GlobalVariables.Get<int>("collabType");
             }
             else
             {
                 SetIsLocal(false);
                 _creationInfo.features = CAPI.ovrAvatar2EntityFeatures.Preset_Remote;
                 gameObject.name = "RemoteAvatar";
-                if (taskManager)
+                CollabType collabT = (CollabType) GlobalVariables.Get<int>("collabType");
+                if (collabT !=null)
                 {
-                    if (taskManager.collabType == CollabType.CoupledView)
+                    if (collabT == CollabType.CoupledView)
                     {
                         foreach(MeshRenderer meshR in gameObject.GetComponentsInChildren<MeshRenderer>())
                         {

@@ -34,6 +34,11 @@ public class Countdown : MonoBehaviour
     void Update()
     {
         print(""+dropdown.value);
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            collabType = CollabType.CoupledView;
+            dropdown.value = (int)collabType;
+        }
         collabType = (CollabType) dropdown.value;
         if (timerIsRunning)
         {
