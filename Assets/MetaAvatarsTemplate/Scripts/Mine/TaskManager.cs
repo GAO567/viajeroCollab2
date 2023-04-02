@@ -105,6 +105,9 @@ public class TaskManager : MonoBehaviour
     Dictionary<Bodypart, BoundaryViolation> listActiveViolations = new Dictionary<Bodypart, BoundaryViolation>();
     List<BoundaryViolation> finishedViolations = new List<BoundaryViolation>();
 
+
+    bool objInteractedP1 = false;
+    float objP1InteractedInitTIme = 0;
     bool objInteractedP2 = false;
     float objP2InteractedInitTIme = 0;
 
@@ -253,6 +256,35 @@ public class TaskManager : MonoBehaviour
             objInteractedP2 = false;
         }
         
+    }
+
+    public void objectInteractedByP1(bool interactionHappening)
+    {
+        if (interactionHappening)
+        {
+            if (!objInteractedP1)
+            {
+                if (currentTaskLog != null)
+                {
+                    objP2InteractedInitTIme = Time.realtimeSinceStartup;
+                }
+            }
+            else
+            {
+                if (currentTaskLog != null)
+                {
+                    float delta = Time.realtimeSinceStartup - objP1InteractedInitTIme;
+                    currentTaskLog.addTimeInteracting("P1", delta);
+                    objP1InteractedInitTIme = Time.realtimeSinceStartup;
+                }
+            }
+        }
+        else
+        {
+            objP1InteractedInitTIme = 0;
+            objInteractedP1 = false;
+        }
+
     }
 
 
