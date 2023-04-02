@@ -105,6 +105,10 @@ public class Raycaster : MonoBehaviour
                 {
                     taskManager.GetComponent<PhotonView>().RPC("objectInteractedByP2", RpcTarget.AllBuffered, true);
                 }
+                else
+                {
+                    taskManager.objectInteractedByP1(true);
+                }
                 
             }
         }
@@ -119,6 +123,10 @@ public class Raycaster : MonoBehaviour
             if(taskManager.isRemotePlayer)
             {
                 taskManager.GetComponent<PhotonView>().RPC("objectInteractedByP2", RpcTarget.AllBuffered, false);
+            }
+            else
+            {
+                taskManager.objectInteractedByP1(false);
             }
         }
 
