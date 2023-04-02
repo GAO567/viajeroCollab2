@@ -28,12 +28,14 @@ public class Raycaster : MonoBehaviour
     float timeElapsed = 0;
     Vector3 rotationObj;
 
+    TaskManager taskManager;
     OVRInput.Controller controllerActive;
     // Start is called before the first frame update
     void Start()
     {
         lineRenderer.SetPosition(0, this.gameObject.transform.TransformPoint(0, 0, rayLength));
         controllerActive = OVRInput.Controller.RTouch;
+        taskManager = GameObject.Find("RootObject").GetComponent<TaskManager>();
     }
 
     // Update is called once per frame
@@ -94,6 +96,17 @@ public class Raycaster : MonoBehaviour
             lineRenderer.SetPosition(0, this.gameObject.transform.TransformPoint(0, 0, 0));
             lineRenderer.SetPosition(1, this.gameObject.transform.TransformPoint(0, 0, hitLocalPos.z));
 
+
+            PhotonView taskManagerPhotonView;
+
+            if (taskManager)
+            {
+                if (taskManager.isRemotePlayer)
+                {
+                    taskManager.GetComponent<PhotonView>().RPC("objectInteractedByP2", RpcTarget.AllBuffered, true);
+                }
+                
+            }
         }
         else
         {
@@ -102,6 +115,10 @@ public class Raycaster : MonoBehaviour
             if (transform.childCount > 0)
             {
                 transform.DetachChildren();
+            }
+            if(taskManager.isRemotePlayer)
+            {
+                taskManager.GetComponent<PhotonView>().RPC("objectInteractedByP2", RpcTarget.AllBuffered, false);
             }
         }
 
@@ -119,6 +136,9 @@ public class Raycaster : MonoBehaviour
         {
             photonView.RequestOwnership();//request ownership of the object
         }
+
+        
+        
         
         //hitObj.transform.position = transform.TransformPoint(transform.localPosition.x, transform.localPosition.y, hitDepth);
         

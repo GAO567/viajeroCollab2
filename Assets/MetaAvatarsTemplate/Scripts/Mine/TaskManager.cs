@@ -105,10 +105,13 @@ public class TaskManager : MonoBehaviour
     Dictionary<Bodypart, BoundaryViolation> listActiveViolations = new Dictionary<Bodypart, BoundaryViolation>();
     List<BoundaryViolation> finishedViolations = new List<BoundaryViolation>();
 
+    bool objInteractedP2 = false;
+    float objP2InteractedInitTIme = 0;
+
     bool taskStarted = false;
 
     bool outsideBoundsLastFrameP1 = false;
-    private bool outsideBoundsLastFrameP2 = false;
+    bool outsideBoundsLastFrameP2 = false;
 
     //deals with the player number
     int playerNumber = 0;
@@ -117,6 +120,8 @@ public class TaskManager : MonoBehaviour
     {
         playerNumber = number;
     }
+
+
 
     //receive the message and set the references for the gameobjects of the corresponding player (for log purposes) 
     public void setReference(GameObject obj)
@@ -219,6 +224,37 @@ public class TaskManager : MonoBehaviour
     {
         return objP1;
     }
+
+    [Photon.Pun.PunRPC]
+    public void objectInteractedByP2(bool interactionHappening)
+    {
+        if (interactionHappening)
+        {
+            if (!objInteractedP2)
+            {
+                if (currentTaskLog != null)
+                {
+                    objP2InteractedInitTIme = Time.realtimeSinceStartup;
+                }
+            }
+            else
+            {
+                if (currentTaskLog != null)
+                {
+                    float delta = Time.realtimeSinceStartup - objP2InteractedInitTIme;
+                    currentTaskLog.addTimeInteracting("P2", delta);
+                    objP2InteractedInitTIme = Time.realtimeSinceStartup;
+                }
+            }
+        }
+        else
+        {
+            objP2InteractedInitTIme = 0;
+            objInteractedP2 = false;
+        }
+        
+    }
+
 
     void initTask()
     {
