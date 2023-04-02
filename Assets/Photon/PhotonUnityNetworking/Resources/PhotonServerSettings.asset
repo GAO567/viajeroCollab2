@@ -49,6 +49,8 @@ MonoBehaviour:
   - RPC_SetOculusID
   - drawBoundary
   - testStuff
+  - objectInteracted
+  - objectInteractedByP2
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
