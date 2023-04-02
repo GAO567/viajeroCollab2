@@ -396,7 +396,7 @@ public class TaskManager : MonoBehaviour
             nextPuzzle();
         }
 
-        if(currentTaskState > TaskState.BothConnected)
+        if(currentTaskState > TaskState.Idle)
         {
             calculateBoundaryViolation();
         }
@@ -462,6 +462,11 @@ public class TaskManager : MonoBehaviour
     Vector3 calculateBoundaryViolation()
     {
         Vector3 violation = new Vector3();
+        if(currentTaskLog == null)
+        {
+            currentTaskLog = new TaskLog(userId, 0, "P1", "test", Player1Area.transform, collabType, Player1Area.transform.localScale);
+        }
+
         if (headPlayer1 && rightHandPlayer1 && leftHandPlayer1)
         {
             //we dont care about the Y
@@ -472,7 +477,7 @@ public class TaskManager : MonoBehaviour
             headP1Local = new Vector3(Mathf.Abs(headP1Local.x), Mathf.Abs(headP1Local.y), Mathf.Abs(headP1Local.z));
             rightHandP1Local = new Vector3(Mathf.Abs(rightHandP1Local.x), Mathf.Abs(rightHandP1Local.y), Mathf.Abs(rightHandP1Local.z));
             leftHandP1Local = new Vector3(Mathf.Abs(leftHandP1Local.x), Mathf.Abs(leftHandP1Local.y), Mathf.Abs(leftHandP1Local.z));
-
+            print("head = " + headP1Local.ToString() + " rightHand" + rightHandP1Local.ToString() + " leftHand " + leftHandP1Local.ToString());
             float delta = Time.deltaTime;
             if (!outsideBoundsLastFrameP1)
             {
@@ -533,6 +538,8 @@ public class TaskManager : MonoBehaviour
                     }
                 }
                 boundaryDrawerP1.drawBoundary(true);
+
+                
                 //currentTaskLog.incrementTimeOutsideBounds(Time.deltaTime);
                 //
             }
@@ -622,6 +629,7 @@ public class TaskManager : MonoBehaviour
                     }
                 }
                 boundaryDrawerP2.drawBoundary(true);
+                Player2Area.GetComponent<Photon.Pun.PhotonView>().RPC("drawBoundary", Photon.Pun.RpcTarget.AllBuffered, true);
                 //currentTaskLog.incrementTimeOutsideBounds(Time.deltaTime);
                 //
             }
@@ -639,6 +647,7 @@ public class TaskManager : MonoBehaviour
                     //do nothing
                 }
                 boundaryDrawerP2.drawBoundary(false);
+                Player2Area.GetComponent<Photon.Pun.PhotonView>().RPC("drawBoundary", Photon.Pun.RpcTarget.AllBuffered, false);
             }
 
             activeBodyPart = Bodypart.rightHandP2;
@@ -658,6 +667,7 @@ public class TaskManager : MonoBehaviour
                     }
                 }
                 boundaryDrawerP2.drawBoundary(true);
+                Player2Area.GetComponent<Photon.Pun.PhotonView>().RPC("drawBoundary", Photon.Pun.RpcTarget.AllBuffered, true);
                 //currentTaskLog.incrementTimeOutsideBounds(Time.deltaTime);
                 //
             }
@@ -675,6 +685,7 @@ public class TaskManager : MonoBehaviour
                     //do nothing
                 }
                 boundaryDrawerP2.drawBoundary(false);
+                Player2Area.GetComponent<Photon.Pun.PhotonView>().RPC("drawBoundary", Photon.Pun.RpcTarget.AllBuffered, false);
             }
 
             activeBodyPart = Bodypart.leftHandP2;
@@ -693,7 +704,8 @@ public class TaskManager : MonoBehaviour
                         listActiveViolations[activeBodyPart].distance = distance;
                     }
                 }
-                boundaryDrawerP1.drawBoundary(true);
+                boundaryDrawerP2.drawBoundary(true);
+                Player2Area.GetComponent<Photon.Pun.PhotonView>().RPC("drawBoundary", Photon.Pun.RpcTarget.AllBuffered, true);
                 //currentTaskLog.incrementTimeOutsideBounds(Time.deltaTime);
                 //
             }
@@ -710,7 +722,8 @@ public class TaskManager : MonoBehaviour
                 {
                     //do nothing
                 }
-                boundaryDrawerP1.drawBoundary(false);
+                boundaryDrawerP2.drawBoundary(false);
+                Player2Area.GetComponent<Photon.Pun.PhotonView>().RPC("drawBoundary", Photon.Pun.RpcTarget.AllBuffered, false);
             }
 
 

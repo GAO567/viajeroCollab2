@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+using Photon.Pun;
+
 public class WireareaDrawer : MonoBehaviour
 {
     [SerializeField] Vector3 BoundsSize;
@@ -21,7 +23,7 @@ public class WireareaDrawer : MonoBehaviour
 
     public bool drawBoundaries = false;
 
-    
+    PhotonView _photonView;
 
     TaskManager taskManager;
     private float timeWhenCollisionStarted;
@@ -77,10 +79,12 @@ public class WireareaDrawer : MonoBehaviour
             taskManager.incrementTimeOutsideBounds(Time.realtimeSinceStartup - startTime);
     }
 
+    [PunRPC]
     public void drawBoundary(bool active)
     {
         drawBoundaries = active;
     }
+
     // Update is called once per frame
     void Update()
     {
