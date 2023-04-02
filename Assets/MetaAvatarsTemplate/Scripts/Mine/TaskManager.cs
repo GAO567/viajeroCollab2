@@ -164,6 +164,8 @@ public class TaskManager : MonoBehaviour
                     }
                 }
             }
+
+            Player2Area.GetComponent<Photon.Pun.PhotonView>().RPC("testStuff", Photon.Pun.RpcTarget.AllBuffered, true);
             /*
             OVRCameraRig player2 = obj.GetComponent<OVRCameraRig>();
             rightHandPlayer2 = player2.rightControllerAnchor.gameObject;
@@ -322,8 +324,8 @@ public class TaskManager : MonoBehaviour
         int globalCollabType = GlobalVariables.Get<int>("collabType");
         int id = GlobalVariables.Get<int>("userId");
 
-        userId = id;
-        collabType = (CollabType) globalCollabType;
+        //userId = id;
+        //collabType = (CollabType) globalCollabType;
         
         if (Application.isEditor)
         {

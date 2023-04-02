@@ -85,6 +85,11 @@ public class WireareaDrawer : MonoBehaviour
         drawBoundaries = active;
     }
 
+    [PunRPC]
+    public void testStuff(bool active)
+    {
+        print("calling an RPC");
+    }
     // Update is called once per frame
     void Update()
     {
