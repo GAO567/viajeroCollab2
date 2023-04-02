@@ -238,6 +238,7 @@ public class TaskManager : MonoBehaviour
                 if (currentTaskLog != null)
                 {
                     objP2InteractedInitTIme = Time.realtimeSinceStartup;
+                    objInteractedP2 = true;
                 }
             }
             else
@@ -267,6 +268,7 @@ public class TaskManager : MonoBehaviour
                 if (currentTaskLog != null)
                 {
                     objP2InteractedInitTIme = Time.realtimeSinceStartup;
+                    objInteractedP1 = true;
                 }
             }
             else

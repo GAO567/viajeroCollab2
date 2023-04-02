@@ -5,6 +5,7 @@ using Photon.Pun;
 
 //using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR;
+using System;
 
 public class Raycaster : MonoBehaviour
 {
@@ -35,7 +36,7 @@ public class Raycaster : MonoBehaviour
     {
         lineRenderer.SetPosition(0, this.gameObject.transform.TransformPoint(0, 0, rayLength));
         controllerActive = OVRInput.Controller.RTouch;
-        taskManager = GameObject.Find("RootObject").GetComponent<TaskManager>();
+        taskManager = GameObject.Find("RootAreas").GetComponent<TaskManager>();
     }
 
     // Update is called once per frame
@@ -101,9 +102,18 @@ public class Raycaster : MonoBehaviour
 
             if (taskManager)
             {
+                if (taskManager.currentTaskState <= TaskState.BothConnected)
+                    return;
                 if (taskManager.isRemotePlayer)
                 {
-                    taskManager.GetComponent<PhotonView>().RPC("objectInteractedByP2", RpcTarget.AllBuffered, true);
+                    try
+                    {
+                        taskManager.GetComponent<PhotonView>().RPC("objectInteractedByP2", RpcTarget.AllBuffered, true);
+                    }
+                    catch(Exception ex)
+                    {
+                        print("error in the RPC call for the raycaster" + ex.StackTrace);
+                    }
                 }
                 else
                 {
@@ -120,14 +130,27 @@ public class Raycaster : MonoBehaviour
             {
                 transform.DetachChildren();
             }
-            if(taskManager.isRemotePlayer)
+            if (taskManager)
             {
-                taskManager.GetComponent<PhotonView>().RPC("objectInteractedByP2", RpcTarget.AllBuffered, false);
+                if (taskManager.currentTaskState <= TaskState.BothConnected)
+                    return;
+                if (taskManager.isRemotePlayer)
+                {
+                    try
+                    {
+                        taskManager.GetComponent<PhotonView>().RPC("objectInteractedByP2", RpcTarget.AllBuffered, false);
+                    }
+                    catch (Exception ex)
+                    {
+                        print("error in the RPC call for the raycaster" + ex.StackTrace);
+                    }
+                }
+                else
+                {
+                    taskManager.objectInteractedByP1(false);
+                }
             }
-            else
-            {
-                taskManager.objectInteractedByP1(false);
-            }
+            
         }
 
         lasttimeTriggered = triggered;
