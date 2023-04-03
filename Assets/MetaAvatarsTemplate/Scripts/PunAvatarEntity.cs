@@ -201,8 +201,13 @@ namespace Chiligames.MetaAvatarsPun
         public void LoadNewAvatar(string assetPath)
         {
             if (_assets[0].path == assetPath) return;
-            _photonView.RPC("RPC_SaveAssetPath", RpcTarget.AllBuffered, assetPath);
-            _photonView.RPC("RPC_LoadNewAvatar", RpcTarget.All,assetString);
+            string pathUsed = "";
+            if (assetString == "")
+                pathUsed = assetPath;
+            else
+                pathUsed = assetString;
+            _photonView.RPC("RPC_SaveAssetPath", RpcTarget.AllBuffered, pathUsed);
+            _photonView.RPC("RPC_LoadNewAvatar", RpcTarget.All,pathUsed);
         }
 
         [PunRPC]
