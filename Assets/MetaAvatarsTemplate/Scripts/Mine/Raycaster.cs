@@ -176,9 +176,8 @@ public class Raycaster : MonoBehaviour
             float hitDepth = transform.InverseTransformPoint(other.transform.position).z;
             if (thumbstickValue.y > 0)
             {
-                
-                    other.transform.position = other.transform.position + (this.transform.transform.forward * stepSize);
-                    zDepth = this.transform.InverseTransformPoint(other.transform.position).z;
+                other.transform.position = other.transform.position + (this.transform.transform.forward * stepSize);
+                zDepth = this.transform.InverseTransformPoint(other.transform.position).z;
                 
             }
         }
