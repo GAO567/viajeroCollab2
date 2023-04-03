@@ -28,6 +28,7 @@ public class Raycaster : MonoBehaviour
     float initTimestamp = 0;
     float timeElapsed = 0;
     Vector3 rotationObj;
+    float zDepth = 0;
 
     TaskManager taskManager;
     OVRInput.Controller controllerActive;
@@ -42,8 +43,7 @@ public class Raycaster : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        lineRenderer.SetPosition(0, this.gameObject.transform.TransformPoint(0, 0, 0));
-        lineRenderer.SetPosition(1, this.gameObject.transform.TransformPoint(0, 0, rayLength));
+        
 
         Debug.DrawLine(this.gameObject.transform.TransformPoint(0, 0, 0), this.gameObject.transform.TransformPoint(0, 0, rayLength), Color.cyan);
         //OVRInput.Get()
@@ -76,9 +76,9 @@ public class Raycaster : MonoBehaviour
         
         if (!triggered)
         {
-            transform.DetachChildren();
+            //transform.DetachChildren();
         }
-        if(!triggered && triggered)
+        if(!triggered && lasttimeTriggered)
         {
             timeElapsed += (Time.realtimeSinceStartup - initTimestamp);//time one person is interacting with an object
         }
@@ -86,6 +86,9 @@ public class Raycaster : MonoBehaviour
 
         RaycastHit hit;
         // Does the ray intersect any objects excluding the player layer
+        lineRenderer.SetPosition(0, this.gameObject.transform.TransformPoint(0, 0, 0));
+        lineRenderer.SetPosition(1, this.gameObject.transform.TransformPoint(0, 0, rayLength));
+
         if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, upperThreshold,layerMask))
         {
             Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
@@ -128,7 +131,7 @@ public class Raycaster : MonoBehaviour
             //Debug.Log("Did not Hit");
             if (transform.childCount > 0)
             {
-                transform.DetachChildren();
+                //transform.DetachChildren();
             }
             if (taskManager)
             {
@@ -166,9 +169,10 @@ public class Raycaster : MonoBehaviour
         if (photonView)
         {
             photonView.RequestOwnership();//request ownership of the object
+            print("requesting ownership");
         }
 
-        
+        zDepth = this.gameObject.transform.InverseTransformPoint(hitObj.transform.position).z;
         
         
         //hitObj.transform.position = transform.TransformPoint(transform.localPosition.x, transform.localPosition.y, hitDepth);
@@ -203,23 +207,29 @@ public class Raycaster : MonoBehaviour
         }
         else {
 
-            if(!lasttimeTriggered && triggered)
+
+            Vector2 thumbstickValue = OVRInput.Get(OVRInput.Axis2D.PrimaryThumbstick, controllerActive);
+            if (!lasttimeTriggered && triggered)
             {
                 rotationObj = hitObj.transform.eulerAngles;
                 initTimestamp = Time.realtimeSinceStartup;
             }
             if (triggered)
             {
-                hitObj.transform.parent = this.gameObject.transform;
-                hitObj.transform.eulerAngles = rotationObj;//lockRotation
+                zDepth = this.transform.InverseTransformPoint(hitObj.transform.position).z;
+                //x, y, zDepth
+                Vector3 worldPos = this.transform.TransformPoint(this.transform.localPosition.x, this.transform.localPosition.y, zDepth);
+                hitObj.transform.position = worldPos;
+                //hitObj.transform.position = this.transform.InverseTransformPoint()
+                //hitObj.transform.parent = this.gameObject.transform;
+                //hitObj.transform.eulerAngles = rotationObj;//lockRotation
             }
-
-            Vector2 thumbstickValue = OVRInput.Get(OVRInput.Axis2D.PrimaryThumbstick, controllerActive);
             if(thumbstickValue.y > 0)
             {
                 if (hitDepth < upperThreshold)
                 {
                     hitObj.transform.position = hitObj.transform.position + (this.transform.transform.forward * stepSize);
+                    zDepth = this.transform.InverseTransformPoint(hitObj.transform.position).z;
                 }
                 else
                 {
@@ -231,12 +241,14 @@ public class Raycaster : MonoBehaviour
                 if (hitDepth > lowerThreshold)
                 {
                     hitObj.transform.position = hitObj.transform.position - (this.transform.transform.forward * stepSize);
+                    zDepth = this.transform.InverseTransformPoint(hitObj.transform.position).z;
                 }
                 else
                 {
                     //do nothing
                 }
             }
+            //print("zDepth = " + zDepth);
         }
     }
 
