@@ -86,6 +86,10 @@ namespace Chiligames.MetaAvatarsPun
                 print("@@@ ACTOR NUMBER = " + PhotonNetwork.LocalPlayer.ActorNumber);
             }
             hasJoinedRoom = true;
+            if (taskManager)
+            {
+               // ChangeMyAvatarLocal (taskManager.avatarId.ToString());
+            }
         }
 
         //Get Access token and user ID from Oculus Platform
@@ -125,19 +129,24 @@ namespace Chiligames.MetaAvatarsPun
                 {
                     yield return null;
                 }
+               
+                myAvatarEntity = PhotonNetwork.Instantiate(avatarTestPrefab.name, OVRCameraRig.transform.position, OVRCameraRig.transform.rotation);
+                myAvatarEntity.GetComponent<PunAvatarEntity>().assetString = taskManager.avatarId.ToString();
+                
                 if (taskManager)
                 {
-                    if(taskManager.collabType == CollabType.CoupledView)
+                    if (taskManager.collabType == CollabType.CoupledView)
                     {
                         GameObject rootCoupledViewGO = PhotonNetwork.Instantiate("NetworkPlayer", OVRCameraRig.transform.position, OVRCameraRig.transform.rotation);
+
                         /*MeshRenderer[] listRenderers = rootCoupledViewGO.GetComponentsInChildren<MeshRenderer>();
                         foreach(MeshRenderer meshR in listRenderers)
                         {
                             meshR.enabled = false;
                         }*/
                     }
+                    //ChangeMyAvatar(taskManager.localUserId.ToString());
                 }
-                myAvatarEntity = PhotonNetwork.Instantiate(avatarTestPrefab.name, OVRCameraRig.transform.position, OVRCameraRig.transform.rotation);
             }
             else
             {
@@ -171,6 +180,12 @@ namespace Chiligames.MetaAvatarsPun
         {
             if (myAvatarEntity == null) return;
             myAvatarEntity.GetComponent<PunAvatarEntity>().LoadNewAvatar(assetPath);
+        }
+
+        public void ChangeMyAvatarLocal(string assetPath)
+        {
+            if (myAvatarEntity == null) return;
+            myAvatarEntity.GetComponent<PunAvatarEntity>().LoadLocalAvatar(assetPath);
         }
     }
 }

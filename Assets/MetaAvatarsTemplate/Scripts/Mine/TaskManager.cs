@@ -33,6 +33,7 @@ public class TaskManager : MonoBehaviour
     [SerializeField] Chiligames.MetaAvatarsPun.NetworkManager networkManager;
     [SerializeField] Chiligames.MetaAvatarsPun.PlayerManager playerManager;
     [SerializeField] int totalNumberTasks = 4;
+    public int avatarId = 0;
     public int userId = 0;
     public CollabType collabType = CollabType.FacetoFaceIntersect;
     public Vector3 boundsSize = new Vector3(0.6f,1.0f,0.8f);

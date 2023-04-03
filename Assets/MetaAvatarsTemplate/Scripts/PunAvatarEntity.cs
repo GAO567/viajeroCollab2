@@ -23,6 +23,7 @@ namespace Chiligames.MetaAvatarsPun
 
         private bool skeletonLoaded = false;
         private bool userIDSet;
+        public string assetString = "";
 
         protected override void Awake()
         {
@@ -139,6 +140,11 @@ namespace Chiligames.MetaAvatarsPun
             userIDSet = true;
         }
 
+        public string GetAssetPath()
+        {
+            return _assets[0].path;
+        }
+
         //Receive the recorded state of the avatar and add it to the List
         internal void AddToStreamDataList(byte[] bytes)
         {
@@ -196,7 +202,7 @@ namespace Chiligames.MetaAvatarsPun
         {
             if (_assets[0].path == assetPath) return;
             _photonView.RPC("RPC_SaveAssetPath", RpcTarget.AllBuffered, assetPath);
-            _photonView.RPC("RPC_LoadNewAvatar", RpcTarget.All);
+            _photonView.RPC("RPC_LoadNewAvatar", RpcTarget.All,assetString);
         }
 
         [PunRPC]
@@ -206,13 +212,14 @@ namespace Chiligames.MetaAvatarsPun
         }
 
         [PunRPC]
-        private void RPC_LoadNewAvatar()
+        private void RPC_LoadNewAvatar(string assetPath)
         {
             skeletonLoaded = false;
             EntityActive = false;
             Teardown();
             CreateEntity();
             LoadLocalAvatar();
+            assetString = assetPath;
         }
 
         private void LoadLocalAvatar()
@@ -244,8 +251,54 @@ namespace Chiligames.MetaAvatarsPun
                 {
                     assetPostfix = _overridePostfix;
                 }
+                if (assetString == "")
+                    path[0] = asset.path + assetPostfix;
+                else
+                    path[0] = assetString + assetPostfix;
+                if (isFromZip)
+                {
+                    LoadAssetsFromZipSource(path);
+                }
+                else
+                {
+                    LoadAssetsFromStreamingAssets(path);
+                }
+            }
+        }
+
+        public void LoadLocalAvatar(string id)
+        {
+            if (!HasLocalAvatarConfigured)
+            {
+                Debug.Log("No local avatar asset configured");
+                return;
+            }
+            useGenericAvatar = false;
+            if (useGenericAvatar)
+            {
+                return;
+            }
+
+            
+            // Zip asset paths are relative to the inside of the zip.
+            // Zips can be loaded from the OvrAvatarManager at startup or by calling OvrAvatarManager.Instance.AddZipSource
+            // Assets can also be loaded individually from Streaming assets
+            var path = new string[1];
+            foreach (var asset in _assets)
+            {
+                bool isFromZip = (asset.source == AssetSource.Zip);
+
+                string assetPostfix = (_underscorePostfix ? "_" : "")
+                    + OvrAvatarManager.Instance.GetPlatformGLBPostfix(isFromZip)
+                    + OvrAvatarManager.Instance.GetPlatformGLBVersion(false, isFromZip)
+                    + OvrAvatarManager.Instance.GetPlatformGLBExtension(isFromZip);
+                if (!String.IsNullOrEmpty(_overridePostfix))
+                {
+                    assetPostfix = _overridePostfix;
+                }
 
                 path[0] = asset.path + assetPostfix;
+                path[0] = id + assetPostfix;
                 if (isFromZip)
                 {
                     LoadAssetsFromZipSource(path);
