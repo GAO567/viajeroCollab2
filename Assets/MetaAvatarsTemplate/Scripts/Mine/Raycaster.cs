@@ -19,7 +19,7 @@ public class Raycaster : MonoBehaviour
     [SerializeField] LineRenderer lineRenderer;
     [SerializeField] Color colorOfRay;
     [SerializeField] float rayLength = 5.0f;
-    [SerializeField] float lowerThreshold = 0.2f;
+    [SerializeField] float lowerThreshold = 0.02f;
     [SerializeField] float upperThreshold = 5.0f;
     [SerializeField] float stepSize = 0.1f;
     private bool lasttimeTriggered;
@@ -159,6 +159,31 @@ public class Raycaster : MonoBehaviour
         lasttimeTriggered = triggered;
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        //this.
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (triggered)
+        {
+            print("entered");
+            BoxCollider collider = GetComponent<BoxCollider>();
+            other.gameObject.transform.position = collider.ClosestPoint(other.gameObject.transform.position);
+            Vector2 thumbstickValue = OVRInput.Get(OVRInput.Axis2D.PrimaryThumbstick, controllerActive);
+
+            float hitDepth = transform.InverseTransformPoint(other.transform.position).z;
+            if (thumbstickValue.y > 0)
+            {
+                
+                    other.transform.position = other.transform.position + (this.transform.transform.forward * stepSize);
+                    zDepth = this.transform.InverseTransformPoint(other.transform.position).z;
+                
+            }
+        }
+    }
+
     void Controller_mapping(RaycastHit hitObj)
     {
         Vector3 hitPosition = hitObj.transform.position;
@@ -217,8 +242,10 @@ public class Raycaster : MonoBehaviour
             if (triggered)
             {
                 zDepth = this.transform.InverseTransformPoint(hitObj.transform.position).z;
-                //x, y, zDepth
                 Vector3 worldPos = this.transform.TransformPoint(this.transform.localPosition.x, this.transform.localPosition.y, zDepth);
+                
+                //x, y, zDepth
+                
                 hitObj.transform.position = worldPos;
                 //hitObj.transform.position = this.transform.InverseTransformPoint()
                 //hitObj.transform.parent = this.gameObject.transform;
