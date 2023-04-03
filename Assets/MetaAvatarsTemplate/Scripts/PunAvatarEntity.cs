@@ -23,7 +23,6 @@ namespace Chiligames.MetaAvatarsPun
 
         private bool skeletonLoaded = false;
         private bool userIDSet;
-        public string assetString = "";
 
         protected override void Awake()
         {
@@ -201,13 +200,13 @@ namespace Chiligames.MetaAvatarsPun
         public void LoadNewAvatar(string assetPath)
         {
             if (_assets[0].path == assetPath) return;
-            string pathUsed = "";
-            if (assetString == "")
-                pathUsed = assetPath;
-            else
-                pathUsed = assetString;
-            _photonView.RPC("RPC_SaveAssetPath", RpcTarget.AllBuffered, pathUsed);
-            _photonView.RPC("RPC_LoadNewAvatar", RpcTarget.All,pathUsed);
+            _photonView.RPC("RPC_SaveAssetPath", RpcTarget.AllBuffered, assetPath);
+            _photonView.RPC("RPC_LoadNewAvatar", RpcTarget.All,assetPath);
+        }
+
+        public void SaveAssetPath(string assetPath)
+        {
+            _assets[0] = new AssetData { source = AssetSource.Zip, path = assetPath };
         }
 
         [PunRPC]
@@ -215,6 +214,7 @@ namespace Chiligames.MetaAvatarsPun
         {
             _assets[0] = new AssetData { source = AssetSource.Zip, path = assetPath };
         }
+
 
         [PunRPC]
         private void RPC_LoadNewAvatar(string assetPath)
@@ -224,7 +224,6 @@ namespace Chiligames.MetaAvatarsPun
             Teardown();
             CreateEntity();
             LoadLocalAvatar();
-            assetString = assetPath;
         }
 
         private void LoadLocalAvatar()
@@ -256,10 +255,8 @@ namespace Chiligames.MetaAvatarsPun
                 {
                     assetPostfix = _overridePostfix;
                 }
-                if (assetString == "")
-                    path[0] = asset.path + assetPostfix;
-                else
-                    path[0] = assetString + assetPostfix;
+                
+                path[0] = asset.path + assetPostfix;
                 if (isFromZip)
                 {
                     LoadAssetsFromZipSource(path);

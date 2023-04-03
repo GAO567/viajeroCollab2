@@ -131,7 +131,8 @@ namespace Chiligames.MetaAvatarsPun
                 }
                
                 myAvatarEntity = PhotonNetwork.Instantiate(avatarTestPrefab.name, OVRCameraRig.transform.position, OVRCameraRig.transform.rotation);
-                myAvatarEntity.GetComponent<PunAvatarEntity>().assetString = taskManager.avatarId.ToString();
+                if(taskManager)
+                    myAvatarEntity.GetComponent<PunAvatarEntity>().SaveAssetPath(taskManager.avatarId.ToString());
                 
                 if (taskManager)
                 {
