@@ -16,6 +16,7 @@ public class WireareaDrawer : MonoBehaviour
     [SerializeField] GameObject leftBoundary;
     [SerializeField] GameObject frontBoundary;
 
+    public bool drawAreas;
     GameObject topRightGO;
     GameObject topLeftGO;
     GameObject bottomRightGO;
@@ -97,6 +98,11 @@ public class WireareaDrawer : MonoBehaviour
         float sizeX = BoundsSize1.x;
         float sizeY = BoundsSize1.y;
         float sizeZ = BoundsSize1.z;
+        if (taskManager)
+        {
+            this.GetComponent<LineRenderer>().enabled = taskManager.drawAreas;
+        }
+
         if (lineRenderer)
         {
             //print("entrou aqui = " + sizeX + "," + sizeY + "," + sizeZ + ")");

@@ -120,6 +120,8 @@ public class TaskManager : MonoBehaviour
     //deals with the player number
     int playerNumber = 0;
 
+    public bool drawAreas = true;
+
     public void setPlayerNumber(int number)
     {
         playerNumber = number;
@@ -303,7 +305,9 @@ public class TaskManager : MonoBehaviour
         if (Player1Area)
         {
             WireareaDrawer drawer =  Player1Area.GetComponentInChildren<WireareaDrawer>();
-            if(drawer) drawer.BoundsSize1 = boundsSize;
+            if (drawer) { 
+                drawer.BoundsSize1 = boundsSize;
+            }
            // drawer.
         }
 
