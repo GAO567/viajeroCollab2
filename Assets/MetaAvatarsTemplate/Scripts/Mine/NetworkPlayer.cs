@@ -24,8 +24,8 @@ public class NetworkPlayer : MonoBehaviour
         if (photonView.IsMine)
         {
             head.GetComponentInChildren<MeshRenderer>().enabled = false;
-            head.GetComponentInChildren<MeshRenderer>().enabled = false;
-            head.GetComponentInChildren<MeshRenderer>().enabled = false;
+            rightHand.GetComponentInChildren<SkinnedMeshRenderer>().enabled = false;
+            leftHand.GetComponentInChildren<SkinnedMeshRenderer>().enabled = false;
         }
         MapPosition(head, XRNode.Head);
         MapPosition(rightHand, XRNode.RightHand);
