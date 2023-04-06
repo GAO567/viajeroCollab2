@@ -34,7 +34,7 @@ public class TaskManager : MonoBehaviour
     [SerializeField] Chiligames.MetaAvatarsPun.PlayerManager playerManager;
     [SerializeField] int totalNumberTasks = 4;
     public int avatarId = 0;
-    public int userId = 0;
+    public int groupId = 0;
     public CollabType collabType = CollabType.FacetoFaceIntersect;
     public Vector3 boundsSize = new Vector3(0.6f,1.0f,0.8f);
 
@@ -317,10 +317,25 @@ public class TaskManager : MonoBehaviour
             if(drawer) drawer.BoundsSize1 = boundsSize;
         }
 
-        currentTaskLog = new TaskLog(userId, 0, "P1", currentTask.ToString(), Player1Area.transform, collabType, boundsSize);
+        currentTaskLog = new TaskLog((groupId*2)-1, 0, "P1", currentTask.ToString(), Player1Area.transform, collabType, boundsSize);
         blueprintObjects = generator.generateBlueprint(new Vector3(0, 0, 0), 6, 4, 3, 0.09f, transformRootForP1Blueprint);
         listPossiblePositionsForPuzzle =  generator.generatePuzzle(false, true, Player1Area);
         taskStarted = true;
+    }
+
+    void logUsersMovementsSplitByUser()
+    {
+        if(currentTaskState > TaskState.Connected)
+        {
+            string violatingP1 = "NoViolationP1";
+            if (currentTaskLog.startTimeOutsideBoundsP1 > 0)
+                violatingP1 = "ViolationP1";
+            string violatingP2 = "NoViolationP2";
+            if (currentTaskLog.startTimeOutsideBoundsP2 > 0)
+            {
+                violatingP2 = "ViolationP2";
+            }
+        }
     }
     
 
@@ -336,7 +351,7 @@ public class TaskManager : MonoBehaviour
             {
                 violatingP2 = "ViolationP2";
             }
-            player1InteractionStr += userId + "," + collabType.ToString() + "," + Time.realtimeSinceStartup + "," + currentTask + "," + (dominantplayer == "P1" ? true : false) + "," + violatingP1 + ","+  Utils.vector3ToString(Player1Area.transform.position)+ "," + Utils.vector3ToString(Player1Area.transform.eulerAngles) +  ","
+            player1InteractionStr += (groupId*2)-1 + "," + collabType.ToString() + "," + Time.realtimeSinceStartup + "," + currentTask + "," + (dominantplayer == "P1" ? true : false) + "," + violatingP1 + ","+  Utils.vector3ToString(Player1Area.transform.position)+ "," + Utils.vector3ToString(Player1Area.transform.eulerAngles) +  ","
                                     + Utils.vector3ToString(headPlayer1.transform.position) + "," + Utils.vector3ToString(headPlayer1.transform.eulerAngles) + Utils.vector3ToString(rightHandPlayer1.transform.position) + "," + Utils.vector3ToString(rightHandPlayer1.transform.eulerAngles) +
                                      Utils.vector3ToString(leftHandPlayer1.transform.position) + "," + Utils.vector3ToString(leftHandPlayer1.transform.eulerAngles );
             if (player1Interacting && getInteractPart("P1"))
@@ -365,7 +380,7 @@ public class TaskManager : MonoBehaviour
                                  + Utils.vecNameToString("leftHandPosP2") + "," + Utils.vecNameToString("leftHandRotP2") + "\n";
 
 
-            player2InteractionStr += userId + ","+ collabType.ToString() + "," + Time.realtimeSinceStartup + "," + currentTask + "," + (dominantplayer == "P2" ? true : false) + "," + violatingP2 + ","+ Utils.vector3ToString(Player2Area.transform.position) + "," + Utils.vector3ToString(Player2Area.transform.eulerAngles) + ","
+            player2InteractionStr += (groupId*2) + ","+ collabType.ToString() + "," + Time.realtimeSinceStartup + "," + currentTask + "," + (dominantplayer == "P2" ? true : false) + "," + violatingP2 + ","+ Utils.vector3ToString(Player2Area.transform.position) + "," + Utils.vector3ToString(Player2Area.transform.eulerAngles) + ","
                                     + Utils.vector3ToString(headPlayer2.transform.position) + "," + Utils.vector3ToString(headPlayer2.transform.eulerAngles) + Utils.vector3ToString(rightHandPlayer2.transform.position) + "," + Utils.vector3ToString(rightHandPlayer2.transform.eulerAngles) +
                                      Utils.vector3ToString(leftHandPlayer2.transform.position) + "," + Utils.vector3ToString(leftHandPlayer2.transform.eulerAngles);
             
@@ -416,12 +431,12 @@ public class TaskManager : MonoBehaviour
         PathDirectory = Directory.GetCurrentDirectory() + "\\LogFiles";
 
         int i = 0;
-        while (Directory.Exists(PathDirectory + "\\user" + userId + "_" + i + "\\"))
+        while (Directory.Exists(PathDirectory + "\\user" + groupId + "_" + i + "\\"))
         {
             i++;
         }
 
-        PathDirectory += "\\user" + userId + "_" + i;// + travelTechnique.ToString();// + "/";
+        PathDirectory += "\\user" + groupId + "_" + i;// + travelTechnique.ToString();// + "/";
 
         PathDirectory += "\\";
         if (!debug) { 
@@ -541,7 +556,7 @@ public class TaskManager : MonoBehaviour
         Vector3 violation = new Vector3();
         if(currentTaskLog == null)
         {
-            currentTaskLog = new TaskLog(userId, 0, "P1", "test", Player1Area.transform, collabType, Player1Area.transform.localScale);
+            currentTaskLog = new TaskLog(groupId*2, 0, "P1", "test", Player1Area.transform, collabType, Player1Area.transform.localScale);
         }
 
         if (headPlayer1 && rightHandPlayer1 && leftHandPlayer1)
@@ -822,7 +837,7 @@ public class TaskManager : MonoBehaviour
             {
                 float distanceBetweenBlueprintAndUserPlacedObject = Vector3.Distance(blueprintObjects[i].transform.position, obj.transform.position);
                 Vector3 distanceByAxis = obj.transform.position - blueprintObjects[i].transform.position;
-                logTaskAccuracy += userId + "," + currentTask + "," + collabType + "," + blueprintObjects[i].name + ","+ Utils.vector3ToString(blueprintObjects[i].transform.position) + "," 
+                logTaskAccuracy += groupId + "," + dominantplayer + ","+ currentTask + "," + collabType + "," + blueprintObjects[i].name + ","+ Utils.vector3ToString(blueprintObjects[i].transform.position) + "," 
                     +obj.name + Utils.vector3ToString(obj.transform.position) + ","+ obj.name + "," + Utils.vector3ToString(distanceByAxis) + "," + distanceBetweenBlueprintAndUserPlacedObject + "\n" ;
             }
         }
@@ -862,8 +877,17 @@ public class TaskManager : MonoBehaviour
         
         blueprintObjects = generator.generateBlueprint(new Vector3(0, 0, 0), 6, 4, 3, 0.09f, dominantRootPuzzle);
         listPossiblePositionsForPuzzle = generator.generatePuzzle(false, false, dominantArea);
+        int idToUse = 0;
+        if(currentTaskState == TaskState.Player1Dominant)
+        {
+            idToUse = (groupId * 2) - 1;
+        }
+        else
+        {
+            idToUse = (groupId * 2);
+        }
 
-        currentTaskLog = new TaskLog(userId,0, dominantplayer, currentTask.ToString(), Player1Area.transform, collabType, boundsSize);
+        currentTaskLog = new TaskLog(idToUse,0, dominantplayer, currentTask.ToString(), Player1Area.transform, collabType, boundsSize);
         
     }
 
