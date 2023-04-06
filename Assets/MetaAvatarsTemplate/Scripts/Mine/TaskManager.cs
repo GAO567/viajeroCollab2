@@ -375,12 +375,12 @@ public class TaskManager : MonoBehaviour
 
 
 
-            string header2q = "userId,timestamp,collabType,currentTask,dominantPlayer,isViolatingBoundary," + Utils.vecNameToString("Player1AreaCenter") + "," + Utils.vecNameToString("Player1AreaRot")
+            string header2q = "userId,dominantPlayer,timestamp,collabType,currentTask,dominantPlayer,isViolatingBoundary," + Utils.vecNameToString("Player1AreaCenter") + "," + Utils.vecNameToString("Player1AreaRot")
                                 + Utils.vecNameToString("headPosP2") + "," + Utils.vecNameToString("headRotP2") + "," + Utils.vecNameToString("rightHandPosP2") + Utils.vecNameToString("rightHandRotP2")
                                  + Utils.vecNameToString("leftHandPosP2") + "," + Utils.vecNameToString("leftHandRotP2") + "\n";
 
 
-            player2InteractionStr += (groupId*2) + ","+ collabType.ToString() + "," + Time.realtimeSinceStartup + "," + currentTask + "," + (dominantplayer == "P2" ? true : false) + "," + violatingP2 + ","+ Utils.vector3ToString(Player2Area.transform.position) + "," + Utils.vector3ToString(Player2Area.transform.eulerAngles) + ","
+            player2InteractionStr += (groupId*2) + ","+dominantplayer+","+ collabType.ToString() + "," + Time.realtimeSinceStartup + "," + currentTask + "," + (dominantplayer == "P2" ? true : false) + "," + violatingP2 + ","+ Utils.vector3ToString(Player2Area.transform.position) + "," + Utils.vector3ToString(Player2Area.transform.eulerAngles) + ","
                                     + Utils.vector3ToString(headPlayer2.transform.position) + "," + Utils.vector3ToString(headPlayer2.transform.eulerAngles) + Utils.vector3ToString(rightHandPlayer2.transform.position) + "," + Utils.vector3ToString(rightHandPlayer2.transform.eulerAngles) +
                                      Utils.vector3ToString(leftHandPlayer2.transform.position) + "," + Utils.vector3ToString(leftHandPlayer2.transform.eulerAngles);
             
@@ -878,16 +878,19 @@ public class TaskManager : MonoBehaviour
         blueprintObjects = generator.generateBlueprint(new Vector3(0, 0, 0), 6, 4, 3, 0.09f, dominantRootPuzzle);
         listPossiblePositionsForPuzzle = generator.generatePuzzle(false, false, dominantArea);
         int idToUse = 0;
+        GameObject player;
         if(currentTaskState == TaskState.Player1Dominant)
         {
             idToUse = (groupId * 2) - 1;
+            player = Player1Area;
         }
         else
         {
             idToUse = (groupId * 2);
+            player = Player2Area;
         }
-
-        currentTaskLog = new TaskLog(idToUse,0, dominantplayer, currentTask.ToString(), Player1Area.transform, collabType, boundsSize);
+        
+        currentTaskLog = new TaskLog(idToUse,0, dominantplayer, currentTask.ToString(), player.transform, collabType, boundsSize);
         
     }
 
@@ -1046,10 +1049,8 @@ public class TaskManager : MonoBehaviour
     public void CompleteTaskReport()
     {
         //string header = "UserId,CurrentGainLevel,TargetSize,InitMovementTime,TargetPressedTime,ReachTime,TargetReleasedTime,numberErrorsFirstTarget,numberErrorsFinalTarget,SlidingTaskTime,TotalTime,ErrorFirstTime,ErrorSecondTime\n";
-        string header = "UserId,TrialNumber,CurrentGainLevel,TargetSize,InitMovementTime,TargetPressedTime,ReachTime,TargetReleasedTime,DraggingTaskTime,TotalTime," +
-        "ErrorInitTarget,ErrorEndTarget,InitTargetPosX,InitTargetPosY,InitTargetPosZ,FingerInitX,FingerInitY,FingerInitZ,EndTargetPosX,EndTargetPosY,EndTargetPosZ,FingerEndX,FingerEndY,FingerEndZ," +
-        "nameInitTarget,nameEndTarget,ErrorInitTargetNormalized,ErrorEndTargetNormalized,snapToPlane,pathLength," + Utils.logVariable("CalibratedPlanePos") + "," + Utils.logVariable("CalibratedPlaneRot") + ",fingerReturnTime" + "\n";
-
+        string header = "userId,trialNumber,dominantPlayer,puzzleId" + Utils.vecNameToString("centerPosArea") + "," + Utils.vecNameToString("centerRotArea") + "," + collabType.ToString() +
+            "," + Utils.vecNameToString("boundsSize") + "," + "numberOfBoundViolationsP1,timeOutsideBoundsP1,totalTime";
         string logTaskStr = header;
         //string passiveHapticsStr = (isPassiveHaptics ? "PassiveHaptics" : "NoPassiveHaptics");
         //string retargettingStr = retargettingOption.ToString();
