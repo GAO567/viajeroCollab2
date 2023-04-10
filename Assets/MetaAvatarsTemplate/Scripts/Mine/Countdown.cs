@@ -18,16 +18,54 @@ public class Countdown : MonoBehaviour
     CollabType collabType = CollabType.FacetoFaceIntersect;
 
     [SerializeField]
+    int avatarId = 0;
+
+
+    [SerializeField]
     TMP_Dropdown dropdown;
 
+    [SerializeField]
+    TMP_Dropdown dropdownRemote;
+
+    [SerializeField] TMP_InputField inputFIeld;
+
     bool timerIsRunning = false;
+
+    [SerializeField]
+    UnityEngine.Video.VideoPlayer videoPlayer;
 
     // Start is called before the first frame update
     void Start()
     {
-        timerIsRunning = true;
+        timerIsRunning = false;
         dropdown.value = (int)collabType;
+        inputFIeld.text = id.ToString();
+    }
+
+    public void GoToScene()
+    {
+        Debug.Log("Time has run out!");
+        GlobalVariables.Set("userId", int.Parse( inputFIeld.text));
+        GlobalVariables.Set("CollabType", dropdown.value);
+        GlobalVariables.Set("camefromVideoScene", true);
+        SceneManager.LoadScene("NetworkScene", LoadSceneMode.Single);
+        GlobalVariables.Set("Remote", dropdownRemote.value);
         
+        
+
+
+        //
+        timeRemaining = 0;
+        timerIsRunning = false;
+
+
+    }
+
+
+    public void PlayVideo()
+    {
+        videoPlayer.enabled = true;
+        timerIsRunning = true;
     }
 
     //https://stackoverflow.com/questions/42393259/load-scene-with-param-variable-unity
@@ -50,13 +88,7 @@ public class Countdown : MonoBehaviour
             }
             else
             {
-                Debug.Log("Time has run out!");
-                GlobalVariables.Set("userId", id);
-                GlobalVariables.Set("CollabType", collabType);
-                SceneManager.LoadScene("MainScene", LoadSceneMode.Single);
-                //
-                timeRemaining = 0;
-                timerIsRunning = false;
+                GoToScene();
             }
         }
     }

@@ -405,18 +405,37 @@ public class TaskManager : MonoBehaviour
 
 
         }
-    } 
+    }
 
-
-    // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
         int globalCollabType = GlobalVariables.Get<int>("collabType");
         int id = GlobalVariables.Get<int>("userId");
+        int avatar = GlobalVariables.Get<int>("avatarId");
+        int remote = GlobalVariables.Get<int>("remote");
 
-        //userId = id;
-        //collabType = (CollabType) globalCollabType;
+        bool cameFromVideoScene = false;
+        cameFromVideoScene = GlobalVariables.Get<bool>("cameFromVideoScene");
+        if (cameFromVideoScene)
+        {
+            groupId = id;
+            collabType = (CollabType)globalCollabType;
+            avatarId = avatar;
+            if(remote == 1)
+            {
+                isRemotePlayer = true;
+            }
+            else
+            {
+                isRemotePlayer = false;
+            }
+        }
+    }
+    // Start is called before the first frame update
+    void Start()
+    {
         
+
         if (Application.isEditor)
         {
             print("is editor");
