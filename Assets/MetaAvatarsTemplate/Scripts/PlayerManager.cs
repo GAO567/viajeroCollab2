@@ -148,7 +148,9 @@ namespace Chiligames.MetaAvatarsPun
                     if (taskManager.collabType == CollabType.CoupledView)
                     {
                         GameObject rootCoupledViewGO = PhotonNetwork.Instantiate("NetworkPlayer", OVRCameraRig.transform.position, OVRCameraRig.transform.rotation);
-
+                        rootCoupledViewGO.transform.parent = spawnPoints[0].transform;
+                        rootCoupledViewGO.transform.localPosition = Vector3.zero;
+                        rootCoupledViewGO.transform.localRotation = Quaternion.identity;
                         /*MeshRenderer[] listRenderers = rootCoupledViewGO.GetComponentsInChildren<MeshRenderer>();
                         foreach(MeshRenderer meshR in listRenderers)
                         {
