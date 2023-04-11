@@ -130,7 +130,7 @@ public class TaskManager : MonoBehaviour
         playerNumber = number;
     }
 
-
+    bool hiddenAvatar = false;
 
     //receive the message and set the references for the gameobjects of the corresponding player (for log purposes) 
     public void setReference(GameObject obj)
@@ -481,10 +481,23 @@ public class TaskManager : MonoBehaviour
     {
         textToShow.text = "USER ID = " + groupId + ", Current State" + currentTaskState.ToString() + " Collab Type " + collabType.ToString();
 
+        if(isRemotePlayer && collabType == CollabType.CoupledView && !hiddenAvatar)
+        {
+            GameObject spawnPointRemotePlayer = GameObject.Find("RemoteAvatar");
+            if (spawnPointRemotePlayer)
+            {
+                Chiligames.MetaAvatarsPun.PunAvatarEntity punAvatarEntity = spawnPointRemotePlayer.GetComponent<Chiligames.MetaAvatarsPun.PunAvatarEntity>();
+                if (punAvatarEntity)
+                {
+                    punAvatarEntity.disableAvatar();
+                    print("disabling remote avatar");
+                    hiddenAvatar = true;
+                }
+            }
+        }
 
         if (isRemotePlayer)
             return;
-
         if(currentTaskState == TaskState.Connected)
         {
             if (GameObject.Find("RemoteAvatar"))
@@ -503,7 +516,7 @@ public class TaskManager : MonoBehaviour
                     Chiligames.MetaAvatarsPun.PunAvatarEntity punAvatarEntity = spawnPointRemotePlayer.GetComponent<Chiligames.MetaAvatarsPun.PunAvatarEntity>();
                     if (punAvatarEntity)
                     {
-                        punAvatarEntity.disableAvatar();
+                        punAvatarEntity.disableAvatar(); 
                         print("disabling remote avatar");
                     }
                 }

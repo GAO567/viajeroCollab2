@@ -75,12 +75,6 @@ namespace Chiligames.MetaAvatarsPun
                 _creationInfo.features = CAPI.ovrAvatar2EntityFeatures.Preset_Remote;
                 gameObject.name = "RemoteAvatar";
                 CollabType collabT = (CollabType) GlobalVariables.Get<int>("CollabType");
-                
-                if (collabT == CollabType.CoupledView)
-                {
-                    ActiveView = CAPI.ovrAvatar2EntityViewFlags.None;
-                }
-
             }
         }
 
