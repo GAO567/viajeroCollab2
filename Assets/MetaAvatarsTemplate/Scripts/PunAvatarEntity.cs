@@ -24,8 +24,15 @@ namespace Chiligames.MetaAvatarsPun
         private bool skeletonLoaded = false;
         private bool userIDSet;
 
+
+
         protected override void Awake()
         {
+        }
+
+        public void disableAvatar()
+        {
+            SetActiveView(CAPI.ovrAvatar2EntityViewFlags.None);
         }
 
         private void Start()
@@ -67,18 +74,13 @@ namespace Chiligames.MetaAvatarsPun
                 SetIsLocal(false);
                 _creationInfo.features = CAPI.ovrAvatar2EntityFeatures.Preset_Remote;
                 gameObject.name = "RemoteAvatar";
-                CollabType collabT = (CollabType) GlobalVariables.Get<int>("collabType");
-                if (collabT !=null)
-                {
-                    if (collabT == CollabType.CoupledView)
-                    {
-                        foreach(MeshRenderer meshR in gameObject.GetComponentsInChildren<MeshRenderer>())
-                        {
-                            meshR.enabled = false;
-                        }
-                    }
-                }
+                CollabType collabT = (CollabType) GlobalVariables.Get<int>("CollabType");
                 
+                if (collabT == CollabType.CoupledView)
+                {
+                    ActiveView = CAPI.ovrAvatar2EntityViewFlags.None;
+                }
+
             }
         }
 

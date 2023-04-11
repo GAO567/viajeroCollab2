@@ -10,6 +10,8 @@ using OculusSampleFramework;
 using System.IO;
 using UnityEngine.UI;
 
+using TMPro;
+
 
 
 public enum CollabType
@@ -32,6 +34,7 @@ public class TaskManager : MonoBehaviour
 {
     [SerializeField] Chiligames.MetaAvatarsPun.NetworkManager networkManager;
     [SerializeField] Chiligames.MetaAvatarsPun.PlayerManager playerManager;
+    [SerializeField] TMP_Text textToShow;
     [SerializeField] int totalNumberTasks = 4;
     public int avatarId = 0;
     public int groupId = 0;
@@ -430,6 +433,10 @@ public class TaskManager : MonoBehaviour
                 isRemotePlayer = false;
             }
         }
+        else
+        {
+            GlobalVariables.Set("CollabType", (int)collabType);
+        }
     }
     // Start is called before the first frame update
     void Start()
@@ -472,6 +479,9 @@ public class TaskManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        textToShow.text = "USER ID = " + groupId + ", Current State" + currentTaskState.ToString() + " Collab Type " + collabType.ToString();
+
+
         if (isRemotePlayer)
             return;
 
@@ -490,6 +500,12 @@ public class TaskManager : MonoBehaviour
                     setReference(spawnPointRemotePlayer);
                         print("COME OVER HERE");
                         currentTaskState = TaskState.BothConnected;
+                    Chiligames.MetaAvatarsPun.PunAvatarEntity punAvatarEntity = spawnPointRemotePlayer.GetComponent<Chiligames.MetaAvatarsPun.PunAvatarEntity>();
+                    if (punAvatarEntity)
+                    {
+                        punAvatarEntity.disableAvatar();
+                        print("disabling remote avatar");
+                    }
                 }
             }
             
