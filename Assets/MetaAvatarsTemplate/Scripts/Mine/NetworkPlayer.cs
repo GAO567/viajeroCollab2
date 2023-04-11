@@ -10,6 +10,8 @@ public class NetworkPlayer : MonoBehaviour
     public Transform head;
     public Transform rightHand;
     public Transform leftHand;
+    public Material remoteMaterial;
+    public Material localMaterial;
     PhotonView photonView;
 
     // Start is called before the first frame update
@@ -27,10 +29,24 @@ public class NetworkPlayer : MonoBehaviour
             rightHand.GetComponentInChildren<SkinnedMeshRenderer>().enabled = false;
             leftHand.GetComponentInChildren<SkinnedMeshRenderer>().enabled = false;
             gameObject.name = "Local Network Player";
+            LineRenderer raycasterRight = rightHand.GetComponentInChildren<LineRenderer>();
+            LineRenderer raycasterLeft = leftHand.GetComponentInChildren<LineRenderer>();
+            if(raycasterLeft && raycasterRight)
+            {
+                raycasterRight.material = localMaterial;
+                raycasterLeft.material = localMaterial;
+            }
         }
         else
         {
             gameObject.name = "Remote Network Player";
+            LineRenderer raycasterRight = rightHand.GetComponentInChildren<LineRenderer>();
+            LineRenderer raycasterLeft = leftHand.GetComponentInChildren<LineRenderer>();
+            if (raycasterLeft && raycasterRight)
+            {
+                raycasterRight.material = remoteMaterial;
+                raycasterLeft.material = remoteMaterial;
+            }
         }
         MapPosition(head, XRNode.Head);
         MapPosition(rightHand, XRNode.RightHand);
