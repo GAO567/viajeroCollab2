@@ -23,13 +23,19 @@ public class NetworkPlayer : MonoBehaviour
     {
         if (photonView.IsMine)
         {
-            //head.GetComponentInChildren<MeshRenderer>().enabled = false;
-            //rightHand.GetComponentInChildren<SkinnedMeshRenderer>().enabled = false;
-            //leftHand.GetComponentInChildren<SkinnedMeshRenderer>().enabled = false;
+            head.GetComponentInChildren<MeshRenderer>().enabled = false;
+            rightHand.GetComponentInChildren<SkinnedMeshRenderer>().enabled = false;
+            leftHand.GetComponentInChildren<SkinnedMeshRenderer>().enabled = false;
+            gameObject.name = "Local Network Player";
+        }
+        else
+        {
+            gameObject.name = "Remote Network Player";
         }
         MapPosition(head, XRNode.Head);
         MapPosition(rightHand, XRNode.RightHand);
         MapPosition(leftHand, XRNode.LeftHand);
+        
     }
 
     void MapPosition(Transform target, XRNode node)
@@ -37,7 +43,7 @@ public class NetworkPlayer : MonoBehaviour
         InputDevices.GetDeviceAtXRNode(node).TryGetFeatureValue(CommonUsages.devicePosition,out Vector3 position);
         InputDevices.GetDeviceAtXRNode(node).TryGetFeatureValue(CommonUsages.deviceRotation,out Quaternion rotation);
 
-        target.position = position;
-        target.rotation = rotation;
+        target.localPosition = position;
+        target.localRotation = rotation;
     }
 }
