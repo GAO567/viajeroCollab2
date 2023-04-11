@@ -30,11 +30,16 @@ public class NetworkPlayer : MonoBehaviour
             leftHand.GetComponentInChildren<SkinnedMeshRenderer>().enabled = false;
             gameObject.name = "Local Network Player";
             LineRenderer raycasterRight = rightHand.GetComponentInChildren<LineRenderer>();
-            LineRenderer raycasterLeft = leftHand.GetComponentInChildren<LineRenderer>();
-            if(raycasterLeft && raycasterRight)
+            LineRenderer raycasterLeft = leftHand.GetComponentInChildren<LineRenderer>(); 
+            ViewportDrawer drawer = head.GetComponentInChildren<ViewportDrawer>();
+            if (raycasterLeft && raycasterRight)
             {
                 raycasterRight.material = localMaterial;
                 raycasterLeft.material = localMaterial;
+            }
+            if (drawer)
+            {
+                drawer.lineRenderer.material = localMaterial;
             }
         }
         else
@@ -42,10 +47,15 @@ public class NetworkPlayer : MonoBehaviour
             gameObject.name = "Remote Network Player";
             LineRenderer raycasterRight = rightHand.GetComponentInChildren<LineRenderer>();
             LineRenderer raycasterLeft = leftHand.GetComponentInChildren<LineRenderer>();
+            ViewportDrawer drawer = head.GetComponentInChildren<ViewportDrawer>();
             if (raycasterLeft && raycasterRight)
             {
                 raycasterRight.material = remoteMaterial;
                 raycasterLeft.material = remoteMaterial;
+            }
+            if (drawer)
+            {
+                drawer.lineRenderer.material = remoteMaterial;
             }
         }
         MapPosition(head, XRNode.Head);
