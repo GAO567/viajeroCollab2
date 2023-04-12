@@ -2214,6 +2214,8 @@ MonoBehaviour:
   leftHand: {fileID: 6804320438440870791}
   remoteMaterial: {fileID: 2100000, guid: 2c5bdb8651f49e94a9afa14c5d374f19, type: 2}
   localMaterial: {fileID: 2100000, guid: f0e40fc865770de4cb1577c051163a9d, type: 2}
+  rayRightHand: {fileID: 3428964205733965225}
+  rayLeftHand: {fileID: 3002152139480689411}
 --- !u!1 &6804320438440870784
 GameObject:
   m_ObjectHideFlags: 0

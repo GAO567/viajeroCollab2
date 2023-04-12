@@ -124,6 +124,7 @@ public class TaskManager : MonoBehaviour
     int playerNumber = 0;
 
     public bool drawAreas = true;
+    int correctObjectsPerTask = 0;
 
     public void setPlayerNumber(int number)
     {
@@ -883,10 +884,17 @@ public class TaskManager : MonoBehaviour
             GameObject obj = GameObject.Find(blueprintObjects[i].name+"_root");
             if (obj)
             {
+                float threshold = 0.3f;
+
                 float distanceBetweenBlueprintAndUserPlacedObject = Vector3.Distance(blueprintObjects[i].transform.position, obj.transform.position);
+                if (distanceBetweenBlueprintAndUserPlacedObject > threshold)
+                {
+                    correctObjectsPerTask++;
+                }
                 Vector3 distanceByAxis = obj.transform.position - blueprintObjects[i].transform.position;
                 logTaskAccuracy += groupId + "," + dominantplayer + ","+ currentTask + "," + collabType + "," + blueprintObjects[i].name + ","+ Utils.vector3ToString(blueprintObjects[i].transform.position) + "," 
                     +obj.name + Utils.vector3ToString(obj.transform.position) + ","+ obj.name + "," + Utils.vector3ToString(distanceByAxis) + "," + distanceBetweenBlueprintAndUserPlacedObject + "\n" ;
+                
             }
         }
 
