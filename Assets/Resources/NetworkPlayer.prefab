@@ -2018,8 +2018,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb9a0f0645f059248ba5edc38e3c0213, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sizeViewport: {x: 0.13, y: 0.13}
-  distanceFromCamera: 0
+  sizeViewport: {x: 0.15, y: 0.15}
+  distanceFromCamera: 0.6
   lineRenderer: {fileID: 0}
 --- !u!120 &6779302763102290056
 LineRenderer:

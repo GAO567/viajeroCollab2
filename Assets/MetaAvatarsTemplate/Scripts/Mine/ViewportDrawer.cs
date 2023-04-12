@@ -5,7 +5,7 @@ using UnityEngine;
 public class ViewportDrawer : MonoBehaviour
 {
     [SerializeField] Vector2 sizeViewport = new Vector2(0.3f,0.3f);
-    [SerializeField] float distanceFromCamera = 0.1f;
+    [SerializeField] float distanceFromCamera = 1.0f;
     public LineRenderer lineRenderer; 
 
 
