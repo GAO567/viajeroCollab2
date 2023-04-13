@@ -36,6 +36,7 @@ public class TaskManager : MonoBehaviour
     [SerializeField] Chiligames.MetaAvatarsPun.PlayerManager playerManager;
     [SerializeField] TMP_Text textToShow;
     [SerializeField] int totalNumberTasks = 4;
+    [SerializeField] float totalTimePerTask = 120.0f;
     public int avatarId = 0;
     public int groupId = 0;
     public CollabType collabType = CollabType.FacetoFaceIntersect;
@@ -125,6 +126,8 @@ public class TaskManager : MonoBehaviour
 
     public bool drawAreas = true;
     int correctObjectsPerTask = 0;
+
+    float timeRemaining = 120.0f;
 
     public void setPlayerNumber(int number)
     {
@@ -532,6 +535,15 @@ public class TaskManager : MonoBehaviour
             initTask();
         }
 
+        if(timeRemaining > 0 && taskStarted)
+        {
+            timeRemaining -= Time.deltaTime;
+        }
+        else if(timeRemaining <= 0 && taskStarted)
+        {
+            nextPuzzle();
+        }
+
         if(Input.GetKeyDown(KeyCode.N) && taskStarted)
         {
             nextPuzzle();
@@ -876,6 +888,8 @@ public class TaskManager : MonoBehaviour
     {
 
         currentTask++;
+        timeRemaining = totalTimePerTask;
+
         if (currentTask > totalNumberTasks)
             return;
         string str = "";
@@ -885,15 +899,16 @@ public class TaskManager : MonoBehaviour
             if (obj)
             {
                 float threshold = 0.3f;
-
+                bool correctObject = false;
                 float distanceBetweenBlueprintAndUserPlacedObject = Vector3.Distance(blueprintObjects[i].transform.position, obj.transform.position);
                 if (distanceBetweenBlueprintAndUserPlacedObject > threshold)
                 {
                     correctObjectsPerTask++;
+                    correctObject = true;
                 }
                 Vector3 distanceByAxis = obj.transform.position - blueprintObjects[i].transform.position;
                 logTaskAccuracy += groupId + "," + dominantplayer + ","+ currentTask + "," + collabType + "," + blueprintObjects[i].name + ","+ Utils.vector3ToString(blueprintObjects[i].transform.position) + "," 
-                    +obj.name + Utils.vector3ToString(obj.transform.position) + ","+ obj.name + "," + Utils.vector3ToString(distanceByAxis) + "," + distanceBetweenBlueprintAndUserPlacedObject + "\n" ;
+                    +obj.name + Utils.vector3ToString(obj.transform.position) + ","+ obj.name + "," + Utils.vector3ToString(distanceByAxis) + "," + distanceBetweenBlueprintAndUserPlacedObject + ","+correctObject +"\n" ;
                 
             }
         }
