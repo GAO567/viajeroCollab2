@@ -35,8 +35,9 @@ public class TaskManager : MonoBehaviour
     [SerializeField] Chiligames.MetaAvatarsPun.NetworkManager networkManager;
     [SerializeField] Chiligames.MetaAvatarsPun.PlayerManager playerManager;
     [SerializeField] TMP_Text textToShow;
+    [SerializeField] TMP_Text timerText;
     [SerializeField] int totalNumberTasks = 4;
-    [SerializeField] float totalTimePerTask = 120.0f;
+    [SerializeField] float totalTimePerTask = 300.0f;
     public int avatarId = 0;
     public int groupId = 0;
     public CollabType collabType = CollabType.FacetoFaceIntersect;
@@ -129,6 +130,8 @@ public class TaskManager : MonoBehaviour
 
     float timeRemaining = 120.0f;
 
+    bool remoteTaskStarted = false;
+
     public void setPlayerNumber(int number)
     {
         playerNumber = number;
@@ -153,9 +156,9 @@ public class TaskManager : MonoBehaviour
         }
         else if (playerNumber == 2)
         {
-            if(obj.name == "RemoteAvatar")
+            if (obj.name == "RemoteAvatar")
             {
-                for(int i = 0; i < obj.transform.childCount; i++)
+                for (int i = 0; i < obj.transform.childCount; i++)
                 {
                     /*
                      *   Joint Head
@@ -168,11 +171,11 @@ public class TaskManager : MonoBehaviour
                      * 
                      */
                     GameObject child = obj.transform.GetChild(i).gameObject;
-                    if(child.name == "Joint Head")
+                    if (child.name == "Joint Head")
                     {
                         headPlayer2 = child;
                     }
-                    else if(child.name == "Joint RightHandWrist")
+                    else if (child.name == "Joint RightHandWrist")
                     {
                         rightHandPlayer2 = child;
                     }
@@ -198,7 +201,7 @@ public class TaskManager : MonoBehaviour
         }
     }
 
-
+    
 
     void setHeaders()
     {
@@ -269,6 +272,23 @@ public class TaskManager : MonoBehaviour
         
     }
 
+    [Photon.Pun.PunRPC]
+    void updateTimer(int time)
+    {
+        int timeRemainingInt = time;
+        int seconds = timeRemainingInt % 60;
+        int minutes = (int)timeRemainingInt / 60;
+        if (minutes == 0)
+        {
+            timerText.color = Color.yellow;
+        }
+        else
+        {
+            timerText.color = Color.red;
+        }
+        timerText.text = minutes + ":" + seconds;
+    }
+
     public void objectInteractedByP1(bool interactionHappening)
     {
         if (interactionHappening)
@@ -328,6 +348,7 @@ public class TaskManager : MonoBehaviour
         blueprintObjects = generator.generateBlueprint(new Vector3(0, 0, 0), 6, 4, 3, 0.09f, transformRootForP1Blueprint);
         listPossiblePositionsForPuzzle =  generator.generatePuzzle(false, true, Player1Area);
         taskStarted = true;
+        this.gameObject.GetComponent<Photon.Pun.PhotonView>().RPC("startTimer", Photon.Pun.RpcTarget.All);
     }
 
     void logUsersMovementsSplitByUser()
@@ -538,13 +559,30 @@ public class TaskManager : MonoBehaviour
         if(timeRemaining > 0 && taskStarted)
         {
             timeRemaining -= Time.deltaTime;
+
+            int timeRemainingInt = (int)timeRemaining;
+            int seconds = timeRemainingInt % 60;
+            int minutes = (int) timeRemainingInt / 60;
+            if (minutes == 0)
+            {
+                timerText.color = Color.yellow;
+            }
+            else
+            {
+                timerText.color = Color.red;
+            }
+            timerText.text = minutes + ":" + seconds;
+            
+
         }
         else if(timeRemaining <= 0 && taskStarted)
         {
             nextPuzzle();
+            GetComponent<Photon.Pun.PhotonView>().RPC("startTimer", Photon.Pun.RpcTarget.AllBuffered);
         }
 
-        if(Input.GetKeyDown(KeyCode.N) && taskStarted)
+        gameObject.GetComponent<Photon.Pun.PhotonView>().RPC("updateTimer", Photon.Pun.RpcTarget.All, (int)timeRemaining);
+        if (Input.GetKeyDown(KeyCode.N) && taskStarted)
         {
             nextPuzzle();
         }
