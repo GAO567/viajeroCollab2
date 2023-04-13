@@ -46,8 +46,8 @@ public class InitSceneLoader : MonoBehaviour
     {
         timerIsRunning = false;
         collabTypeDropdown.value = (int)collabType;
-        userIdDropdown.value = id;
-        avatarIdDropdown.value = avatarId;
+        userIdDropdown.value = id -1;
+        avatarIdDropdown.value = avatarId-1;
 
         if (isRemote)
             userTypeDropdown.value = 1;
