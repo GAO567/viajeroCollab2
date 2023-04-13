@@ -1545,7 +1545,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1083672039}
-        m_TargetAssemblyTypeName: Countdown, Assembly-CSharp
+        m_TargetAssemblyTypeName: InitSceneLoader, Assembly-CSharp
         m_MethodName: PlayVideo
         m_Mode: 1
         m_Arguments:
@@ -3651,6 +3651,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1083672038}
   - component: {fileID: 1083672037}
+  - component: {fileID: 1083672040}
   - component: {fileID: 1083672039}
   m_Layer: 0
   m_Name: Video Player
@@ -3717,19 +3718,31 @@ MonoBehaviour:
   m_GameObject: {fileID: 1083672036}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 46930b67c75b4e040b96d06ee3c96b08, type: 3}
+  m_Script: {fileID: 11500000, guid: 267773b30f638a3448390b805d51251c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   timeRemaining: 10
   id: 0
-  collabType: 4
+  collabType: 0
   avatarId: 0
+  isRemote: 0
   userIdDropdown: {fileID: 1998616787}
   avatarIdDropdown: {fileID: 534213489}
   collabTypeDropdown: {fileID: 385705004}
   userTypeDropdown: {fileID: 1367345646}
-  inputFIeld: {fileID: 1512638506}
   videoPlayer: {fileID: 1083672037}
+--- !u!114 &1083672040
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1083672036}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c4c1b38c49ffa449b585d54fcdc4a8c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1117816773
 GameObject:
   m_ObjectHideFlags: 0
@@ -4605,7 +4618,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1083672039}
-        m_TargetAssemblyTypeName: Countdown, Assembly-CSharp
+        m_TargetAssemblyTypeName: InitSceneLoader, Assembly-CSharp
         m_MethodName: GoToScene
         m_Mode: 1
         m_Arguments:
