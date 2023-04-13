@@ -101,8 +101,6 @@ public class Raycaster : MonoBehaviour
             lineRenderer.SetPosition(1, this.gameObject.transform.TransformPoint(0, 0, hitLocalPos.z));
 
 
-            PhotonView taskManagerPhotonView;
-
             if (taskManager)
             {
                 if (taskManager.currentTaskState <= TaskState.BothConnected)
@@ -178,7 +176,6 @@ public class Raycaster : MonoBehaviour
             {
                 other.transform.position = other.transform.position + (this.transform.transform.forward * stepSize);
                 zDepth = this.transform.InverseTransformPoint(other.transform.position).z;
-                
             }
         }
     }

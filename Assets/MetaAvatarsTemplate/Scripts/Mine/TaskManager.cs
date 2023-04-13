@@ -32,10 +32,9 @@ public enum Bodypart
 
 public class TaskManager : MonoBehaviour
 {
-    [SerializeField] Chiligames.MetaAvatarsPun.NetworkManager networkManager;
-    [SerializeField] Chiligames.MetaAvatarsPun.PlayerManager playerManager;
-    [SerializeField] TMP_Text textToShow;
+    [SerializeField] TMP_Text debugTextLabel;
     [SerializeField] TMP_Text timerText;
+    [SerializeField] TMP_Text dominantplayerLabel;
     [SerializeField] int totalNumberTasks = 4;
     [SerializeField] float totalTimePerTask = 300.0f;
     public int avatarId = 0;
@@ -273,11 +272,18 @@ public class TaskManager : MonoBehaviour
     }
 
     [Photon.Pun.PunRPC]
-    void updateTimer(int time)
+    void updateTimer(string time)
     {
-        int timeRemainingInt = time;
+        if (!isRemotePlayer)
+            return;
+
+        string[] arrayT = time.Split(':');
+        string player = arrayT[0];
+
+        int timeRemainingInt = int.Parse(arrayT[1]);
         int seconds = timeRemainingInt % 60;
         int minutes = (int)timeRemainingInt / 60;
+        print("coming from rpc");
         if (minutes == 0)
         {
             timerText.color = Color.yellow;
@@ -286,7 +292,28 @@ public class TaskManager : MonoBehaviour
         {
             timerText.color = Color.red;
         }
-        timerText.text = minutes + ":" + seconds;
+
+        if (seconds == 0)
+        {
+            timerText.text = minutes + ":" + seconds + "0";
+        }
+        else
+        {
+            timerText.text = minutes + ":" + seconds;
+        }
+
+        if (player == "P1")
+        {
+            dominantplayerLabel.text = "not my turn";
+            dominantplayerLabel.color = Color.red;
+            //add a label saying not my turn
+        }
+        else
+        {
+            dominantplayerLabel.text = "my turn";
+            dominantplayerLabel.color = Color.green;
+            //add a label saying my turn
+        }
     }
 
     public void objectInteractedByP1(bool interactionHappening)
@@ -348,7 +375,6 @@ public class TaskManager : MonoBehaviour
         blueprintObjects = generator.generateBlueprint(new Vector3(0, 0, 0), 6, 4, 3, 0.09f, transformRootForP1Blueprint);
         listPossiblePositionsForPuzzle =  generator.generatePuzzle(false, true, Player1Area);
         taskStarted = true;
-        this.gameObject.GetComponent<Photon.Pun.PhotonView>().RPC("startTimer", Photon.Pun.RpcTarget.All);
     }
 
     void logUsersMovementsSplitByUser()
@@ -466,7 +492,7 @@ public class TaskManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        dominantplayer = "P1";
 
         if (Application.isEditor)
         {
@@ -504,7 +530,7 @@ public class TaskManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        textToShow.text = "USER ID = " + groupId + ", Current State" + currentTaskState.ToString() + " Collab Type " + collabType.ToString();
+        debugTextLabel.text = "USER ID = " + groupId + ", Current State" + currentTaskState.ToString() + " Collab Type " + collabType.ToString();
 
         if(isRemotePlayer && collabType == CollabType.CoupledView && !hiddenAvatar)
         {
@@ -571,21 +597,51 @@ public class TaskManager : MonoBehaviour
             {
                 timerText.color = Color.red;
             }
-            timerText.text = minutes + ":" + seconds;
-            
+
+            if(seconds == 0)
+            {
+                timerText.text = minutes + ":" + seconds+"0";
+            }
+            else
+            {
+                timerText.text = minutes + ":" + seconds;
+            }
+            if(dominantplayer == "P1")
+            {
+                dominantplayerLabel.text = "my turn";
+                dominantplayerLabel.color = Color.green;
+            }
+            else
+            {
+                dominantplayerLabel.text = "not my turn";
+                dominantplayerLabel.color = Color.red;
+            }
 
         }
         else if(timeRemaining <= 0 && taskStarted)
         {
             nextPuzzle();
-            GetComponent<Photon.Pun.PhotonView>().RPC("startTimer", Photon.Pun.RpcTarget.AllBuffered);
+        }
+        
+        gameObject.GetComponent<Photon.Pun.PhotonView>().RPC("updateTimer", Photon.Pun.RpcTarget.AllBuffered, dominantplayer + ":" + timeRemaining);
+        
+        bool nextTaskButtonRightController = OVRInput.Get(OVRInput.Button.One, OVRInput.Controller.RHand);
+        bool nextTaskButtonLeftController = OVRInput.Get(OVRInput.Button.One, OVRInput.Controller.LHand);
+        bool nextTaskButtonKeyboard = Input.GetKeyDown(KeyCode.N);
+
+        if (nextTaskButtonRightController || nextTaskButtonLeftController || nextTaskButtonKeyboard)
+        {
+            if (!taskStarted)
+            {
+                initTask();
+            }
+            else
+            {
+                nextPuzzle();
+            }
+            
         }
 
-        gameObject.GetComponent<Photon.Pun.PhotonView>().RPC("updateTimer", Photon.Pun.RpcTarget.All, (int)timeRemaining);
-        if (Input.GetKeyDown(KeyCode.N) && taskStarted)
-        {
-            nextPuzzle();
-        }
 
         if(currentTaskState > TaskState.Idle)
         {

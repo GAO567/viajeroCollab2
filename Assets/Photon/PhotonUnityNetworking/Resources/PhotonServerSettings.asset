@@ -51,6 +51,8 @@ MonoBehaviour:
   - testStuff
   - objectInteracted
   - objectInteractedByP2
+  - startTimer
+  - updateTimer
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
