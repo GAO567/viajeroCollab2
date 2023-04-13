@@ -140,15 +140,19 @@ namespace Chiligames.MetaAvatarsPun
                 }
                
                 myAvatarEntity = PhotonNetwork.Instantiate(avatarTestPrefab.name, OVRCameraRig.transform.position, OVRCameraRig.transform.rotation);
-                if(taskManager)
-                    myAvatarEntity.GetComponent<PunAvatarEntity>().SaveAssetPath(taskManager.avatarId.ToString());
-                
+                if (taskManager)
+                {
+                    myAvatarEntity.GetComponent<PhotonView>().RPC("RPC_SaveAssetPath", RpcTarget.AllBuffered, taskManager.avatarId.ToString());
+                    //myAvatarEntity.GetComponent<PunAvatarEntity>().SaveAssetPath(taskManager.avatarId.ToString());
+                    print("####[Player Manager] Changing avatar to the avatar : " + taskManager.avatarId);
+                }
+
                 if (taskManager)
                 {
                     //if (taskManager.collabType == CollabType.CoupledView)
                     //{
                         GameObject rootCoupledViewGO = PhotonNetwork.Instantiate("NetworkPlayer", OVRCameraRig.transform.position, OVRCameraRig.transform.rotation);
-                        rootCoupledViewGO.transform.parent = spawnPoints[0].transform;
+                        rootCoupledViewGO.transform.parent = spawnPoints[PhotonNetwork.LocalPlayer.ActorNumber - 1].transform;
                         rootCoupledViewGO.transform.localPosition = Vector3.zero;
                         rootCoupledViewGO.transform.localRotation = Quaternion.identity;
                         /*MeshRenderer[] listRenderers = rootCoupledViewGO.GetComponentsInChildren<MeshRenderer>();

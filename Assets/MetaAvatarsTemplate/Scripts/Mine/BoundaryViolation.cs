@@ -4,13 +4,17 @@ using UnityEngine;
 
 public class BoundaryViolation 
 {
-    Bodypart bPart = 0;
-    bool active = false;
-    float timestampInit = 0;
+    public Bodypart bPart = 0;
+    public bool active = false;
+    public float timestampInit = 0;
     public float timestampEnd = 0;
-    float shortestDistance = 0;
+    public float shortestDistance = 0;
     public float distance = 0;
-    Vector3 lastPoint = Vector3.zero;
+    public Vector3 lastPoint = Vector3.zero;
+    public int userId = 0;
+    public CollabType collabType = CollabType.CoupledView;
+    public int puzzleId = 0;
+
 
     List<Vector3> pointsWhenOutsideBoundary;
     public BoundaryViolation(Bodypart bPart, float timeInit, float distance)
@@ -18,6 +22,16 @@ public class BoundaryViolation
         this.bPart = bPart;
         this.timestampInit = timeInit;
         this.distance = distance;
+    }
+
+    public BoundaryViolation(int userId, int puzzleId,CollabType collabType, Bodypart bPart, float timeInit, float distance)
+    {
+        this.userId = userId;
+        this.collabType = collabType;
+        this.bPart = bPart;
+        this.timestampInit = timeInit;
+        this.distance = distance;
+        this.puzzleId = puzzleId;
     }
 
     void incrementBoundaryViolations()
@@ -79,5 +93,10 @@ public class BoundaryViolation
         float deltaS = calculateDistanceElapsed() / (timestampEnd - timestampInit);
 
 
+    }
+
+    public string toLogString()
+    {
+        return userId + "," + collabType + "," + puzzleId + ","+ bPart.ToString() + "," + distance + "," + (timestampEnd - timestampInit) + "\n";
     }
 }

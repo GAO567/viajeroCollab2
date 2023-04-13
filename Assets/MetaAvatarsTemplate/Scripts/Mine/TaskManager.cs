@@ -32,9 +32,7 @@ public enum Bodypart
 
 public class TaskManager : MonoBehaviour
 {
-    [SerializeField] TMP_Text debugTextLabel;
-    [SerializeField] TMP_Text timerText;
-    [SerializeField] TMP_Text dominantplayerLabel;
+    public bool isRemotePlayer = false;// { get; private set; }
     [SerializeField] int totalNumberTasks = 4;
     [SerializeField] float totalTimePerTask = 300.0f;
     public int avatarId = 0;
@@ -94,7 +92,7 @@ public class TaskManager : MonoBehaviour
     GameObject objP2;// = new G
 
     public string PathDirectory { get => pathDirectory; set => pathDirectory = value; }
-    public bool isRemotePlayer = false;// { get; private set; }
+    
 
     public TaskState currentTaskState = TaskState.Idle;
 
@@ -104,7 +102,7 @@ public class TaskManager : MonoBehaviour
     public string player1InteractionStr = "";
     private string player2InteractionStr;
 
-    string logTaskAccuracy = "UserId,currentTask,collaborationType,NameBlueprintObj,"+ Utils.vecNameToString("blueprintPos") + ",NameUserPlacedObj," + Utils.vecNameToString("UserPlacedPos") + "," + 
+    string logTaskAccuracy = "UserId,collaborationType,currentTask,NameBlueprintObj," + Utils.vecNameToString("blueprintPos") + ",NameUserPlacedObj," + Utils.vecNameToString("UserPlacedPos") + "," + 
         "AbsoluteDistance," + Utils.vecNameToString("RelativeDistance");
 
     Dictionary<Bodypart, BoundaryViolation> listActiveViolations = new Dictionary<Bodypart, BoundaryViolation>();
@@ -127,10 +125,12 @@ public class TaskManager : MonoBehaviour
     public bool drawAreas = true;
     int correctObjectsPerTask = 0;
 
-    float timeRemaining = 120.0f;
+    float timeRemaining = 0;
 
     bool remoteTaskStarted = false;
-
+    [SerializeField] TMP_Text debugTextLabel;
+    [SerializeField] TMP_Text timerText;
+    [SerializeField] TMP_Text dominantplayerLabel;
     public void setPlayerNumber(int number)
     {
         playerNumber = number;
@@ -493,6 +493,7 @@ public class TaskManager : MonoBehaviour
     void Start()
     {
         dominantplayer = "P1";
+        timeRemaining = totalTimePerTask;
 
         if (Application.isEditor)
         {
@@ -538,7 +539,7 @@ public class TaskManager : MonoBehaviour
             if (spawnPointRemotePlayer)
             {
                 Chiligames.MetaAvatarsPun.PunAvatarEntity punAvatarEntity = spawnPointRemotePlayer.GetComponent<Chiligames.MetaAvatarsPun.PunAvatarEntity>();
-                if (punAvatarEntity)
+                if (punAvatarEntity && collabType == CollabType.CoupledView)
                 {
                     punAvatarEntity.disableAvatar();
                     print("disabling remote avatar");
@@ -565,7 +566,7 @@ public class TaskManager : MonoBehaviour
                         print("COME OVER HERE");
                         currentTaskState = TaskState.BothConnected;
                     Chiligames.MetaAvatarsPun.PunAvatarEntity punAvatarEntity = spawnPointRemotePlayer.GetComponent<Chiligames.MetaAvatarsPun.PunAvatarEntity>();
-                    if (punAvatarEntity)
+                    if (punAvatarEntity && collabType == CollabType.CoupledView)
                     {
                         punAvatarEntity.disableAvatar(); 
                         print("disabling remote avatar");
@@ -582,9 +583,16 @@ public class TaskManager : MonoBehaviour
             initTask();
         }
 
-        if(timeRemaining > 0 && taskStarted)
+        if (timeRemaining > 0 && taskStarted)
         {
-            timeRemaining -= Time.deltaTime;
+            if (currentTaskState == TaskState.EndTask)
+            {
+                timeRemaining = totalTimePerTask;
+            }
+            else
+            {
+                timeRemaining -= Time.deltaTime;
+            }
 
             int timeRemainingInt = (int)timeRemaining;
             int seconds = timeRemainingInt % 60;
@@ -611,6 +619,16 @@ public class TaskManager : MonoBehaviour
                 dominantplayerLabel.text = "my turn";
                 dominantplayerLabel.color = Color.green;
             }
+            else if(dominantplayer == "P2")
+            {
+                dominantplayerLabel.text = "not my turn";
+                dominantplayerLabel.color = Color.red;
+            }
+            else if(currentTaskState == TaskState.EndTask)
+            {
+                dominantplayerLabel.text = "GAME OVER";
+                dominantplayerLabel.color = Color.red;
+            }
             else
             {
                 dominantplayerLabel.text = "not my turn";
@@ -623,8 +641,11 @@ public class TaskManager : MonoBehaviour
             nextPuzzle();
         }
         
-        gameObject.GetComponent<Photon.Pun.PhotonView>().RPC("updateTimer", Photon.Pun.RpcTarget.AllBuffered, dominantplayer + ":" + timeRemaining);
-        
+        if(currentTaskState < TaskState.EndTask)
+            gameObject.GetComponent<Photon.Pun.PhotonView>().RPC("updateTimer", Photon.Pun.RpcTarget.AllBuffered, dominantplayer + ":" + timeRemaining);
+        else
+            gameObject.GetComponent<Photon.Pun.PhotonView>().RPC("updateTimer", Photon.Pun.RpcTarget.AllBuffered, "GAME OVER" + ":" + timeRemaining);
+
         bool nextTaskButtonRightController = OVRInput.Get(OVRInput.Button.One, OVRInput.Controller.RHand);
         bool nextTaskButtonLeftController = OVRInput.Get(OVRInput.Button.One, OVRInput.Controller.LHand);
         bool nextTaskButtonKeyboard = Input.GetKeyDown(KeyCode.N);
@@ -643,12 +664,12 @@ public class TaskManager : MonoBehaviour
         }
 
 
-        if(currentTaskState > TaskState.Idle)
+        if(currentTaskState > TaskState.BothConnected && currentTaskState <= TaskState.EndTask)
         {
             calculateBoundaryViolation();
         }
 
-        if(!debug && currentTaskState > TaskState.BothConnected)
+        if(!debug && currentTaskState > TaskState.BothConnected && currentTaskState < TaskState.EndTask)
         {
             logUsersMovements();
         }
@@ -703,6 +724,29 @@ public class TaskManager : MonoBehaviour
     }
 
 
+    void finishActiveBoundaryViolations()
+    {
+        for(int i = 0; i < 6; i++)
+        {
+            Bodypart activeCol = (Bodypart)i;
+            if (listActiveViolations.ContainsKey(activeCol))
+            {
+                
+                BoundaryViolation finished = listActiveViolations[activeCol];// new BoundaryViolation()
+                listActiveViolations.Remove((Bodypart)i);
+                finished.timestampEnd = Time.realtimeSinceStartup;
+                if(finished.userId % 2 == 0)
+                {
+                    currentTaskLog.incrementTimeOutsideBoundsP2(finished.timestampEnd - finished.timestampInit);
+                }
+                else
+                {
+                    currentTaskLog.incrementTimeOutsideBoundsP1(finished.timestampEnd - finished.timestampInit);
+                }
+                finishedViolations.Add(finished);
+            }
+        }
+    }
     
 
     
@@ -737,8 +781,9 @@ public class TaskManager : MonoBehaviour
                 float distance = Vector3.Distance(Vector3.zero, headP1Local);
                 if (!listActiveViolations.ContainsKey(activeBodyPart))
                 {
-                    listActiveViolations[activeBodyPart] = new BoundaryViolation(activeBodyPart, Time.realtimeSinceStartup,distance);
+                    listActiveViolations[activeBodyPart] = new BoundaryViolation((groupId *2)-1, currentTask, collabType, activeBodyPart, Time.realtimeSinceStartup,distance);
                     currentTaskLog.incrementViolationNumber((int)activeBodyPart);
+                    currentTaskLog.incrementBoundViolationsP1();
                 }
                 else
                 {
@@ -758,6 +803,7 @@ public class TaskManager : MonoBehaviour
                     BoundaryViolation finished = listActiveViolations[activeBodyPart];// new BoundaryViolation()
                     listActiveViolations.Remove(activeBodyPart);
                     finished.timestampEnd = Time.realtimeSinceStartup;
+                    currentTaskLog.incrementTimeOutsideBoundsP1(finished.timestampEnd - finished.timestampInit);
                     finishedViolations.Add(finished);
                 }
                 else
@@ -773,9 +819,11 @@ public class TaskManager : MonoBehaviour
                 float distance = Vector3.Distance(Vector3.zero, rightHandP1Local);
                 if (!listActiveViolations.ContainsKey(activeBodyPart))
                 {
-                    listActiveViolations[activeBodyPart] = new BoundaryViolation(activeBodyPart, Time.realtimeSinceStartup, distance);
+                    listActiveViolations[activeBodyPart] = new BoundaryViolation((groupId * 2) - 1, currentTask, collabType, activeBodyPart, Time.realtimeSinceStartup, distance);
+                    //listActiveViolations[activeBodyPart] = new BoundaryViolation(activeBodyPart, Time.realtimeSinceStartup, distance);
                     currentTaskLog.incrementViolationNumber((int)activeBodyPart);
-                    
+                    currentTaskLog.incrementBoundViolationsP1();
+
                 }
                 else
                 {
@@ -797,6 +845,7 @@ public class TaskManager : MonoBehaviour
                     BoundaryViolation finished = listActiveViolations[activeBodyPart];// new BoundaryViolation()
                     listActiveViolations.Remove(activeBodyPart);
                     finished.timestampEnd = Time.realtimeSinceStartup;
+                    currentTaskLog.incrementTimeOutsideBoundsP1(finished.timestampEnd - finished.timestampInit);
                     finishedViolations.Add(finished);
                 }
                 else
@@ -812,8 +861,10 @@ public class TaskManager : MonoBehaviour
                 float distance = Vector3.Distance(Vector3.zero, leftHandP1Local);
                 if (!listActiveViolations.ContainsKey(activeBodyPart))
                 {
-                    listActiveViolations[activeBodyPart] = new BoundaryViolation(activeBodyPart, Time.realtimeSinceStartup, distance);
+                    listActiveViolations[activeBodyPart] = new BoundaryViolation((groupId * 2) - 1, currentTask, collabType, activeBodyPart, Time.realtimeSinceStartup, distance);
+                    //listActiveViolations[activeBodyPart] = new BoundaryViolation(activeBodyPart, Time.realtimeSinceStartup, distance);
                     currentTaskLog.incrementViolationNumber((int)activeBodyPart);
+                    currentTaskLog.incrementBoundViolationsP1();
                 }
                 else
                 {
@@ -833,6 +884,9 @@ public class TaskManager : MonoBehaviour
                     BoundaryViolation finished = listActiveViolations[activeBodyPart];// new BoundaryViolation()
                     listActiveViolations.Remove(activeBodyPart);
                     finished.timestampEnd = Time.realtimeSinceStartup;
+                    currentTaskLog.incrementTimeOutsideBoundsP1(finished.timestampEnd - finished.timestampInit);
+
+
                     finishedViolations.Add(finished);
                 }
                 else
@@ -865,8 +919,10 @@ public class TaskManager : MonoBehaviour
                 float distance = Vector3.Distance(Vector3.zero, headP2Local);
                 if (!listActiveViolations.ContainsKey(activeBodyPart))
                 {
-                    listActiveViolations[activeBodyPart] = new BoundaryViolation(activeBodyPart, Time.realtimeSinceStartup, distance);
+                    listActiveViolations[activeBodyPart] = new BoundaryViolation((groupId * 2) , currentTask, collabType, activeBodyPart, Time.realtimeSinceStartup, distance);
+                    //listActiveViolations[activeBodyPart] = new BoundaryViolation(activeBodyPart, Time.realtimeSinceStartup, distance);
                     currentTaskLog.incrementViolationNumber((int)activeBodyPart);
+                    currentTaskLog.incrementBoundViolationsP2();
                 }
                 else
                 {
@@ -887,6 +943,7 @@ public class TaskManager : MonoBehaviour
                     BoundaryViolation finished = listActiveViolations[activeBodyPart];// new BoundaryViolation()
                     listActiveViolations.Remove(activeBodyPart);
                     finished.timestampEnd = Time.realtimeSinceStartup;
+                    currentTaskLog.incrementTimeOutsideBoundsP2(finished.timestampInit - finished.timestampEnd);
                     finishedViolations.Add(finished);
                 }
                 else
@@ -903,8 +960,10 @@ public class TaskManager : MonoBehaviour
                 float distance = Vector3.Distance(Vector3.zero, rightHandP2Local);
                 if (!listActiveViolations.ContainsKey(activeBodyPart))
                 {
-                    listActiveViolations[activeBodyPart] = new BoundaryViolation(activeBodyPart, Time.realtimeSinceStartup, distance);
+                    listActiveViolations[activeBodyPart] = new BoundaryViolation((groupId * 2), currentTask,collabType, activeBodyPart, Time.realtimeSinceStartup, distance);
+                    //listActiveViolations[activeBodyPart] = new BoundaryViolation(activeBodyPart, Time.realtimeSinceStartup, distance);
                     currentTaskLog.incrementViolationNumber((int)activeBodyPart);
+                    currentTaskLog.incrementBoundViolationsP2();
                 }
                 else
                 {
@@ -925,6 +984,7 @@ public class TaskManager : MonoBehaviour
                     BoundaryViolation finished = listActiveViolations[activeBodyPart];// new BoundaryViolation()
                     listActiveViolations.Remove(activeBodyPart);
                     finished.timestampEnd = Time.realtimeSinceStartup;
+                    currentTaskLog.incrementTimeOutsideBoundsP2(finished.timestampInit - finished.timestampEnd);
                     finishedViolations.Add(finished);
                 }
                 else
@@ -941,8 +1001,10 @@ public class TaskManager : MonoBehaviour
                 float distance = Vector3.Distance(Vector3.zero, leftHandP2Local);
                 if (!listActiveViolations.ContainsKey(activeBodyPart))
                 {
-                    listActiveViolations[activeBodyPart] = new BoundaryViolation(activeBodyPart, Time.realtimeSinceStartup, distance);
+                    listActiveViolations[activeBodyPart] = new BoundaryViolation((groupId * 2), currentTask, collabType, activeBodyPart, Time.realtimeSinceStartup, distance);
+                    //listActiveViolations[activeBodyPart] = new BoundaryViolation(activeBodyPart, Time.realtimeSinceStartup, distance);
                     currentTaskLog.incrementViolationNumber((int)activeBodyPart);
+                    currentTaskLog.incrementBoundViolationsP2();
                 }
                 else
                 {
@@ -963,6 +1025,7 @@ public class TaskManager : MonoBehaviour
                     BoundaryViolation finished = listActiveViolations[activeBodyPart];// new BoundaryViolation()
                     listActiveViolations.Remove(activeBodyPart);
                     finished.timestampEnd = Time.realtimeSinceStartup;
+                    currentTaskLog.incrementTimeOutsideBoundsP2(finished.timestampInit - finished.timestampEnd);
                     finishedViolations.Add(finished);
                 }
                 else
@@ -985,7 +1048,22 @@ public class TaskManager : MonoBehaviour
         timeRemaining = totalTimePerTask;
 
         if (currentTask > totalNumberTasks)
+        {
+            currentTaskState = TaskState.EndTask;
+            dominantplayer = "P3";
+            for(int i = 0; i < blueprintObjects.Count; i++)
+            {
+                blueprintObjects[i].gameObject.SetActive(false);
+            }
+            for(int i = 0; i < listPossiblePositionsForPuzzle.Count; i++)
+            {
+                listPossiblePositionsForPuzzle[i].SetActive(false);
+            }
+            finishActiveBoundaryViolations();
+
             return;
+        }
+            
         string str = "";
         for(int i = 0;i < blueprintObjects.Count; i++)
         {
@@ -1001,7 +1079,7 @@ public class TaskManager : MonoBehaviour
                     correctObject = true;
                 }
                 Vector3 distanceByAxis = obj.transform.position - blueprintObjects[i].transform.position;
-                logTaskAccuracy += groupId + "," + dominantplayer + ","+ currentTask + "," + collabType + "," + blueprintObjects[i].name + ","+ Utils.vector3ToString(blueprintObjects[i].transform.position) + "," 
+                logTaskAccuracy += groupId + "," + collabType + ","+ dominantplayer + ","+ currentTask + "," + "," + blueprintObjects[i].name + ","+ Utils.vector3ToString(blueprintObjects[i].transform.position) + "," 
                     +obj.name + Utils.vector3ToString(obj.transform.position) + ","+ obj.name + "," + Utils.vector3ToString(distanceByAxis) + "," + distanceBetweenBlueprintAndUserPlacedObject + ","+correctObject +"\n" ;
                 
             }
@@ -1009,6 +1087,8 @@ public class TaskManager : MonoBehaviour
 
         currentTaskLog.setTaskEndTime(Time.realtimeSinceStartup);
         logTasks.Add(currentTaskLog);
+        finishActiveBoundaryViolations();
+        
         //
         GameObject dominantArea;
         GameObject dominantRootPuzzle;
@@ -1214,8 +1294,8 @@ public class TaskManager : MonoBehaviour
     public void CompleteTaskReport()
     {
         //string header = "UserId,CurrentGainLevel,TargetSize,InitMovementTime,TargetPressedTime,ReachTime,TargetReleasedTime,numberErrorsFirstTarget,numberErrorsFinalTarget,SlidingTaskTime,TotalTime,ErrorFirstTime,ErrorSecondTime\n";
-        string header = "userId,trialNumber,dominantPlayer,puzzleId" + Utils.vecNameToString("centerPosArea") + "," + Utils.vecNameToString("centerRotArea") + "," + collabType.ToString() +
-            "," + Utils.vecNameToString("boundsSize") + "," + "numberOfBoundViolationsP1,timeOutsideBoundsP1,totalTime";
+        string header = "userId,collabType,trialNumber,dominantPlayer,puzzleId," + Utils.vecNameToString("centerPosArea") + "," + Utils.vecNameToString("centerRotArea") + "," + collabType.ToString() +
+            "," + Utils.vecNameToString("boundsSize") + "," + "numberOfBoundViolationsP1,timeOutsideBoundsP1,numberOfBoundViolationsP2,timeOutsideBoundsP2,totalTime\n";
         string logTaskStr = header;
         //string passiveHapticsStr = (isPassiveHaptics ? "PassiveHaptics" : "NoPassiveHaptics");
         //string retargettingStr = retargettingOption.ToString();
@@ -1249,6 +1329,14 @@ public class TaskManager : MonoBehaviour
             }
 
             System.IO.File.WriteAllText(pathDirectory + "TaskReportAccuracy_" + collabType.ToString() + ".csv", logTaskAccuracy);
+
+            string logBoundaryViolations = "userId,currentTask,collabType,bPart,distance,timeElapsed";
+            foreach(BoundaryViolation finishedCOllision in finishedViolations)
+            {
+                logBoundaryViolations += finishedCOllision.toLogString();
+                    
+            }
+            System.IO.File.WriteAllText(pathDirectory + "TaskReportCollisions_" + collabType.ToString() + ".csv", logBoundaryViolations);
         }
     
 

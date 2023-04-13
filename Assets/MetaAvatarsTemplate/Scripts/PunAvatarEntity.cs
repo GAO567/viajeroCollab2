@@ -33,6 +33,7 @@ namespace Chiligames.MetaAvatarsPun
         public void disableAvatar()
         {
             SetActiveView(CAPI.ovrAvatar2EntityViewFlags.None);
+            print("$$$disabling avatar$$$");
         }
 
         private void Start()
@@ -209,6 +210,7 @@ namespace Chiligames.MetaAvatarsPun
         private void RPC_SaveAssetPath(string assetPath)
         {
             _assets[0] = new AssetData { source = AssetSource.Zip, path = assetPath };
+            print("calling RPC Save Asset Path");
         }
 
 

@@ -9266,13 +9266,25 @@ PrefabInstance:
       propertyPath: sceneViewId
       value: 38
       objectReference: {fileID: 0}
+    - target: {fileID: 8465339781447079481, guid: c673a7ed842dd3b41ac8fc8cfe649214, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8465339781447079482, guid: c673a7ed842dd3b41ac8fc8cfe649214, type: 3}
       propertyPath: m_Name
       value: RootAreas
       objectReference: {fileID: 0}
     - target: {fileID: 8465339781447079483, guid: c673a7ed842dd3b41ac8fc8cfe649214, type: 3}
+      propertyPath: debug
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8465339781447079483, guid: c673a7ed842dd3b41ac8fc8cfe649214, type: 3}
+      propertyPath: groupId
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8465339781447079483, guid: c673a7ed842dd3b41ac8fc8cfe649214, type: 3}
       propertyPath: avatarId
-      value: 5
+      value: 16
       objectReference: {fileID: 0}
     - target: {fileID: 8465339781447079483, guid: c673a7ed842dd3b41ac8fc8cfe649214, type: 3}
       propertyPath: drawAreas
@@ -9300,7 +9312,7 @@ PrefabInstance:
       objectReference: {fileID: 1315192949}
     - target: {fileID: 8465339781447079483, guid: c673a7ed842dd3b41ac8fc8cfe649214, type: 3}
       propertyPath: isRemotePlayer
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8465339781447079483, guid: c673a7ed842dd3b41ac8fc8cfe649214, type: 3}
       propertyPath: networkManager
@@ -9360,6 +9372,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8465339781447079491, guid: c673a7ed842dd3b41ac8fc8cfe649214, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8465339781447079492, guid: c673a7ed842dd3b41ac8fc8cfe649214, type: 3}
+      propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8465339781564956120, guid: c673a7ed842dd3b41ac8fc8cfe649214, type: 3}

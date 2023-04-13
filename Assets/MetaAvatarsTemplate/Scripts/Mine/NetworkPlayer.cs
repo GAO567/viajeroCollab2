@@ -62,17 +62,24 @@ public class NetworkPlayer : MonoBehaviour
                     leftHand.GetComponentInChildren<SkinnedMeshRenderer>().enabled = true; 
                     //head.GetComponentInChildren<MeshRenderer>().enabled = false;
                 }
+                else
+                {
+                    rightHand.GetComponentInChildren<SkinnedMeshRenderer>().enabled = false;
+                    leftHand.GetComponentInChildren<SkinnedMeshRenderer>().enabled = false;
+                }
 
-                
-                    if (manager.collabType == CollabType.CoupledView)
-                    {
-                        head.GetComponentInChildren<ViewportDrawer>().gameObject.SetActive(true);
-                    }
-                    else
-                    {
-                        head.GetComponentInChildren<ViewportDrawer>().gameObject.SetActive(false);
-                    }
-//                }
+                /*
+                if (manager.collabType == CollabType.CoupledView)
+                {
+                if(head)
+                    head.GetComponentInChildren<ViewportDrawer>().gameObject.SetActive(true);
+                }
+                else
+                {
+                if(head)
+                    head.GetComponentInChildren<ViewportDrawer>().gameObject.SetActive(false);
+                }*/
+                //                }
             }
             if (raycasterLeft && raycasterRight)
             {

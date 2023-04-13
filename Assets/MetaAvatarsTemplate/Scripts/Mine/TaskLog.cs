@@ -124,9 +124,9 @@ public class TaskLog
     public string toLogString()
     {
         string logStr = "";
-        logStr = headerTaskFile;
-        logStr += userId + "," + trialNumber + "," + dominantPlayer + "," + puzzleId + "," + Utils.vector3ToString(centerPosArea) + "," + Utils.vector3ToString(centerRotArea) + "," + collabType.ToString() +
-            "," + Utils.vector3ToString(boundsSize) + "," +numberOfBoundViolationsP1 +","+ timeOutsideBoundsP1 + "," + totalTime  ;
+        logStr = "";
+        logStr += userId + "," + collabType + ","+trialNumber + "," + dominantPlayer + "," + puzzleId + "," + Utils.vector3ToString(centerPosArea) + "," + Utils.vector3ToString(centerRotArea) + "," + collabType.ToString() +
+            "," + Utils.vector3ToString(boundsSize) + "," +numberOfBoundViolationsP1 +","+ timeOutsideBoundsP1 + "," +  numberOfBoundViolationsP2 + ","+ timeOutsideBoundsP2 + ","+totalTime  ;
         if(bluePrintParts != null && objParts != null)
         {
             logStr += "," + objParts.Count;//add the number of parts to make sure we have the right amount
@@ -181,13 +181,15 @@ public class TaskLog
 
     public void incrementTimeOutsideBoundsP1(float timeOutsideBounds)
     {
-        this.timeOutsideBoundsP1 += timeOutsideBounds - startTimeOutsideBoundsP1;
+        this.timeOutsideBoundsP1 += timeOutsideBounds;
         startTimeOutsideBoundsP1 = 0;// timeOutsideBounds;
     }
 
+
+
     public void incrementTimeOutsideBoundsP2(float timeOutsideBounds)
     {
-        this.timeOutsideBoundsP2 += timeOutsideBounds - startTimeOutsideBoundsP2;
+        this.timeOutsideBoundsP2 += timeOutsideBounds;// - startTimeOutsideBoundsP2;
         startTimeOutsideBoundsP2 = 0;// timeOutsideBounds;
     }
 
