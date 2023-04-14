@@ -100,12 +100,12 @@ public class TaskManager : MonoBehaviour
                                                 Utils.vecNameToString("headPos") + "," + Utils.vecNameToString("headRot") + ","+  Utils.vecNameToString("rightHandPos") + Utils.vecNameToString("rightHandRot") + ","+
                                                 Utils.vecNameToString("leftHandPos") + Utils.vecNameToString("leftHandRot") + "partId," + Utils.vecNameToString("objInteractedPos") + "," + Utils.vecNameToString("objInteractedRot") + "\n";
     
-    public string player1InteractionStr = "userId,collabType,timestamp,currentTask,dominantplayer,violatingP1," + Utils.vecNameToString("Player1AreaPos") + "," + Utils.vecNameToString("Player1AreaRot") + "," +
-                                            Utils.vecNameToString("headP1") + "," + Utils.vecNameToString("rightHandP1Pos") + "," + Utils.vecNameToString("rightHandP1Rot") + "," + Utils.vecNameToString("leftHandP1Pos") + "," + 
-                                            Utils.vecNameToString("leftHandP1Rot") + "\n";
-    private string player2InteractionStr = "userId,collabType,timestamp,currentTask,dominantplayer,violatingP2," + Utils.vecNameToString("Player2AreaPos") + "," + Utils.vecNameToString("Player2AreaRot") + "," +
-                                            Utils.vecNameToString("headP2") + "," + Utils.vecNameToString("rightHandP2Pos") + "," + Utils.vecNameToString("rightHandP2Rot") + "," + Utils.vecNameToString("leftHandP2Pos") + "," +
-                                            Utils.vecNameToString("leftHandP2Rot") + "\n";
+    public string player1InteractionStr = "userId,dominantPlayer,timestamp,collabType,currentTask,dominantPlayer,isViolatingBoundary," + Utils.vecNameToString("Player1AreaCenter") + "," + Utils.vecNameToString("Player1AreaRot")
+                                + Utils.vecNameToString("headPosP1") + "," + Utils.vecNameToString("headRotP1") + "," + Utils.vecNameToString("rightHandPosP1") + Utils.vecNameToString("rightHandRotP1")
+                                 + Utils.vecNameToString("leftHandPosP1") + "," + Utils.vecNameToString("leftHandRotP1") + "\n";
+    private string player2InteractionStr = "userId,dominantPlayer,timestamp,collabType,currentTask,dominantPlayer,isViolatingBoundary," + Utils.vecNameToString("Player2AreaCenter") + "," + Utils.vecNameToString("Player2AreaRot")
+                                + Utils.vecNameToString("headPosP2") + "," + Utils.vecNameToString("headRotP2") + "," + Utils.vecNameToString("rightHandPosP2") + Utils.vecNameToString("rightHandRotP2")
+                                 + Utils.vecNameToString("leftHandPosP2") + "," + Utils.vecNameToString("leftHandRotP2") + "\n";
 
     string logTaskAccuracy = "UserId,collaborationType,dominantPlayer,currentTask,NameBlueprintObj," + Utils.vecNameToString("blueprintPos") + ",NameUserPlacedObj," + Utils.vecNameToString("UserPlacedPos") + "," + 
         "AbsoluteDistance," + Utils.vecNameToString("RelativeDistance")+ ",correctObject\n";
@@ -401,7 +401,7 @@ public class TaskManager : MonoBehaviour
 
     void logUsersMovements()
     {
-        if (currentTaskState > TaskState.Connected)
+        if (currentTaskState > TaskState.BothConnected)
         {
             string violatingP1 = "NoViolationP1";
             if (currentTaskLog.startTimeOutsideBoundsP1 > 0)
@@ -412,9 +412,9 @@ public class TaskManager : MonoBehaviour
                 violatingP2 = "ViolationP2";
             }
             
-            player1InteractionStr += (groupId*2)-1 + "," + collabType.ToString() + "," + Time.realtimeSinceStartup + "," + currentTask + "," + (dominantplayer == "P1" ? true : false) + "," + violatingP1 + ","+  Utils.vector3ToString(Player1Area.transform.position)+ "," + Utils.vector3ToString(Player1Area.transform.eulerAngles) +  ","
-                                    + Utils.vector3ToString(headPlayer1.transform.position) + "," + Utils.vector3ToString(headPlayer1.transform.eulerAngles) + Utils.vector3ToString(rightHandPlayer1.transform.position) + "," + Utils.vector3ToString(rightHandPlayer1.transform.eulerAngles) +
-                                     Utils.vector3ToString(leftHandPlayer1.transform.position) + "," + Utils.vector3ToString(leftHandPlayer1.transform.eulerAngles );
+            player1InteractionStr += ((groupId * 2)-1) + "," + dominantplayer + "," + collabType.ToString() + "," + Time.realtimeSinceStartup + "," + currentTask + "," + (dominantplayer == "P2" ? true : false) + "," + violatingP2 + "," + Utils.vector3ToString(Player1Area.transform.position) + "," + Utils.vector3ToString(Player1Area.transform.eulerAngles) + ","
+                                    + Utils.vector3ToString(headPlayer1.transform.position) + "," + Utils.vector3ToString(headPlayer1.transform.eulerAngles) + ","+ Utils.vector3ToString(rightHandPlayer1.transform.position) + "," + Utils.vector3ToString(rightHandPlayer1.transform.eulerAngles) +
+                                     Utils.vector3ToString(leftHandPlayer1.transform.position) + "," + Utils.vector3ToString(leftHandPlayer1.transform.eulerAngles);
             if (player1Interacting && getInteractPart("P1"))
             {
                 player1InteractionStr += "," + Utils.vector3ToString(getInteractPart("P1").transform.position) + "," + Utils.vector3ToString(getInteractPart("P1").transform.eulerAngles) + "\n";
@@ -425,7 +425,7 @@ public class TaskManager : MonoBehaviour
                 player1InteractionStr += "\n";
             }
 
-            if (player1InteractionStr.Length > 200)
+            if (player1InteractionStr.Length > 400)
             {
                 //flush to file
                 System.IO.File.AppendAllText(pathDirectory + "MovementReportP1_" + collabType.ToString() + ".csv", player1InteractionStr);
@@ -442,7 +442,7 @@ public class TaskManager : MonoBehaviour
 
 
             player2InteractionStr += (groupId*2) + ","+dominantplayer+","+ collabType.ToString() + "," + Time.realtimeSinceStartup + "," + currentTask + "," + (dominantplayer == "P2" ? true : false) + "," + violatingP2 + ","+ Utils.vector3ToString(Player2Area.transform.position) + "," + Utils.vector3ToString(Player2Area.transform.eulerAngles) + ","
-                                    + Utils.vector3ToString(headPlayer2.transform.position) + "," + Utils.vector3ToString(headPlayer2.transform.eulerAngles) + Utils.vector3ToString(rightHandPlayer2.transform.position) + "," + Utils.vector3ToString(rightHandPlayer2.transform.eulerAngles) +
+                                    + Utils.vector3ToString(headPlayer2.transform.position) + "," + Utils.vector3ToString(headPlayer2.transform.eulerAngles) + ","+Utils.vector3ToString(rightHandPlayer2.transform.position) + "," + Utils.vector3ToString(rightHandPlayer2.transform.eulerAngles) +
                                      Utils.vector3ToString(leftHandPlayer2.transform.position) + "," + Utils.vector3ToString(leftHandPlayer2.transform.eulerAngles);
             
             if (player2Interacting && getInteractPart("P2"))
@@ -455,7 +455,7 @@ public class TaskManager : MonoBehaviour
             }
 
 
-            if (player2InteractionStr.Length > 200)
+            if (player2InteractionStr.Length > 400)
             {
                 //flush to file
                 System.IO.File.AppendAllText(pathDirectory + "MovementReportP2_" + collabType.ToString() + ".csv", player2InteractionStr);
