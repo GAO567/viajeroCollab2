@@ -144,6 +144,16 @@ public class TaskLog
         return logStr;
     }
 
+    public bool isViolatingP1()
+    {
+        
+        return true;
+    }
+
+    public bool isViolatingP2()
+    {
+        return true;
+    }
     
 
     public void addTimeInteracting(string player, float timeElapsed)

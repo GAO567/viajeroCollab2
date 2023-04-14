@@ -398,16 +398,32 @@ public class TaskManager : MonoBehaviour
         }
     }
     
+     bool isViolatingP1()
+    {
+        if(listActiveViolations.ContainsKey(Bodypart.HeadP1) || listActiveViolations.ContainsKey(Bodypart.rightHandP1) || listActiveViolations.ContainsKey(Bodypart.leftHandP1))
+        {
+            return true;
+        }
+        return false;
+    }
 
+    bool isViolatingP2()
+    {
+        if (listActiveViolations.ContainsKey(Bodypart.HeadP2) || listActiveViolations.ContainsKey(Bodypart.rightHandP2) || listActiveViolations.ContainsKey(Bodypart.leftHandP2))
+        {
+            return true;
+        }
+        return false;
+    }
     void logUsersMovements()
     {
         if (currentTaskState > TaskState.BothConnected)
         {
             string violatingP1 = "NoViolationP1";
-            if (currentTaskLog.startTimeOutsideBoundsP1 > 0)
+            if (isViolatingP1())
                 violatingP1 = "ViolationP1";
             string violatingP2 = "NoViolationP2";
-            if (currentTaskLog.startTimeOutsideBoundsP2 > 0)
+            if (isViolatingP2())
             {
                 violatingP2 = "ViolationP2";
             }
