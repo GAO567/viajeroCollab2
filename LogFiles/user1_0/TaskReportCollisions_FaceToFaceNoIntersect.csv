@@ -1,0 +1,14 @@
+userId,collabType,currentTask,bPart,distance,timeElapsed
+1,FaceToFaceNoIntersect,0,rightHandP1,0.4576914,1.197578
+2,FaceToFaceNoIntersect,0,HeadP2,1.002707,1.195854
+2,FaceToFaceNoIntersect,0,rightHandP2,0.6079796,1.195755
+2,FaceToFaceNoIntersect,0,leftHandP2,0.7054766,1.195702
+1,FaceToFaceNoIntersect,1,rightHandP1,0.456241,2.154633
+2,FaceToFaceNoIntersect,1,HeadP2,1.002274,2.154633
+2,FaceToFaceNoIntersect,1,rightHandP2,0.6079391,2.154564
+2,FaceToFaceNoIntersect,1,leftHandP2,0.7053872,2.154533
+1,FaceToFaceNoIntersect,2,rightHandP1,0.4568501,1.360771
+2,FaceToFaceNoIntersect,2,HeadP2,1.008117,1.360764
+2,FaceToFaceNoIntersect,2,rightHandP2,0.6078388,1.360703
+2,FaceToFaceNoIntersect,2,leftHandP2,0.7051194,1.360672
+1,FaceToFaceNoIntersect,3,HeadP1,0.4028637,0.3060989

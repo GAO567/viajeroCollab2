@@ -572,15 +572,6 @@ public class TaskManager : MonoBehaviour
         }
         if(isRemotePlayer)
         {
-            if (taskStarted)
-            {
-                if(collabType == CollabType.CoupledView || collabType == CollabType.FacetoFaceIntersect)
-            {
-                GameObject traytablePlayer2 = GameObject.Find("TraytableP2");// CreatePrimitive(PrimitiveType.Cube);
-                traytablePlayer2.SetActive(false);
-            }
-            }
-            
             return;
         }
 
