@@ -144,10 +144,7 @@ public class TaskLog
         return logStr;
     }
 
-    public void setTaskEndTime(float timestampEnd)
-    {
-        timeElapsed = timestampEnd - timestampInit;
-    }
+    
 
     public void addTimeInteracting(string player, float timeElapsed)
     {

@@ -99,8 +99,13 @@ public class TaskManager : MonoBehaviour
     public string headerPlayer1Interaction = "userId,currentTask,dominantPlayer," + Utils.vecNameToString("centerBoundsPos") + "," + Utils.vecNameToString("centerAreaRot") + "," +
                                                 Utils.vecNameToString("headPos") + "," + Utils.vecNameToString("headRot") + ","+  Utils.vecNameToString("rightHandPos") + Utils.vecNameToString("rightHandRot") + ","+
                                                 Utils.vecNameToString("leftHandPos") + Utils.vecNameToString("leftHandRot") + "partId," + Utils.vecNameToString("objInteractedPos") + "," + Utils.vecNameToString("objInteractedRot") + "\n";
-    public string player1InteractionStr = "";
-    private string player2InteractionStr;
+    
+    public string player1InteractionStr = "userId,collabType,timestamp,currentTask,dominantplayer,violatingP1," + Utils.vecNameToString("Player1AreaPos") + "," + Utils.vecNameToString("Player1AreaRot") + "," +
+                                            Utils.vecNameToString("headP1") + "," + Utils.vecNameToString("rightHandP1Pos") + "," + Utils.vecNameToString("rightHandP1Rot") + "," + Utils.vecNameToString("leftHandP1Pos") + "," + 
+                                            Utils.vecNameToString("leftHandP1Rot") + "\n";
+    private string player2InteractionStr = "userId,collabType,timestamp,currentTask,dominantplayer,violatingP2," + Utils.vecNameToString("Player2AreaPos") + "," + Utils.vecNameToString("Player2AreaRot") + "," +
+                                            Utils.vecNameToString("headP2") + "," + Utils.vecNameToString("rightHandP2Pos") + "," + Utils.vecNameToString("rightHandP2Rot") + "," + Utils.vecNameToString("leftHandP2Pos") + "," +
+                                            Utils.vecNameToString("leftHandP2Rot") + "\n";
 
     string logTaskAccuracy = "UserId,collaborationType,dominantPlayer,currentTask,NameBlueprintObj," + Utils.vecNameToString("blueprintPos") + ",NameUserPlacedObj," + Utils.vecNameToString("UserPlacedPos") + "," + 
         "AbsoluteDistance," + Utils.vecNameToString("RelativeDistance")+ ",correctObject\n";
@@ -370,6 +375,7 @@ public class TaskManager : MonoBehaviour
             WireareaDrawer drawer = Player2Area.GetComponentInChildren<WireareaDrawer>();
             if(drawer) drawer.BoundsSize1 = boundsSize;
         }
+        currentTaskState = TaskState.Player1Dominant;
 
         currentTaskLog = new TaskLog((groupId*2)-1, 0, "P1", currentTask.ToString(), Player1Area.transform, collabType, boundsSize);
         blueprintObjects = generator.generateBlueprint(new Vector3(0, 0, 0), 6, 4, 3, 0.09f, transformRootForP1Blueprint);
@@ -405,6 +411,7 @@ public class TaskManager : MonoBehaviour
             {
                 violatingP2 = "ViolationP2";
             }
+            
             player1InteractionStr += (groupId*2)-1 + "," + collabType.ToString() + "," + Time.realtimeSinceStartup + "," + currentTask + "," + (dominantplayer == "P1" ? true : false) + "," + violatingP1 + ","+  Utils.vector3ToString(Player1Area.transform.position)+ "," + Utils.vector3ToString(Player1Area.transform.eulerAngles) +  ","
                                     + Utils.vector3ToString(headPlayer1.transform.position) + "," + Utils.vector3ToString(headPlayer1.transform.eulerAngles) + Utils.vector3ToString(rightHandPlayer1.transform.position) + "," + Utils.vector3ToString(rightHandPlayer1.transform.eulerAngles) +
                                      Utils.vector3ToString(leftHandPlayer1.transform.position) + "," + Utils.vector3ToString(leftHandPlayer1.transform.eulerAngles );
@@ -531,7 +538,7 @@ public class TaskManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        debugTextLabel.text = "USER ID = " + groupId + ", Current State" + currentTaskState.ToString() + " Collab Type " + collabType.ToString();
+        debugTextLabel.text = "USER ID = " + groupId + " current task " + currentTask + " Current State" + currentTaskState.ToString() + " Collab Type " + collabType.ToString();
 
         if(isRemotePlayer && collabType == CollabType.CoupledView && !hiddenAvatar)
         {
@@ -664,7 +671,7 @@ public class TaskManager : MonoBehaviour
         }
 
 
-        if(currentTaskState >= TaskState.BothConnected && currentTaskState < TaskState.EndTask)
+        if(currentTaskState > TaskState.BothConnected && currentTaskState < TaskState.EndTask)
         {
             calculateBoundaryViolation();
         }
@@ -1044,26 +1051,9 @@ public class TaskManager : MonoBehaviour
     void nextPuzzle()
     {
 
-        currentTask++;
-        timeRemaining = totalTimePerTask;
+        
 
-        if (currentTask > totalNumberTasks)
-        {
-            currentTaskState = TaskState.EndTask;
-            dominantplayer = "P3";
-            for(int i = 0; i < blueprintObjects.Count; i++)
-            {
-                blueprintObjects[i].gameObject.SetActive(false);
-            }
-            for(int i = 0; i < listPossiblePositionsForPuzzle.Count; i++)
-            {
-                listPossiblePositionsForPuzzle[i].SetActive(false);
-            }
-            finishActiveBoundaryViolations();
-
-            return;
-        }
-            
+        
         string str = "";
         for(int i = 0;i < blueprintObjects.Count; i++)
         {
@@ -1085,20 +1075,36 @@ public class TaskManager : MonoBehaviour
             }
         }
 
-        currentTaskLog.setTaskEndTime(Time.realtimeSinceStartup);
+        currentTaskLog.endTask();
         logTasks.Add(currentTaskLog);
         finishActiveBoundaryViolations();
-        
+
+        currentTask++;
+        timeRemaining = totalTimePerTask;
+        if (currentTask == totalNumberTasks)
+        {
+            currentTaskState = TaskState.EndTask;
+            dominantplayer = "P3";
+            for (int i = 0; i < blueprintObjects.Count; i++)
+            {
+                blueprintObjects[i].gameObject.SetActive(false);
+            }
+            for (int i = 0; i < listPossiblePositionsForPuzzle.Count; i++)
+            {
+                listPossiblePositionsForPuzzle[i].SetActive(false);
+            }
+            //finishActiveBoundaryViolations();
+
+            return;
+        }
+
+
         //
         GameObject dominantArea;
         GameObject dominantRootPuzzle;
         if(dominantplayer == "P2")
         {
-            if (currentTaskLog!=null)
-            {
-                //currentTaskLog.addTimeInteracting("P2", Time.realtimeSinceStartup);
-                currentTaskLog.endTask();
-            }
+            
             dominantplayer = "P1";
             currentTaskState = TaskState.Player1Dominant;
             dominantArea = Player1Area.gameObject;
@@ -1107,11 +1113,7 @@ public class TaskManager : MonoBehaviour
         }
         else
         {
-            if (currentTaskLog != null)
-            {
-                //currentTaskLog.addTimeInteracting("P2", Time.realtimeSinceStartup);
-                currentTaskLog.endTask();
-            }
+           
             dominantplayer = "P2";
             currentTaskState = TaskState.Player2Dominant;
             dominantArea = Player2Area;
