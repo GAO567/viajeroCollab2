@@ -102,8 +102,8 @@ public class TaskManager : MonoBehaviour
     public string player1InteractionStr = "";
     private string player2InteractionStr;
 
-    string logTaskAccuracy = "UserId,collaborationType,currentTask,NameBlueprintObj," + Utils.vecNameToString("blueprintPos") + ",NameUserPlacedObj," + Utils.vecNameToString("UserPlacedPos") + "," + 
-        "AbsoluteDistance," + Utils.vecNameToString("RelativeDistance");
+    string logTaskAccuracy = "UserId,collaborationType,dominantPlayer,currentTask,NameBlueprintObj," + Utils.vecNameToString("blueprintPos") + ",NameUserPlacedObj," + Utils.vecNameToString("UserPlacedPos") + "," + 
+        "AbsoluteDistance," + Utils.vecNameToString("RelativeDistance")+ ",correctObject\n";
 
     Dictionary<Bodypart, BoundaryViolation> listActiveViolations = new Dictionary<Bodypart, BoundaryViolation>();
     List<BoundaryViolation> finishedViolations = new List<BoundaryViolation>();
@@ -664,7 +664,7 @@ public class TaskManager : MonoBehaviour
         }
 
 
-        if(currentTaskState > TaskState.BothConnected && currentTaskState <= TaskState.EndTask)
+        if(currentTaskState >= TaskState.BothConnected && currentTaskState < TaskState.EndTask)
         {
             calculateBoundaryViolation();
         }
@@ -1067,7 +1067,7 @@ public class TaskManager : MonoBehaviour
         string str = "";
         for(int i = 0;i < blueprintObjects.Count; i++)
         {
-            GameObject obj = GameObject.Find(blueprintObjects[i].name+"_root");
+            GameObject obj = GameObject.Find(blueprintObjects[i].name+"_root(Clone)");//part2_root(Clone)
             if (obj)
             {
                 float threshold = 0.3f;
@@ -1079,7 +1079,7 @@ public class TaskManager : MonoBehaviour
                     correctObject = true;
                 }
                 Vector3 distanceByAxis = obj.transform.position - blueprintObjects[i].transform.position;
-                logTaskAccuracy += groupId + "," + collabType + ","+ dominantplayer + ","+ currentTask + "," + "," + blueprintObjects[i].name + ","+ Utils.vector3ToString(blueprintObjects[i].transform.position) + "," 
+                logTaskAccuracy += groupId + "," + collabType + ","+ dominantplayer + ","+ currentTask + ","  + blueprintObjects[i].name + ","+ Utils.vector3ToString(blueprintObjects[i].transform.position) + "," 
                     +obj.name + Utils.vector3ToString(obj.transform.position) + ","+ obj.name + "," + Utils.vector3ToString(distanceByAxis) + "," + distanceBetweenBlueprintAndUserPlacedObject + ","+correctObject +"\n" ;
                 
             }
@@ -1330,7 +1330,7 @@ public class TaskManager : MonoBehaviour
 
             System.IO.File.WriteAllText(pathDirectory + "TaskReportAccuracy_" + collabType.ToString() + ".csv", logTaskAccuracy);
 
-            string logBoundaryViolations = "userId,currentTask,collabType,bPart,distance,timeElapsed";
+            string logBoundaryViolations = "userId,collabType,currentTask,bPart,distance,timeElapsed\n";
             foreach(BoundaryViolation finishedCOllision in finishedViolations)
             {
                 logBoundaryViolations += finishedCOllision.toLogString();
