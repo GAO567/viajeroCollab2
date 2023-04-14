@@ -379,7 +379,7 @@ public class TaskManager : MonoBehaviour
 
         currentTaskLog = new TaskLog((groupId*2)-1, 0, "P1", currentTask.ToString(), Player1Area.transform, collabType, boundsSize);
         blueprintObjects = generator.generateBlueprint(new Vector3(0, 0, 0), 6, 4, 3, 0.09f, transformRootForP1Blueprint);
-        listPossiblePositionsForPuzzle =  generator.generatePuzzle(false, true, Player1Area);
+        listPossiblePositionsForPuzzle =  generator.generatePuzzle(true, Player1Area);
         taskStarted = true;
     }
 
@@ -570,9 +570,20 @@ public class TaskManager : MonoBehaviour
                 }
             }
         }
-
-        if (isRemotePlayer)
+        if(isRemotePlayer)
+        {
+            if (taskStarted)
+            {
+                if(collabType == CollabType.CoupledView || collabType == CollabType.FacetoFaceIntersect)
+            {
+                GameObject traytablePlayer2 = GameObject.Find("TraytableP2");// CreatePrimitive(PrimitiveType.Cube);
+                traytablePlayer2.SetActive(false);
+            }
+            }
+            
             return;
+        }
+
         if(currentTaskState == TaskState.Connected)
         {
             if (GameObject.Find("RemoteAvatar"))
@@ -1139,7 +1150,7 @@ public class TaskManager : MonoBehaviour
 
         
         blueprintObjects = generator.generateBlueprint(new Vector3(0, 0, 0), 6, 4, 3, 0.09f, dominantRootPuzzle);
-        listPossiblePositionsForPuzzle = generator.generatePuzzle(false, false, dominantArea);
+        listPossiblePositionsForPuzzle = generator.generatePuzzle(false, dominantArea);
         int idToUse = 0;
         GameObject player;
         if(currentTaskState == TaskState.Player1Dominant)
@@ -1156,7 +1167,7 @@ public class TaskManager : MonoBehaviour
         currentTaskLog = new TaskLog(idToUse,0, dominantplayer, currentTask.ToString(), player.transform, collabType, boundsSize);
         
     }
-
+    
     void initializeTask()
     {
         if (Player1Area && Player2Area)
@@ -1256,7 +1267,7 @@ public class TaskManager : MonoBehaviour
                 traytablePlayer2.transform.name = "TraytableP2";
                 traytablePlayer2.transform.parent = Player2Area.transform;
                 traytablePlayer2.transform.localEulerAngles = Vector3.zero;
-                traytablePlayer2.transform.localPosition = new Vector3(0.003f, -0.137f, 0.243f);
+                traytablePlayer2.transform.localPosition = new Vector3(0.003f, -100.137f, 0.243f);
                 traytablePlayer2.transform.localScale = new Vector3(0.5137f, 0.019f, 0.29f);
                 traytablePlayer2.AddComponent<Photon.Pun.PhotonView>();
                 traytablePlayer2.GetComponent<MeshRenderer>().enabled = false;

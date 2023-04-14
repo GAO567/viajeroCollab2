@@ -94,7 +94,7 @@ public class Raycaster : MonoBehaviour
             Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
             //Debug.Log("Did Hit");
             Controller_mapping(hit);
-            print("@hit" + hit.transform.gameObject.name);
+            print("@hit" + hit.transform.gameObject.name + "from player " + (taskManager.isRemotePlayer ? "P2" : "P1"));
             Vector3 hitLocalPos = transform.InverseTransformPoint(hit.transform.position);
 
             lineRenderer.SetPosition(0, this.gameObject.transform.TransformPoint(0, 0, 0));
@@ -190,7 +190,11 @@ public class Raycaster : MonoBehaviour
         if (photonView)
         {
             photonView.RequestOwnership();//request ownership of the object
-            print("requesting ownership");
+            print("requesting ownership of object "+ hitObj.transform.name + "from player " + (taskManager.isRemotePlayer? "P2" : "P1"));
+        }
+        else
+        {
+            print("Photon view not present in object " + hitObj.transform.name + "from player " + (taskManager.isRemotePlayer ? "P2" : "P1"));
         }
 
         zDepth = this.gameObject.transform.InverseTransformPoint(hitObj.transform.position).z;

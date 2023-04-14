@@ -50,6 +50,8 @@ public class PuzzleGenerator : MonoBehaviour
         listColors.Add(new Color(0.0f, 0.0f, 1.0f));
         listColors.Add(new Color(1.0f, 1.0f, 0.0f));
         listColors.Add(new Color(0.0f, 1.0f, 1.0f));
+
+        
         //taskManager = GameObject.Find("TaskManager").GetComponent<TaskManager>();
         //generatePuzzle();
 
@@ -58,7 +60,7 @@ public class PuzzleGenerator : MonoBehaviour
     }
 
 
-    public List<GameObject> generatePuzzle(bool usePrimitives,bool generate,GameObject headObj)
+    public List<GameObject> generatePuzzle(bool generate,GameObject headObj)
     {
         GameObject partsRoot = new GameObject("partsRoot");
         GameObject distractorRoot = GameObject.Find("distractorRoot");
@@ -67,31 +69,62 @@ public class PuzzleGenerator : MonoBehaviour
         objAux.transform.position = headObj.transform.position;
         objAux.transform.rotation = headObj.transform.rotation;
         List<int> auxIndex = new List<int>();
-        if (usePrimitives)
-        { 
-            for(int i = 0; i < numberPieces; i++)
-            {
-                GameObject obj = Photon.Pun.PhotonNetwork.Instantiate("Distractor", new Vector3(), new Quaternion());
-                    //GameObject.CreatePrimitive(PrimitiveType.Cube);
-                obj.GetComponent<MeshRenderer>().material = mat;
-                obj.GetComponent<MeshRenderer>().material.color = new Color(0.0f, 0.0f, 1.0f);
-                obj.transform.localScale = new Vector3(0.06f, 0.06f, 0.06f);
-                obj.name = "piece" + i;
-                obj.transform.parent = partsRoot.transform;
-
-                parts.Add(obj);
-
-                obj.GetComponent<Photon.Pun.PhotonTransformView>().m_SynchronizePosition = true;
-                obj.GetComponent<Photon.Pun.PhotonTransformView>().m_SynchronizeRotation = true;
-                obj.GetComponent<Photon.Pun.PhotonTransformView>().m_SynchronizeScale = true;
-                //auxIndex.Add(i);
-            }
-        }
+        
         var random = new System.Random();
-        if (generate) { 
+        if (generate) {
             for (int i=0;i< numberDistractors; i++)
             {
                 GameObject obj = Photon.Pun.PhotonNetwork.Instantiate("DistractorCube", new Vector3(), new Quaternion());
+               //obj.AddComponent<M>().color = new Color(1.0f, 0.0f, 0.0f);
+                //obj.GetComponent<MeshRenderer>().material.color = new Color(1.0f, 0.0f, 0.0f);
+                obj.transform.localScale = new Vector3(0.06f, 0.06f, 0.06f);
+                //obj.name = "distractor" + i;
+                obj.transform.parent = distractorRoot.transform;
+
+                Photon.Pun.PhotonView view = obj.GetComponent<Photon.Pun.PhotonView>();
+
+                //view.ViewID = currentPhotonId++;
+                view.OwnershipTransfer = Photon.Pun.OwnershipOption.Request;
+                view.Synchronization = Photon.Pun.ViewSynchronization.ReliableDeltaCompressed;
+
+                Photon.Pun.PhotonTransformView tView = obj.GetComponent<Photon.Pun.PhotonTransformView>();
+                if (!tView)
+                    obj.AddComponent<Photon.Pun.PhotonTransformView>();
+                //Photon.Pun.PhotonRigidbodyView rView = obj.AddComponent<Photon.Pun.PhotonRigidbodyView>();
+                tView.m_SynchronizeScale = true;
+                parts.Add(obj);
+            }
+            /*
+            for (int i = 0; i < distractorRoot.transform.childCount; i++)
+            {
+                GameObject obj = distractorRoot.transform.GetChild(i).gameObject;// Photon.Pun.PhotonNetwork.Instantiate("DistractorCube", new Vector3(), new Quaternion());
+                //obj.AddComponent<M>().color = new Color(1.0f, 0.0f, 0.0f);
+                //obj.GetComponent<MeshRenderer>().material.color = new Color(1.0f, 0.0f, 0.0f);
+                obj.transform.localScale = new Vector3(0.06f, 0.06f, 0.06f);
+                //obj.name = "distractor" + i;
+                obj.transform.parent = distractorRoot.transform;
+
+                Photon.Pun.PhotonView view = obj.GetComponent<Photon.Pun.PhotonView>();
+
+                //view.ViewID = currentPhotonId++;
+                view.OwnershipTransfer = Photon.Pun.OwnershipOption.Request;
+                view.Synchronization = Photon.Pun.ViewSynchronization.ReliableDeltaCompressed;
+
+                Photon.Pun.PhotonTransformView tView = obj.GetComponent<Photon.Pun.PhotonTransformView>();
+                if (!tView)
+                    obj.AddComponent<Photon.Pun.PhotonTransformView>();
+                //Photon.Pun.PhotonRigidbodyView rView = obj.AddComponent<Photon.Pun.PhotonRigidbodyView>();
+                tView.m_SynchronizeScale = true;
+                parts.Add(obj);
+            }*/
+
+
+        }
+        else
+        {
+            for(int i = 0; i < distractorRoot.transform.childCount; i++)
+            {
+                GameObject obj = distractorRoot.transform.GetChild(i).gameObject;// Photon.Pun.PhotonNetwork.Instantiate("DistractorCube", new Vector3(), new Quaternion());
                 //obj.AddComponent<M>().color = new Color(1.0f, 0.0f, 0.0f);
                 //obj.GetComponent<MeshRenderer>().material.color = new Color(1.0f, 0.0f, 0.0f);
                 obj.transform.localScale = new Vector3(0.06f, 0.06f, 0.06f);
@@ -99,27 +132,17 @@ public class PuzzleGenerator : MonoBehaviour
                 obj.transform.parent = distractorRoot.transform;
 
                 Photon.Pun.PhotonView view = obj.GetComponent<Photon.Pun.PhotonView>();
+
                 view.ViewID = currentPhotonId++;
-                view.OwnershipTransfer = Photon.Pun.OwnershipOption.Takeover;
+                view.OwnershipTransfer = Photon.Pun.OwnershipOption.Request;
                 view.Synchronization = Photon.Pun.ViewSynchronization.ReliableDeltaCompressed;
-               
 
-                /*SphereCollider coll = obj.AddComponent<SphereCollider>();
-                Rigidbody body = obj.AddComponent<Rigidbody>();
-
-                coll.isTrigger = true;
-                body.isKinematic = true;
-                body.useGravity = false;*/
-
-                Photon.Pun.PhotonTransformView tView = obj.AddComponent<Photon.Pun.PhotonTransformView>();
+                Photon.Pun.PhotonTransformView tView = obj.GetComponent<Photon.Pun.PhotonTransformView>();
+                if(!tView)
+                    obj.AddComponent<Photon.Pun.PhotonTransformView>();
                 //Photon.Pun.PhotonRigidbodyView rView = obj.AddComponent<Photon.Pun.PhotonRigidbodyView>();
                 tView.m_SynchronizeScale = true;
-                /* obj.AddComponent<Photon.Pun.PhotonTransformView>();
-                 obj.GetComponent<Photon.Pun.PhotonTransformView>().m_SynchronizePosition = true;
-                 obj.GetComponent<Photon.Pun.PhotonTransformView>().m_SynchronizeRotation = true;
-                 obj.GetComponent<Photon.Pun.PhotonTransformView>().m_SynchronizeScale = true;*/
-
-                parts.Add(obj);
+                
             }
         }
         for (int i =0;i < (numberDistractors + numberPieces); i++)
@@ -175,7 +198,7 @@ public class PuzzleGenerator : MonoBehaviour
         }*///Photon.Pun.PhotonNetwork.
 
 
-        float piecesPerQuadrant = (numberPieces + numberDistractors) / 3.0f;
+            float piecesPerQuadrant = (numberPieces + numberDistractors) / 3.0f;
         float angleIncrement = 90.0f / piecesPerQuadrant;
 
         List<GameObject> sortedParts = new List<GameObject>();
@@ -404,7 +427,7 @@ public class PuzzleGenerator : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.R))
         {
             generateBlueprint(new Vector3(0, 0, 0), 6, 4, 3, 0.09f, null);
-            generatePuzzle(false, false,dominantPlayerPos);
+            generatePuzzle( false,dominantPlayerPos);
         }
     }
 
