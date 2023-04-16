@@ -164,7 +164,7 @@ public class Raycaster : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (triggered)
+        if (triggered && other.gameObject.name != "Raycaster")
         {
             print("entered");
             BoxCollider collider = GetComponent<BoxCollider>();
