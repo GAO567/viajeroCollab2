@@ -596,7 +596,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &86842875
 Transform:
   m_ObjectHideFlags: 0
@@ -4934,7 +4934,7 @@ MonoBehaviour:
   requestFaceTrackingPermissionOnStartup: 0
   requestEyeTrackingPermissionOnStartup: 0
   _localDimming: 0
-  _trackingOriginType: 0
+  _trackingOriginType: 1
   usePositionTracking: 1
   useRotationTracking: 1
   useIPDInPositionTracking: 1
@@ -9656,7 +9656,7 @@ PrefabInstance:
       objectReference: {fileID: 706748078}
     - target: {fileID: 8465339781447079483, guid: c673a7ed842dd3b41ac8fc8cfe649214, type: 3}
       propertyPath: collabType
-      value: 3
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8465339781447079483, guid: c673a7ed842dd3b41ac8fc8cfe649214, type: 3}
       propertyPath: textToShow
@@ -9814,9 +9814,17 @@ PrefabInstance:
       propertyPath: sceneViewId
       value: 33
       objectReference: {fileID: 0}
+    - target: {fileID: 8465339781934704670, guid: c673a7ed842dd3b41ac8fc8cfe649214, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8465339781996316290, guid: c673a7ed842dd3b41ac8fc8cfe649214, type: 3}
       propertyPath: sceneViewId
       value: 34
+      objectReference: {fileID: 0}
+    - target: {fileID: 8465339782109555979, guid: c673a7ed842dd3b41ac8fc8cfe649214, type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8465339782109555981, guid: c673a7ed842dd3b41ac8fc8cfe649214, type: 3}
       propertyPath: sceneViewId
@@ -9841,6 +9849,10 @@ PrefabInstance:
     - target: {fileID: 8465339782309181742, guid: c673a7ed842dd3b41ac8fc8cfe649214, type: 3}
       propertyPath: OwnershipTransfer
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8465339782317354467, guid: c673a7ed842dd3b41ac8fc8cfe649214, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.92
       objectReference: {fileID: 0}
     - target: {fileID: 8465339782581099934, guid: c673a7ed842dd3b41ac8fc8cfe649214, type: 3}
       propertyPath: sceneViewId
