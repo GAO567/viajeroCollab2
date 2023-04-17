@@ -47,6 +47,7 @@ public class NetworkPlayer : MonoBehaviour
                 viewportDrawer.lineRenderer.material = localMaterial;
                 viewportDrawer.gameObject.gameObject.SetActive(false);
             }
+            manager.setPlayer1(head.gameObject, rightHand.gameObject, leftHand.gameObject);
         }
         else
         {
@@ -83,6 +84,7 @@ public class NetworkPlayer : MonoBehaviour
                         drawer.gameObject.SetActive(false);
                     }
                 }
+                manager.setPlayer2(head.gameObject, rightHand.gameObject, leftHand.gameObject);
                 //                }
             }
             if (raycasterLeft && raycasterRight)
