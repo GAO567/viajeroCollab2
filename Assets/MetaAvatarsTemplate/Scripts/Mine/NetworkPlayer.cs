@@ -48,6 +48,9 @@ public class NetworkPlayer : MonoBehaviour
                 viewportDrawer.gameObject.gameObject.SetActive(false);
             }
             manager.setPlayer1(head.gameObject, rightHand.gameObject, leftHand.gameObject);
+            MapPosition(head, XRNode.Head);
+            MapPosition(rightHand, XRNode.RightHand);
+            MapPosition(leftHand, XRNode.LeftHand);
         }
         else
         {
@@ -99,9 +102,7 @@ public class NetworkPlayer : MonoBehaviour
         }
 
 
-        MapPosition(head, XRNode.Head);
-        MapPosition(rightHand, XRNode.RightHand);
-        MapPosition(leftHand, XRNode.LeftHand);
+        
         
     }
 
