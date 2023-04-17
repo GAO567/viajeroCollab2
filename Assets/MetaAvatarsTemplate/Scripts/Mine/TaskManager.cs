@@ -149,11 +149,19 @@ public class TaskManager : MonoBehaviour
         print("Player Number" + playerNumber);
         if (playerNumber == 1)
         {
+            GameObject go = GameObject.Find("Local Network Player");
             OVRCameraRig player1 = obj.GetComponent<OVRCameraRig>();
+            
             rightHandPlayer1 = player1.rightControllerAnchor.gameObject;
             headPlayer1 = player1.centerEyeAnchor.gameObject;
             leftHandPlayer1 = player1.leftControllerAnchor.gameObject;
-
+            if (go)
+            {
+                NetworkPlayer networkPlayer = go.GetComponent<NetworkPlayer>();
+                rightHandPlayer1 = networkPlayer.rightHand.gameObject;
+                leftHandPlayer1 = networkPlayer.leftHand.gameObject;
+                headPlayer1 = networkPlayer.head.gameObject;
+            }
             currentTaskState = TaskState.Connected;
             //Photon.Pun.PhotonNetwork.Instantiate("DistractorCube", new Vector3(1, 0, 0), Quaternion.identity);
 
@@ -189,8 +197,15 @@ public class TaskManager : MonoBehaviour
                     }
                 }
             }
-
-            Player2Area.GetComponent<Photon.Pun.PhotonView>().RPC("testStuff", Photon.Pun.RpcTarget.AllBuffered, true);
+            GameObject go = GameObject.Find("Remote Network Player");
+            if (go)
+            {
+                NetworkPlayer networkPlayer = go.GetComponent<NetworkPlayer>();
+                rightHandPlayer2 = networkPlayer.rightHand.gameObject;
+                leftHandPlayer2 = networkPlayer.leftHand.gameObject;
+                headPlayer2 = networkPlayer.head.gameObject;
+            }
+            //Player2Area.GetComponent<Photon.Pun.PhotonView>().RPC("testStuff", Photon.Pun.RpcTarget.AllBuffered, true);
             /*
             OVRCameraRig player2 = obj.GetComponent<OVRCameraRig>();
             rightHandPlayer2 = player2.rightControllerAnchor.gameObject;
