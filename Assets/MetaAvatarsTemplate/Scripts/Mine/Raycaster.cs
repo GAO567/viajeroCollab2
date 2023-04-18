@@ -32,6 +32,8 @@ public class Raycaster : MonoBehaviour
 
     TaskManager taskManager;
     OVRInput.Controller controllerActive;
+
+    GameObject lockedObject;
     // Start is called before the first frame update
     void Start()
     {
@@ -83,6 +85,8 @@ public class Raycaster : MonoBehaviour
             timeElapsed += (Time.realtimeSinceStartup - initTimestamp);//time one person is interacting with an object
         }
         //print("triggered ? " + triggered + " button up : " + buttonUp);
+        if (lockedObject)
+            return;
 
         RaycastHit hit;
         // Does the ray intersect any objects excluding the player layer
@@ -167,6 +171,8 @@ public class Raycaster : MonoBehaviour
         if (triggered && other.gameObject.name != "Raycaster")
         {
             print("entered");
+            if (lockedObject)
+                return;
             BoxCollider collider = GetComponent<BoxCollider>();
             other.gameObject.transform.position = collider.ClosestPoint(other.gameObject.transform.position);
             Vector2 thumbstickValue = OVRInput.Get(OVRInput.Axis2D.PrimaryThumbstick, controllerActive);
@@ -180,6 +186,10 @@ public class Raycaster : MonoBehaviour
         }
     }
 
+    private void OnTriggerExit(Collider other)
+    {
+        lockedObject = null;
+    }
     void Controller_mapping(RaycastHit hitObj)
     {
         Vector3 hitPosition = hitObj.transform.position;
