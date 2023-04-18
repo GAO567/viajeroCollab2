@@ -92,8 +92,7 @@ public class Raycaster : MonoBehaviour
 
         RaycastHit hit;
         // Does the ray intersect any objects excluding the player layer
-        lineRenderer.SetPosition(0, this.gameObject.transform.TransformPoint(0, 0, 0));
-        lineRenderer.SetPosition(1, this.gameObject.transform.TransformPoint(0, 0, rayLength));
+        
 
         if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, upperThreshold,layerMask))
         {
@@ -131,6 +130,8 @@ public class Raycaster : MonoBehaviour
         }
         else
         {
+            lineRenderer.SetPosition(0, this.gameObject.transform.TransformPoint(0, 0, 0));
+            lineRenderer.SetPosition(1, this.gameObject.transform.TransformPoint(0, 0, rayLength));
             Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * 1000, Color.white);
             //Debug.Log("Did not Hit");
             if (transform.childCount > 0)
