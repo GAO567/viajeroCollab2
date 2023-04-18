@@ -24,6 +24,7 @@ public class Raycaster : MonoBehaviour
     [SerializeField] float stepSize = 0.1f;
     private bool lasttimeTriggered;
     bool triggered = false;
+    bool handTriggered = false;
 
     float initTimestamp = 0;
     float timeElapsed = 0;
@@ -75,7 +76,8 @@ public class Raycaster : MonoBehaviour
 
         //lasttimeTriggered = triggered;
         triggered = OVRInput.Get(OVRInput.Button.PrimaryIndexTrigger, controllerActive);
-        
+        handTriggered = OVRInput.Get(OVRInput.Button.PrimaryHandTrigger, controllerActive);
+
         if (!triggered)
         {
             //transform.DetachChildren();
@@ -171,7 +173,7 @@ public class Raycaster : MonoBehaviour
         
         if (triggered && !other.gameObject.name.Contains("Raycaster"))
         {
-            print("entered");
+            //print("entered");
             if (lockedObject)
                 return;
             BoxCollider collider = GetComponent<BoxCollider>();
@@ -197,13 +199,16 @@ public class Raycaster : MonoBehaviour
         float hitDepth = transform.InverseTransformPoint(hitPosition).z;
 
         PhotonView photonView = hitObj.transform.gameObject.GetPhotonView();
-
+       
         if (photonView)
         {
-            photonView.RequestOwnership();//request ownership of the object
-            print("requesting ownership of object "+ hitObj.transform.name + "from player " + (taskManager.isRemotePlayer? "P2" : "P1"));
+            if(triggered || handTriggered)
+            {
+                photonView.RequestOwnership();//request ownership of the object
+                print("requesting ownership of object " + hitObj.transform.name + "from player " + (taskManager.isRemotePlayer ? "P2" : "P1"));
+            }
         }
-        else
+        else if(!photonView)
         {
             print("Photon view not present in object " + hitObj.transform.name + "from player " + (taskManager.isRemotePlayer ? "P2" : "P1"));
         }
@@ -262,7 +267,7 @@ public class Raycaster : MonoBehaviour
                 //hitObj.transform.parent = this.gameObject.transform;
                 //hitObj.transform.eulerAngles = rotationObj;//lockRotation
             }
-            if(thumbstickValue.y > 0)
+            if(thumbstickValue.y > 0 && handTriggered)
             {
                 if (hitDepth < upperThreshold)
                 {
@@ -274,7 +279,7 @@ public class Raycaster : MonoBehaviour
                     //do nothing
                 }
             }
-            else if(thumbstickValue.y < 0)
+            else if(thumbstickValue.y < 0 && handTriggered)
             {
                 if (hitDepth > lowerThreshold)
                 {
