@@ -14,6 +14,7 @@ public class NetworkPlayer : MonoBehaviour
     public Material localMaterial;
     public GameObject rayRightHand;
     public GameObject rayLeftHand;
+    public ViewportDrawer drawer;
     TaskManager manager;
     public float headLowThreshold = -30.0f;
     public float headHighThreshold = 30.0f;
@@ -58,7 +59,6 @@ public class NetworkPlayer : MonoBehaviour
             gameObject.name = "Remote Network Player";
             LineRenderer raycasterRight = rightHand.GetComponentInChildren<LineRenderer>();
             LineRenderer raycasterLeft = leftHand.GetComponentInChildren<LineRenderer>();
-            ViewportDrawer drawer = head.GetComponentInChildren<ViewportDrawer>();
             if (manager)
             {
                 if (manager.collabType == CollabType.CoupledView)
