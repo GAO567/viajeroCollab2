@@ -1083,7 +1083,7 @@ public class TaskManager : MonoBehaviour
                 //Player2Area.GetComponent<Photon.Pun.PhotonView>().RPC("drawBoundary", Photon.Pun.RpcTarget.AllBuffered, false);
             }
 
-            boundaryDrawerP2.drawBoundary(drawboundaryP2);
+            //boundaryDrawerP2.drawBoundary(drawboundaryP2);
             Player2Area.GetComponent<Photon.Pun.PhotonView>().RPC("drawBoundary", Photon.Pun.RpcTarget.AllBuffered, drawboundaryP2);
         }
         return violation;
