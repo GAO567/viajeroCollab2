@@ -6,7 +6,7 @@ using Photon.Pun;
 
 public class NetworkPlayer : MonoBehaviour
 {
-
+    
     public Transform head;
     public Transform rightHand;
     public Transform leftHand;
@@ -15,7 +15,8 @@ public class NetworkPlayer : MonoBehaviour
     public GameObject rayRightHand;
     public GameObject rayLeftHand;
     TaskManager manager;
-
+    public float headLowThreshold = -30.0f;
+    public float headHighThreshold = 30.0f;
     PhotonView photonView;
 
     // Start is called before the first frame update
@@ -73,7 +74,7 @@ public class NetworkPlayer : MonoBehaviour
                 }
 
                 
-                if (manager.collabType == CollabType.CoupledView)
+                if (manager.collabType == CollabType.CoupledView || manager.collabType == CollabType.SideBySide)
                 {
                     if (drawer)
                     {
@@ -82,10 +83,18 @@ public class NetworkPlayer : MonoBehaviour
                 }
                 else
                 {
-                    if (drawer)
+                    if (head)
                     {
-                        drawer.gameObject.SetActive(false);
+                        if(head.transform.localEulerAngles.y > headLowThreshold && head.transform.localEulerAngles.y < headHighThreshold)
+                        {
+                            drawer.gameObject.SetActive(true);
+                        }
+                        else
+                        {
+                            drawer.gameObject.SetActive(false);
+                        }
                     }
+                    
                 }
                 manager.setPlayer2(head.gameObject, rightHand.gameObject, leftHand.gameObject);
                 //                }
