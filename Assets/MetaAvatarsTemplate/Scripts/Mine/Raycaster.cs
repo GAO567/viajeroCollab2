@@ -168,6 +168,7 @@ public class Raycaster : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
+        
         if (triggered && !other.gameObject.name.Contains("Raycaster"))
         {
             print("entered");

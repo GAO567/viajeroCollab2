@@ -87,11 +87,13 @@ public class NetworkPlayer : MonoBehaviour
                     {
                         if(head.transform.localEulerAngles.y > headLowThreshold && head.transform.localEulerAngles.y < headHighThreshold)
                         {
-                            drawer.gameObject.SetActive(true);
+                            if(drawer)
+                                drawer.gameObject.SetActive(true);
                         }
                         else
                         {
-                            drawer.gameObject.SetActive(false);
+                            if(drawer)
+                                drawer.gameObject.SetActive(false);
                         }
                     }
                     
