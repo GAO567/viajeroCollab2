@@ -808,7 +808,7 @@ public class TaskManager : MonoBehaviour
             headP1Local = new Vector3(Mathf.Abs(headP1Local.x), Mathf.Abs(headP1Local.y), Mathf.Abs(headP1Local.z));
             rightHandP1Local = new Vector3(Mathf.Abs(rightHandP1Local.x), Mathf.Abs(rightHandP1Local.y), Mathf.Abs(rightHandP1Local.z));
             leftHandP1Local = new Vector3(Mathf.Abs(leftHandP1Local.x), Mathf.Abs(leftHandP1Local.y), Mathf.Abs(leftHandP1Local.z));
-            print("head = " + headP1Local.ToString() + " rightHand" + rightHandP1Local.ToString() + " leftHand " + leftHandP1Local.ToString() + " bounds" + boundsSize.ToString() );
+            //print("head = " + headP1Local.ToString() + " rightHand" + rightHandP1Local.ToString() + " leftHand " + leftHandP1Local.ToString() + " bounds" + boundsSize.ToString() );//
             float delta = Time.deltaTime;
             if (!outsideBoundsLastFrameP1)
             {

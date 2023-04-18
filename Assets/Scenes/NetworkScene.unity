@@ -9392,7 +9392,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8465339781447079483, guid: c673a7ed842dd3b41ac8fc8cfe649214, type: 3}
       propertyPath: avatarId
-      value: 13
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 8465339781447079483, guid: c673a7ed842dd3b41ac8fc8cfe649214, type: 3}
       propertyPath: drawAreas
@@ -9624,7 +9624,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8465339782530834406, guid: c673a7ed842dd3b41ac8fc8cfe649214, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.92
+      value: -1.8
       objectReference: {fileID: 0}
     - target: {fileID: 8465339782581099934, guid: c673a7ed842dd3b41ac8fc8cfe649214, type: 3}
       propertyPath: sceneViewId
@@ -9714,6 +9714,7 @@ PrefabInstance:
     - {fileID: 7986061897687650316, guid: c673a7ed842dd3b41ac8fc8cfe649214, type: 3}
     - {fileID: 7986061896924238134, guid: c673a7ed842dd3b41ac8fc8cfe649214, type: 3}
     - {fileID: 7986061896378304539, guid: c673a7ed842dd3b41ac8fc8cfe649214, type: 3}
+    - {fileID: 7986061896124835064, guid: c673a7ed842dd3b41ac8fc8cfe649214, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: c673a7ed842dd3b41ac8fc8cfe649214, type: 3}
 --- !u!33 &8482381506624555236
 MeshFilter:
