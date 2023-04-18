@@ -9814,6 +9814,10 @@ PrefabInstance:
       propertyPath: sceneViewId
       value: 33
       objectReference: {fileID: 0}
+    - target: {fileID: 8465339781934704666, guid: c673a7ed842dd3b41ac8fc8cfe649214, type: 3}
+      propertyPath: Synchronization
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8465339781934704670, guid: c673a7ed842dd3b41ac8fc8cfe649214, type: 3}
       propertyPath: m_Enabled
       value: 0
@@ -9829,6 +9833,10 @@ PrefabInstance:
     - target: {fileID: 8465339782109555981, guid: c673a7ed842dd3b41ac8fc8cfe649214, type: 3}
       propertyPath: sceneViewId
       value: 35
+      objectReference: {fileID: 0}
+    - target: {fileID: 8465339782109555981, guid: c673a7ed842dd3b41ac8fc8cfe649214, type: 3}
+      propertyPath: Synchronization
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8465339782109555983, guid: c673a7ed842dd3b41ac8fc8cfe649214, type: 3}
       propertyPath: m_Name
