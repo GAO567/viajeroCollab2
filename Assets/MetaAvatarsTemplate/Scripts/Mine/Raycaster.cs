@@ -268,29 +268,37 @@ public class Raycaster : MonoBehaviour
                 //hitObj.transform.parent = this.gameObject.transform;
                 //hitObj.transform.eulerAngles = rotationObj;//lockRotation
             }
-            if(thumbstickValue.y > 0 && handTriggered)
+            if(thumbstickValue.y > 0)
             {
-                if (hitDepth < upperThreshold)
+                if(handTriggered || triggered)
                 {
-                    hitObj.transform.position = hitObj.transform.position + (this.transform.transform.forward * stepSize);
-                    zDepth = this.transform.InverseTransformPoint(hitObj.transform.position).z;
-                }
-                else
-                {
-                    //do nothing
+                    if (hitDepth < upperThreshold)
+                    {
+                        hitObj.transform.position = hitObj.transform.position + (this.transform.transform.forward * stepSize);
+                        zDepth = this.transform.InverseTransformPoint(hitObj.transform.position).z;
+                    }
+                    else
+                    {
+                        //do nothing
+                    }
                 }
             }
-            else if(thumbstickValue.y < 0 && handTriggered)
+                
+            else if(thumbstickValue.y < 0)
             {
-                if (hitDepth > lowerThreshold)
+                if(triggered || handTriggered)
                 {
-                    hitObj.transform.position = hitObj.transform.position - (this.transform.transform.forward * stepSize);
-                    zDepth = this.transform.InverseTransformPoint(hitObj.transform.position).z;
+                    if (hitDepth > lowerThreshold)
+                    {
+                        hitObj.transform.position = hitObj.transform.position - (this.transform.transform.forward * stepSize);
+                        zDepth = this.transform.InverseTransformPoint(hitObj.transform.position).z;
+                    }
+                    else
+                    {
+                        //do nothing
+                    }
                 }
-                else
-                {
-                    //do nothing
-                }
+                
             }
             //print("zDepth = " + zDepth);
         }
