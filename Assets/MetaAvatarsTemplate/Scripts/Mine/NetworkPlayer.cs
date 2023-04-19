@@ -85,7 +85,7 @@ public class NetworkPlayer : MonoBehaviour
                 {
                     if (head)
                     {
-                        print(" head = " + head.transform.localEulerAngles.ToString());
+                        //print(" head = " + head.transform.localEulerAngles.ToString());
                         if(head.transform.localEulerAngles.y < headLowThreshold && head.transform.localEulerAngles.y > headHighThreshold)
                         {
                             if(drawer)
