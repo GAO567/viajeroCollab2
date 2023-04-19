@@ -30,25 +30,46 @@ public class NetworkPlayer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+        LineRenderer raycasterRight = rightHand.GetComponentInChildren<LineRenderer>();
+        LineRenderer raycasterLeft = leftHand.GetComponentInChildren<LineRenderer>();
+        ViewportDrawer viewportDrawer = head.GetComponentInChildren<ViewportDrawer>();
+        if (manager)
+        {
+            if (manager.isRemotePlayer)
+            {
+                if (raycasterLeft && raycasterRight)
+                {
+                    raycasterRight.material = remoteMaterial;
+                    raycasterLeft.material = remoteMaterial;
+                }
+                if (drawer)
+                {
+                    drawer.lineRenderer.material = remoteMaterial;
+                }
+            }
+            else
+            {
+                if (raycasterLeft && raycasterRight)
+                {
+                    raycasterRight.material = localMaterial;
+                    raycasterLeft.material = localMaterial;
+                }
+                if (viewportDrawer)
+                {
+                    viewportDrawer.lineRenderer.material = localMaterial;
+                    viewportDrawer.gameObject.gameObject.SetActive(false);
+                }
+            }
+        }
+
         if (photonView.IsMine)
         {
             //head.GetComponentInChildren<MeshRenderer>().enabled = false;
             rightHand.GetComponentInChildren<SkinnedMeshRenderer>().enabled = false;
             leftHand.GetComponentInChildren<SkinnedMeshRenderer>().enabled = false;
             gameObject.name = "Local Network Player";
-            LineRenderer raycasterRight = rightHand.GetComponentInChildren<LineRenderer>();
-            LineRenderer raycasterLeft = leftHand.GetComponentInChildren<LineRenderer>(); 
-            ViewportDrawer viewportDrawer = head.GetComponentInChildren<ViewportDrawer>();
-            if (raycasterLeft && raycasterRight)
-            {
-                raycasterRight.material = localMaterial;
-                raycasterLeft.material = localMaterial;
-            }
-            if (viewportDrawer)
-            {
-                viewportDrawer.lineRenderer.material = localMaterial;
-                viewportDrawer.gameObject.gameObject.SetActive(false);
-            }
+            
             manager.setPlayer1(head.gameObject, rightHand.gameObject, leftHand.gameObject);
             MapPosition(head, XRNode.Head);
             MapPosition(rightHand, XRNode.RightHand);
@@ -57,10 +78,14 @@ public class NetworkPlayer : MonoBehaviour
         else
         {
             gameObject.name = "Remote Network Player";
-            LineRenderer raycasterRight = rightHand.GetComponentInChildren<LineRenderer>();
-            LineRenderer raycasterLeft = leftHand.GetComponentInChildren<LineRenderer>();
+            raycasterRight = rightHand.GetComponentInChildren<LineRenderer>();
+            raycasterLeft = leftHand.GetComponentInChildren<LineRenderer>();
             if (manager)
             {
+                manager.drawBoundaryViolationP2(head.gameObject, rightHand.gameObject, leftHand.gameObject);
+
+
+
                 if (manager.collabType == CollabType.CoupledView)
                 {
                     rightHand.GetComponentInChildren<SkinnedMeshRenderer>().enabled = true;
@@ -102,15 +127,7 @@ public class NetworkPlayer : MonoBehaviour
                 manager.setPlayer2(head.gameObject, rightHand.gameObject, leftHand.gameObject);
                 //                }
             }
-            if (raycasterLeft && raycasterRight)
-            {
-                raycasterRight.material = remoteMaterial;
-                raycasterLeft.material = remoteMaterial;
-            }
-            if (drawer)
-            {
-                drawer.lineRenderer.material = remoteMaterial;
-            }
+            
         }
 
 

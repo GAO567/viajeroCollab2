@@ -205,6 +205,7 @@ public class Raycaster : MonoBehaviour
         {
             if(triggered || handTriggered)
             {
+                //photonView.TransferOwnership(this.GetComponent<PhotonView>().ViewID);
                 photonView.RequestOwnership();//request ownership of the object
                 print("requesting ownership of object " + hitObj.transform.name + "from player " + (taskManager.isRemotePlayer ? "P2" : "P1"));
             }

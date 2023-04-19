@@ -788,7 +788,7 @@ public class TaskManager : MonoBehaviour
         }
     }
     
-    void calculateBoundaryViolationP2()
+    public void drawBoundaryViolationP2(GameObject headPlayer2, GameObject rightHandPlayer2, GameObject leftHandPlayer2)
     {
         if(headPlayer2 && rightHandPlayer2 && leftHandPlayer2)
         {
@@ -803,7 +803,29 @@ public class TaskManager : MonoBehaviour
             float delta = Time.deltaTime;
             bool drawboundaryP2 = false;
 
+            if(Utils.IsViolatingBoundary(headP2Local, boundsSize))
+            {
+                drawboundaryP2 = true;
+            }
+            else
+            {
 
+            }
+
+            if(Utils.IsViolatingBoundary(rightHandP2Local, boundsSize))
+            {
+                drawboundaryP2 = true;
+            }
+
+            if(Utils.IsViolatingBoundary(leftHandP2Local, boundsSize))
+            {
+                drawboundaryP2 = true;
+            }
+
+            if (drawboundaryP2)
+            {
+                boundaryDrawerP2 = Player2Area.GetComponent<WireareaDrawer>();
+            }
         }
     }
     

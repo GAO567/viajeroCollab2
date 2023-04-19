@@ -164,7 +164,17 @@ public static class Utils
         return Math.Log((targetsDistance / targetWidth + 1), 2);
     }
 
-
+    public static bool IsViolatingBoundary(Vector3 jointPos, Vector3 boundPos)
+    {
+        if (jointPos.x > boundPos.x || jointPos.y > boundPos.y || jointPos.z > boundPos.z)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
     public static GridCell nextAvailableCellInPuzzleGrid(GridCell[] arrayCells,GridCell currentCell)
     {
         GridCell aux = currentCell;
