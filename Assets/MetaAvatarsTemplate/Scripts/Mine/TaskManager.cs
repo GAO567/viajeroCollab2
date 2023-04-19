@@ -788,7 +788,24 @@ public class TaskManager : MonoBehaviour
         }
     }
     
+    void calculateBoundaryViolationP2()
+    {
+        if(headPlayer2 && rightHandPlayer2 && leftHandPlayer2)
+        {
+            Vector3 headP2Local = Player2Area.transform.InverseTransformPoint(headPlayer2.transform.position);
+            Vector3 rightHandP2Local = Player2Area.transform.InverseTransformPoint(rightHandPlayer2.transform.position);
+            Vector3 leftHandP2Local = Player2Area.transform.InverseTransformPoint(leftHandPlayer2.transform.position);
 
+            headP2Local = new Vector3(Mathf.Abs(headP2Local.x), Mathf.Abs(headP2Local.y), Mathf.Abs(headP2Local.z));
+            rightHandP2Local = new Vector3(Mathf.Abs(rightHandP2Local.x), Mathf.Abs(rightHandP2Local.y), Mathf.Abs(rightHandP2Local.z));
+            leftHandP2Local = new Vector3(Mathf.Abs(leftHandP2Local.x), Mathf.Abs(leftHandP2Local.y), Mathf.Abs(leftHandP2Local.z));
+
+            float delta = Time.deltaTime;
+            bool drawboundaryP2 = false;
+
+
+        }
+    }
     
     Vector3 calculateBoundaryViolation()
     {
@@ -946,9 +963,9 @@ public class TaskManager : MonoBehaviour
         if(headPlayer2 && rightHandPlayer2 && leftHandPlayer2)
         {
             //we dont care about the Y
-            Vector3 headP2Local = Player1Area.transform.InverseTransformPoint(headPlayer2.transform.position);
-            Vector3 rightHandP2Local = Player1Area.transform.InverseTransformPoint(rightHandPlayer2.transform.position);
-            Vector3 leftHandP2Local = Player1Area.transform.InverseTransformPoint(leftHandPlayer2.transform.position);
+            Vector3 headP2Local = Player2Area.transform.InverseTransformPoint(headPlayer2.transform.position);
+            Vector3 rightHandP2Local = Player2Area.transform.InverseTransformPoint(rightHandPlayer2.transform.position);
+            Vector3 leftHandP2Local = Player2Area.transform.InverseTransformPoint(leftHandPlayer2.transform.position);
 
             headP2Local = new Vector3(Mathf.Abs(headP2Local.x), Mathf.Abs(headP2Local.y), Mathf.Abs(headP2Local.z));
             rightHandP2Local = new Vector3(Mathf.Abs(rightHandP2Local.x), Mathf.Abs(rightHandP2Local.y), Mathf.Abs(rightHandP2Local.z));
