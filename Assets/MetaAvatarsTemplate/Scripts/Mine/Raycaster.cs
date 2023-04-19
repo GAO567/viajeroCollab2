@@ -175,8 +175,8 @@ public class Raycaster : MonoBehaviour
         if (triggered && !other.gameObject.name.Contains("Raycaster"))
         {
             //print("entered");
-            if (lockedObject)
-                return;
+            // if (lockedObject)
+            //    return;
             BoxCollider collider = GetComponent<BoxCollider>();
             other.gameObject.transform.position = collider.ClosestPoint(other.gameObject.transform.position);
             Vector2 thumbstickValue = OVRInput.Get(OVRInput.Axis2D.PrimaryThumbstick, controllerActive);
