@@ -25,6 +25,16 @@ public class NetworkPlayer : MonoBehaviour
     {
         photonView = GetComponent<PhotonView>();
         manager = GameObject.Find("RootAreas").GetComponent<TaskManager>();
+        drawer = head.gameObject.GetComponentInChildren<ViewportDrawer>();
+        drawer.GetComponent<LineRenderer>().enabled = false;
+    }
+
+    private void drawRayAndViewport()
+    {
+        if (manager)
+        {
+
+        }
     }
 
     // Update is called once per frame
@@ -36,35 +46,7 @@ public class NetworkPlayer : MonoBehaviour
         ViewportDrawer viewportDrawer = head.GetComponentInChildren<ViewportDrawer>();
         if (manager)
         {
-            if (manager.isRemotePlayer)
-            {
-                if (raycasterLeft && raycasterRight)
-                {
-                    raycasterRight.material = remoteMaterial;
-                    raycasterLeft.material = remoteMaterial;
-                }
-                if (drawer)
-                {
-                    drawer.lineRenderer.material = remoteMaterial;
-                }
-                if (manager.taskStartedP2)
-                {
-                    manager.drawBoundaryViolationP2(head.gameObject, rightHand.gameObject, leftHand.gameObject);
-                }
-            }
-            else
-            {
-                if (raycasterLeft && raycasterRight)
-                {
-                    raycasterRight.material = localMaterial;
-                    raycasterLeft.material = localMaterial;
-                }
-                if (viewportDrawer)
-                {
-                    viewportDrawer.lineRenderer.material = localMaterial;
-                    viewportDrawer.gameObject.gameObject.SetActive(false);
-                }
-            }
+            
         }
 
         if (photonView.IsMine)
@@ -78,8 +60,41 @@ public class NetworkPlayer : MonoBehaviour
             MapPosition(head, XRNode.Head);
             MapPosition(rightHand, XRNode.RightHand);
             MapPosition(leftHand, XRNode.LeftHand);
+
+            if (manager)
+            {
+                if (manager.isRemotePlayer)
+                {
+                    if (raycasterLeft && raycasterRight)
+                    {
+                        raycasterRight.material = remoteMaterial;
+                        raycasterLeft.material = remoteMaterial;
+                    }
+                    if (drawer)
+                    {
+                        drawer.lineRenderer.material = remoteMaterial;
+                    }
+                    //if (manager.taskStartedP2)
+                    //{
+                        manager.drawBoundaryViolationP2(head.gameObject, rightHand.gameObject, leftHand.gameObject);
+                    //}
+                }
+                else
+                {
+                    if (raycasterLeft && raycasterRight)
+                    {
+                        raycasterRight.material = localMaterial;
+                        raycasterLeft.material = localMaterial;
+                    }
+                    //if (viewportDrawer)
+                    //{
+                    //    viewportDrawer.lineRenderer.material = localMaterial;
+                    //    viewportDrawer.gameObject.gameObject.SetActive(false);
+                    //}
+                }
+            }
         }
-        else
+        else // !isMine
         {
             gameObject.name = "Remote Network Player";
             raycasterRight = rightHand.GetComponentInChildren<LineRenderer>();
@@ -88,8 +103,37 @@ public class NetworkPlayer : MonoBehaviour
             {
                 //if (manager.currentTaskState > TaskState.BothConnected)
                 //{
-                    
+
                 //}
+                if (manager.isRemotePlayer)
+                {
+                    if (raycasterLeft && raycasterRight)
+                    {
+                        raycasterRight.material = localMaterial;
+                        raycasterLeft.material = localMaterial;
+                    }
+                    if (drawer)
+                    {
+                        drawer.lineRenderer.material = localMaterial;
+                    }
+                    //if (manager.taskStartedP2)
+                    //{
+                        manager.drawBoundaryViolationP2(head.gameObject, rightHand.gameObject, leftHand.gameObject);
+                    //}
+                }
+                else
+                {
+                    if (raycasterLeft && raycasterRight)
+                    {
+                        raycasterRight.material = remoteMaterial;
+                        raycasterLeft.material = remoteMaterial;
+                    }
+                    if (viewportDrawer)
+                    {
+                        viewportDrawer.lineRenderer.material = remoteMaterial;
+                        viewportDrawer.gameObject.gameObject.SetActive(false);
+                    }
+                }
 
 
                 if (manager.collabType == CollabType.CoupledView)
@@ -110,6 +154,7 @@ public class NetworkPlayer : MonoBehaviour
                     if (drawer)
                     {
                         drawer.gameObject.SetActive(true);
+                        drawer.GetComponent<LineRenderer>().enabled = true;
                     }
                 }
                 else
@@ -119,8 +164,14 @@ public class NetworkPlayer : MonoBehaviour
                         //print(" head = " + head.transform.localEulerAngles.ToString());
                         if(head.transform.localEulerAngles.y < headLowThreshold && head.transform.localEulerAngles.y > headHighThreshold)
                         {
-                            if(drawer)
+                            if (drawer)
+                            {
                                 drawer.gameObject.SetActive(true);
+                                drawer.GetComponent<LineRenderer>().enabled = true;
+                            }
+                               
+                            
+                            //print("head angle " + head.transform.localEulerAngles.ToString());
                         }
                         else
                         {

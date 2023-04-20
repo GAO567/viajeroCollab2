@@ -53,6 +53,10 @@ MonoBehaviour:
   - objectInteractedByP2
   - startTimer
   - updateTimer
+  - initializeTaskP2
+  - nextPuzzleP2
+  - updateDominantPlayer
+  - setDominantPlayer
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
