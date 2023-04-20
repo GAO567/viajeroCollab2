@@ -84,7 +84,7 @@ public class PuzzleGenerator : MonoBehaviour
                 Photon.Pun.PhotonView view = obj.GetComponent<Photon.Pun.PhotonView>();
 
                 //view.ViewID = currentPhotonId++;
-                view.OwnershipTransfer = Photon.Pun.OwnershipOption.Request;
+                view.OwnershipTransfer = Photon.Pun.OwnershipOption.Takeover;
                 view.Synchronization = Photon.Pun.ViewSynchronization.ReliableDeltaCompressed;
 
                 Photon.Pun.PhotonTransformView tView = obj.GetComponent<Photon.Pun.PhotonTransformView>();
@@ -134,7 +134,7 @@ public class PuzzleGenerator : MonoBehaviour
                 Photon.Pun.PhotonView view = obj.GetComponent<Photon.Pun.PhotonView>();
 
                 view.ViewID = currentPhotonId++;
-                view.OwnershipTransfer = Photon.Pun.OwnershipOption.Request;
+                view.OwnershipTransfer = Photon.Pun.OwnershipOption.Takeover;
                 view.Synchronization = Photon.Pun.ViewSynchronization.ReliableDeltaCompressed;
 
                 Photon.Pun.PhotonTransformView tView = obj.GetComponent<Photon.Pun.PhotonTransformView>();

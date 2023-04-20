@@ -47,6 +47,10 @@ public class NetworkPlayer : MonoBehaviour
                 {
                     drawer.lineRenderer.material = remoteMaterial;
                 }
+                if (manager.taskStartedP2)
+                {
+                    manager.drawBoundaryViolationP2(head.gameObject, rightHand.gameObject, leftHand.gameObject);
+                }
             }
             else
             {
@@ -82,8 +86,10 @@ public class NetworkPlayer : MonoBehaviour
             raycasterLeft = leftHand.GetComponentInChildren<LineRenderer>();
             if (manager)
             {
-                manager.drawBoundaryViolationP2(head.gameObject, rightHand.gameObject, leftHand.gameObject);
-
+                //if (manager.currentTaskState > TaskState.BothConnected)
+                //{
+                    
+                //}
 
 
                 if (manager.collabType == CollabType.CoupledView)

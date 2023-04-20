@@ -121,6 +121,9 @@ public class TaskManager : MonoBehaviour
 
     bool taskStarted = false;
 
+    [NonSerialized]
+    public bool taskStartedP2 = false;
+
     bool outsideBoundsLastFrameP1 = false;
     bool outsideBoundsLastFrameP2 = false;
 
@@ -296,44 +299,51 @@ public class TaskManager : MonoBehaviour
     {
         if (!isRemotePlayer)
             return;
+        try
+        {
+            string[] arrayT = time.Split(':');
+            string player = arrayT[0];
 
-        string[] arrayT = time.Split(':');
-        string player = arrayT[0];
+            int timeRemainingInt = int.Parse(arrayT[1]);
+            int seconds = timeRemainingInt % 60;
+            int minutes = (int)timeRemainingInt / 60;
+            print("coming from rpc");
+            if (minutes == 0)
+            {
+                timerText.color = Color.yellow;
+            }
+            else
+            {
+                timerText.color = Color.red;
+            }
 
-        int timeRemainingInt = int.Parse(arrayT[1]);
-        int seconds = timeRemainingInt % 60;
-        int minutes = (int)timeRemainingInt / 60;
-        print("coming from rpc");
-        if (minutes == 0)
-        {
-            timerText.color = Color.yellow;
-        }
-        else
-        {
-            timerText.color = Color.red;
-        }
+            if (seconds == 0)
+            {
+                timerText.text = minutes + ":" + seconds + "0";
+            }
+            else
+            {
+                timerText.text = minutes + ":" + seconds;
+            }
 
-        if (seconds == 0)
-        {
-            timerText.text = minutes + ":" + seconds + "0";
+            if (player == "P1")
+            {
+                dominantplayerLabel.text = "not my turn";
+                dominantplayerLabel.color = Color.red;
+                //add a label saying not my turn
+            }
+            else
+            {
+                dominantplayerLabel.text = "my turn";
+                dominantplayerLabel.color = Color.green;
+                //add a label saying my turn
+            }
         }
-        else
+        catch (Exception ex)
         {
-            timerText.text = minutes + ":" + seconds;
+            print("exception " + isRemotePlayer + " e" + time);
         }
-
-        if (player == "P1")
-        {
-            dominantplayerLabel.text = "not my turn";
-            dominantplayerLabel.color = Color.red;
-            //add a label saying not my turn
-        }
-        else
-        {
-            dominantplayerLabel.text = "my turn";
-            dominantplayerLabel.color = Color.green;
-            //add a label saying my turn
-        }
+        
     }
 
     public void objectInteractedByP1(bool interactionHappening)
@@ -825,6 +835,8 @@ public class TaskManager : MonoBehaviour
             if (drawboundaryP2)
             {
                 boundaryDrawerP2 = Player2Area.GetComponent<WireareaDrawer>();
+                if (boundaryDrawerP2)
+                    boundaryDrawerP2.drawBoundary(boundaryDrawerP2);
             }
         }
     }
@@ -1123,7 +1135,7 @@ public class TaskManager : MonoBehaviour
             }
 
             //boundaryDrawerP2.drawBoundary(drawboundaryP2);
-            Player2Area.GetComponent<Photon.Pun.PhotonView>().RPC("drawBoundary", Photon.Pun.RpcTarget.AllBuffered, drawboundaryP2);
+            //Player2Area.GetComponent<Photon.Pun.PhotonView>().RPC("drawBoundary", Photon.Pun.RpcTarget.AllBuffered, drawboundaryP2);
         }
         return violation;
     }
@@ -1220,12 +1232,20 @@ public class TaskManager : MonoBehaviour
         currentTaskLog = new TaskLog(idToUse,0, dominantplayer, currentTask.ToString(), player.transform, collabType, boundsSize);
         
     }
-    
+
+    [Photon.Pun.PunRPC]
+    public void initializeTaskP2()
+    {
+        dominantplayer = "P1";
+        taskStartedP2 = true;
+    }
+
     void initializeTask()
     {
+
         if (Player1Area && Player2Area)
         {
-
+            this.gameObject.GetComponent<Photon.Pun.PhotonView>().RPC("initializeTaskP2", Photon.Pun.RpcTarget.AllBuffered);
 
             if (collabType == CollabType.FacetoFaceIntersect)
             {
