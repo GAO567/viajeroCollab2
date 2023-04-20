@@ -161,7 +161,7 @@ public class Raycaster : MonoBehaviour
             
         }
 
-        lasttimeTriggered = triggered;
+        lasttimeTriggered = triggered || handTriggered;
     }
 
     private void OnTriggerEnter(Collider other)
