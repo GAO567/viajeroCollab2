@@ -22,6 +22,7 @@ public class TaskLog
 
     int userId = 0;
     int trialNumber = 0;
+    //bool isTraining = false;
 
     float amounttimeDominantInteracting = 0;
     float amounttimePassiveInteracting = 0;
@@ -114,6 +115,8 @@ public class TaskLog
         this.centerPosArea = areaDominantPlayer.transform.position;
         this.centerRotArea = areaDominantPlayer.transform.eulerAngles;
         this.startTime = Time.realtimeSinceStartup;
+        if (trialNumber == 0 || trialNumber == 1)
+            isTraining = true;
 
         shortestDistances = new float[6];// Dictionary<string, float>();
         lastFrameBoundaryViolation = new bool[6];
@@ -126,7 +129,7 @@ public class TaskLog
         string logStr = "";
         logStr = "";
         logStr += userId + "," + collabType + ","+trialNumber + "," + dominantPlayer + "," + puzzleId + "," + Utils.vector3ToString(centerPosArea) + "," + Utils.vector3ToString(centerRotArea) + "," + collabType.ToString() +
-            "," + Utils.vector3ToString(boundsSize) + "," +numberOfBoundViolationsP1 +","+ timeOutsideBoundsP1 + "," +  numberOfBoundViolationsP2 + ","+ timeOutsideBoundsP2 + ","+totalTime  ;
+            "," + Utils.vector3ToString(boundsSize) + "," +numberOfBoundViolationsP1 +","+ timeOutsideBoundsP1 + "," +  numberOfBoundViolationsP2 + ","+ timeOutsideBoundsP2 + ","+totalTime + "," + isTraining  ;
         if(bluePrintParts != null && objParts != null)
         {
             logStr += "," + objParts.Count;//add the number of parts to make sure we have the right amount

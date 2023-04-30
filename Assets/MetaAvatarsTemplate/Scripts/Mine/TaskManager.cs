@@ -410,7 +410,7 @@ public class TaskManager : MonoBehaviour
         }
         currentTaskState = TaskState.Player1Dominant;
 
-        currentTaskLog = new TaskLog((groupId*2)-1, 0, "P1", currentTask.ToString(), Player1Area.transform, collabType, boundsSize);
+        currentTaskLog = new TaskLog((groupId*2)-1, currentTask, "P1", currentTask.ToString(), Player1Area.transform, collabType, boundsSize);
         blueprintObjects = generator.generateBlueprint(new Vector3(0, 0, 0), 6, 4, 3, 0.09f, transformRootForP1Blueprint);
         listPossiblePositionsForPuzzle =  generator.generatePuzzle(true, Player1Area);
         taskStarted = true;
@@ -895,7 +895,7 @@ public class TaskManager : MonoBehaviour
         Vector3 violation = new Vector3();
         if(currentTaskLog == null)
         {
-            currentTaskLog = new TaskLog(groupId*2, 0, "P1", "test", Player1Area.transform, collabType, Player1Area.transform.localScale);
+            currentTaskLog = new TaskLog(groupId*2, currentTask, "P1", "test", Player1Area.transform, collabType, Player1Area.transform.localScale);
         }
 
         if (headPlayer1 && rightHandPlayer1 && leftHandPlayer1)
@@ -1288,7 +1288,7 @@ public class TaskManager : MonoBehaviour
             player = Player2Area;
         }
         
-        currentTaskLog = new TaskLog(idToUse,0, dominantplayer, currentTask.ToString(), player.transform, collabType, boundsSize);
+        currentTaskLog = new TaskLog(idToUse,currentTask, dominantplayer, currentTask.ToString(), player.transform, collabType, boundsSize);
         //gameObject.GetComponent<Photon.Pun.PhotonView>().RPC("nextPuzzleP2", Photon.Pun.RpcTarget.AllBuffered, (int)currentTaskState);
         //GetComponent<Photon.Pun.PhotonView>().RPC("nextPuzzleP2", Photon.Pun.RpcTarget.AllBuffered, );
     }
@@ -1465,7 +1465,7 @@ public class TaskManager : MonoBehaviour
     {
         //string header = "UserId,CurrentGainLevel,TargetSize,InitMovementTime,TargetPressedTime,ReachTime,TargetReleasedTime,numberErrorsFirstTarget,numberErrorsFinalTarget,SlidingTaskTime,TotalTime,ErrorFirstTime,ErrorSecondTime\n";
         string header = "userId,collabType,trialNumber,dominantPlayer,puzzleId," + Utils.vecNameToString("centerPosArea") + "," + Utils.vecNameToString("centerRotArea") + "," + collabType.ToString() +
-            "," + Utils.vecNameToString("boundsSize") + "," + "numberOfBoundViolationsP1,timeOutsideBoundsP1,numberOfBoundViolationsP2,timeOutsideBoundsP2,totalTime\n";
+            "," + Utils.vecNameToString("boundsSize") + "," + "numberOfBoundViolationsP1,timeOutsideBoundsP1,numberOfBoundViolationsP2,timeOutsideBoundsP2,totalTime,isTraining\n";
         string logTaskStr = header;
         //string passiveHapticsStr = (isPassiveHaptics ? "PassiveHaptics" : "NoPassiveHaptics");
         //string retargettingStr = retargettingOption.ToString();
