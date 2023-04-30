@@ -17,6 +17,9 @@ public class PuzzleGenerator : MonoBehaviour
     int numberPieces = 12;
 
     [SerializeField]
+    int numberPiecesTraining = 3;
+
+    [SerializeField]
     int numberDistractors = 15;
 
     List<GameObject> parts = new List<GameObject>();
@@ -74,7 +77,7 @@ public class PuzzleGenerator : MonoBehaviour
         //if training
         if(taskManager.currentTask == 0 || taskManager.currentTask == 1)
         {
-            numberPieces = 6;// this.numberPieces - 3;
+            numberPieces = numberPiecesTraining;// this.numberPieces - 3;
             numberDistractors = 9;
         }
 
@@ -294,7 +297,7 @@ public class PuzzleGenerator : MonoBehaviour
             //testar isso
             if (taskManager.currentTask == 0 || taskManager.currentTask == 1)
             {
-                numberObjects = 6;// numberPieces - 3;
+                numberObjects = numberPiecesTraining;// numberPieces - 3;
             }
             else 
             {
