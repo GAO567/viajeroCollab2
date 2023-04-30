@@ -1293,6 +1293,19 @@ public class TaskManager : MonoBehaviour
         //GetComponent<Photon.Pun.PhotonView>().RPC("nextPuzzleP2", Photon.Pun.RpcTarget.AllBuffered, );
     }
 
+    public void skipTraining()
+    {
+        if (currentTask == 0 && currentTaskState >= TaskState.BothConnected)
+        {
+            nextPuzzle();
+            nextPuzzle();
+        }
+        else if(currentTask == 1)
+        {
+            nextPuzzle();
+        }
+    }
+
     [Photon.Pun.PunRPC]
     public void initializeTaskP2(int number)
     {
