@@ -9431,6 +9431,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 687736363}
     - target: {fileID: 8465339781447079483, guid: c673a7ed842dd3b41ac8fc8cfe649214, type: 3}
+      propertyPath: totalTimePerTask
+      value: 180
+      objectReference: {fileID: 0}
+    - target: {fileID: 8465339781447079483, guid: c673a7ed842dd3b41ac8fc8cfe649214, type: 3}
       propertyPath: dominantplayerLabel
       value: 
       objectReference: {fileID: 1983939357}

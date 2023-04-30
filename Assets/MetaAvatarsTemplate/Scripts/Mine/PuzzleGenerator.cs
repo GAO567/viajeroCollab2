@@ -69,7 +69,13 @@ public class PuzzleGenerator : MonoBehaviour
         objAux.transform.position = headObj.transform.position;
         objAux.transform.rotation = headObj.transform.rotation;
         List<int> auxIndex = new List<int>();
-        
+        int numberPieces = this.numberPieces;
+        //if training
+        if(taskManager.currentTask == 0 || taskManager.currentTask == 1)
+        {
+            numberPieces = this.numberPieces - 3;
+        }
+
         var random = new System.Random();
         if (generate) {
             for (int i=0;i< numberDistractors; i++)
@@ -282,8 +288,16 @@ public class PuzzleGenerator : MonoBehaviour
             obj.transform.position = rootForObjects.transform.position;
             obj.transform.rotation = rootForObjects.transform.rotation;
             obj.transform.parent = rootForObjects.transform.parent;
+            int numberObjects = this.numberPieces;
+            //testar isso
+            if (taskManager.currentTask == 0 || taskManager.currentTask == 1)
+            {
+                numberObjects = numberPieces - 3;
+            }
+            else
+                numberObjects = numberPieces;
 
-            for(int i = 0; i < rootForObjects.transform.childCount; i++)
+            for(int i = 0; i < numberObjects; i++)
             {
                 blueprintObjs.Add(rootForObjects.transform.GetChild(i).gameObject);
 

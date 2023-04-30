@@ -58,8 +58,8 @@ public class TaskManager : MonoBehaviour
     List<TaskLog> logTasks;
     List<GameObject> objectPartsForThisTask;
     TaskLog currentTaskLog;
-    int currentTask = 0;
-
+    public int currentTask = 0;
+    bool training = false;
 
     List<float[]> conditionsByUserId;
     //List<TaskCondition[]> taskConditionsByUserId;
@@ -687,6 +687,11 @@ public class TaskManager : MonoBehaviour
             {
                 timeRemaining -= Time.deltaTime;
             }
+            //training stuff
+            if (currentTask == 0 || currentTask == 1)
+                training = true;
+            else
+                training = false;
 
             int timeRemainingInt = (int)timeRemaining;
             int seconds = timeRemainingInt % 60;
