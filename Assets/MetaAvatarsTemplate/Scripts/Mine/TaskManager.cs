@@ -450,7 +450,7 @@ public class TaskManager : MonoBehaviour
     }
     void logUsersMovements()
     {
-        if (currentTaskState > TaskState.BothConnected)
+        if (currentTaskState > TaskState.BothConnected && !debug && !training)
         {
             string violatingP1 = "NoViolationP1";
             if (isViolatingP1())
@@ -485,9 +485,9 @@ public class TaskManager : MonoBehaviour
 
 
 
-            string header2q = "userId,dominantPlayer,timestamp,collabType,currentTask,dominantPlayer,isViolatingBoundary," + Utils.vecNameToString("Player1AreaCenter") + "," + Utils.vecNameToString("Player1AreaRot")
+            string header2q = "userId,dominantPlayer,timestamp,collabType,currentTask,dominantPlayer,isViolatingBoundary," + Utils.vecNameToString("Player2AreaCenter") + "," + Utils.vecNameToString("Player2AreaRot")
                                 + Utils.vecNameToString("headPosP2") + "," + Utils.vecNameToString("headRotP2") + "," + Utils.vecNameToString("rightHandPosP2") + Utils.vecNameToString("rightHandRotP2")
-                                 + Utils.vecNameToString("leftHandPosP2") + "," + Utils.vecNameToString("leftHandRotP2") + "\n";
+                                 + Utils.vecNameToString("leftHandPosP2") + "," + Utils.vecNameToString("leftHandRotP2") ;
 
 
             player2InteractionStr += (groupId*2) + ","+dominantplayer+","+ collabType.ToString() + "," + Time.realtimeSinceStartup + "," + currentTask + "," + (dominantplayer == "P2" ? true : false) + "," + violatingP2 + ","+ Utils.vector3ToString(Player2Area.transform.position) + "," + Utils.vector3ToString(Player2Area.transform.eulerAngles) + ","
