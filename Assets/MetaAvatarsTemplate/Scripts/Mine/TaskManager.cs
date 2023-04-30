@@ -35,6 +35,7 @@ public class TaskManager : MonoBehaviour
     public bool isRemotePlayer = false;// { get; private set; }
     [SerializeField] int totalNumberTasks = 4;
     [SerializeField] float totalTimePerTask = 300.0f;
+    [SerializeField] float timeTraining = 120.0f;
     public int avatarId = 0;
     public int groupId = 0;
     public CollabType collabType = CollabType.FacetoFaceIntersect;
@@ -548,8 +549,8 @@ public class TaskManager : MonoBehaviour
     void Start()
     {
         dominantplayer = "P1";
-        timeRemaining = totalTimePerTask;
-
+        //timeRemaining = totalTimePerTask;
+        timeRemaining = timeTraining;
         if (Application.isEditor)
         {
             print("is editor");
@@ -1227,7 +1228,10 @@ public class TaskManager : MonoBehaviour
         finishActiveBoundaryViolations();
 
         currentTask++;
-        timeRemaining = totalTimePerTask;
+        if (currentTask == 0 || currentTask == 1)
+            timeRemaining = timeTraining;
+        else
+            timeRemaining = totalTimePerTask;
         if (currentTask == totalNumberTasks)
         {
             currentTaskState = TaskState.EndTask;
