@@ -128,8 +128,10 @@ public class TaskLog
     {
         string logStr = "";
         logStr = "";
+        if (isTraining)
+            return "";//if training return empty string
         logStr += userId + "," + collabType + ","+trialNumber + "," + dominantPlayer + "," + puzzleId + "," + Utils.vector3ToString(centerPosArea) + "," + Utils.vector3ToString(centerRotArea) + "," + collabType.ToString() +
-            "," + Utils.vector3ToString(boundsSize) + "," +numberOfBoundViolationsP1 +","+ timeOutsideBoundsP1 + "," +  numberOfBoundViolationsP2 + ","+ timeOutsideBoundsP2 + ","+totalTime + "," + isTraining  ;
+            "," + Utils.vector3ToString(boundsSize) + "," +numberOfBoundViolationsP1 +","+ timeOutsideBoundsP1 + "," +  numberOfBoundViolationsP2 + ","+ timeOutsideBoundsP2 + ","+totalTime;
         if(bluePrintParts != null && objParts != null)
         {
             logStr += "," + objParts.Count;//add the number of parts to make sure we have the right amount
