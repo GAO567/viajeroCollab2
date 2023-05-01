@@ -587,7 +587,13 @@ public class TaskManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        debugTextLabel.text = "USER ID = " + groupId + " current task " + currentTask + " Current State" + currentTaskState.ToString() + " Collab Type " + collabType.ToString();
+        if (currentTask == 0 || currentTask == 1)
+            training = true;
+        else
+            training = false;
+
+        string strTraining = training  ? "training" : "real deal"; 
+        debugTextLabel.text = "USER ID = " + groupId + " current task " + currentTask  + " "+ strTraining + " Current State" + currentTaskState.ToString() + " Collab Type " + collabType.ToString();
 
         if(isRemotePlayer && collabType == CollabType.CoupledView && !hiddenAvatar)
         {
@@ -689,10 +695,7 @@ public class TaskManager : MonoBehaviour
                 timeRemaining -= Time.deltaTime;
             }
             //training stuff
-            if (currentTask == 0 || currentTask == 1)
-                training = true;
-            else
-                training = false;
+            
 
             int timeRemainingInt = (int)timeRemaining;
             int seconds = timeRemainingInt % 60;
