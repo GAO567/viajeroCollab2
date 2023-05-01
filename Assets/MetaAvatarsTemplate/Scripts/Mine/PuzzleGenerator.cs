@@ -55,7 +55,9 @@ public class PuzzleGenerator : MonoBehaviour
         listColors.Add(new Color(0.0f, 1.0f, 1.0f));
 
         
-        //taskManager = GameObject.Find("TaskManager").GetComponent<TaskManager>();
+        taskManager = this.GetComponent<TaskManager>();
+        //GameObject rootObj = GameObject.Find("rootForObjsP1");
+        //generateBlueprint(new Vector3(0, 0, 0), 6, 4, 3, 0.09f, rootObj);
         //generatePuzzle();
 
         //generateBlueprint(new Vector3(0, 0, 0), 6, 4, 3, 0.09f, null);
@@ -73,13 +75,8 @@ public class PuzzleGenerator : MonoBehaviour
         objAux.transform.rotation = headObj.transform.rotation;
         List<int> auxIndex = new List<int>();
         int numberPieces = this.numberPieces;
-        int numberDistractors = this.numberDistractors;
         //if training
-        if(taskManager.currentTask == 0 || taskManager.currentTask == 1)
-        {
-            numberPieces = numberPiecesTraining;// this.numberPieces - 3;
-            numberDistractors = 9;
-        }
+        
 
         var random = new System.Random();
         if (generate) {
@@ -178,6 +175,7 @@ public class PuzzleGenerator : MonoBehaviour
         for(int i = 0;i < numberDistractors; i++)
         {
             distractorsPuzzle.Add(parts[i + numberPieces ]);
+            //print("distractor - " + (i + numberPieces) + " numberDistractors :" + numberDistractors);
         }
 
         piecesOfthePuzzle = Utils.ShuffleArray(piecesOfthePuzzle);
@@ -262,6 +260,29 @@ public class PuzzleGenerator : MonoBehaviour
         }
        
         Destroy(objAux);
+        if(taskManager.currentTask == 0 || taskManager.currentTask == 1)
+        {
+            for(int u = numberPiecesTraining; u < blueprintObjs.Count; u++)
+            {
+                GameObject gObj = piecesOfthePuzzle[u];// rootForObjects.transform.GetChild(u).gameObject;
+                GameObject bObj = blueprintObjs[u];
+                gObj.GetComponent<MeshRenderer>().enabled = false;
+                bObj.GetComponent<MeshRenderer>().enabled = false;
+                //gObj.GetComponent<MeshRenderer>().enabled = false;
+            }
+        }
+        else
+        {
+            for (int u = 0; u < rootForObjects.transform.childCount; u++)
+            {
+                GameObject gObj = piecesOfthePuzzle[u];
+                GameObject bObj = blueprintObjs[u];
+                print("GO NAME " + gObj.name);
+                gObj.GetComponent<MeshRenderer>().enabled = true;
+                bObj.GetComponent<MeshRenderer>().enabled = true;
+                //gObj.GetComponent<MeshRenderer>().enabled = false;
+            }
+        }
         return sortedParts;
     }
 
@@ -304,7 +325,7 @@ public class PuzzleGenerator : MonoBehaviour
                 numberObjects = numberPieces;
             }
 
-            for (int i = 0; i < numberObjects; i++)
+            for (int i = 0; i < rootForObjects.transform.childCount; i++)
             {
                 blueprintObjs.Add(rootForObjects.transform.GetChild(i).gameObject);
 
@@ -317,21 +338,7 @@ public class PuzzleGenerator : MonoBehaviour
                 //mat = duplicate.GetComponent<MeshRenderer>().material;
                 //mat.color = new Color(1, 1, 1, 1.0f);
                 duplicate.transform.parent = obj.transform;
-                //duplicate.AddComponent<Photon.Pun.PhotonView>().ViewID = currentPhotonId++;
-                /*
-                Photon.Pun.PhotonView view = duplicate.GetComponent<Photon.Pun.PhotonView>();
-                Photon.Pun.PhotonTransformView tView = duplicate.AddComponent<Photon.Pun.PhotonTransformView>();
-                tView.m_SynchronizeScale = true;
-
-
-                view.ViewID = currentPhotonId++;
-                tView.m_SynchronizeScale = true;
-
-                view = rootForObjects.transform.GetChild(i).gameObject.AddComponent<Photon.Pun.PhotonView>();
-                tView = rootForObjects.transform.GetChild(i).gameObject.AddComponent<Photon.Pun.PhotonTransformView>();
-                tView.m_SynchronizeScale = true;
                 
-                view.ViewID = currentPhotonId++;*/
                 parts.Add(duplicate);
                 
 
@@ -417,7 +424,7 @@ public class PuzzleGenerator : MonoBehaviour
                     dictionaryPerDepth[i].Remove(cell);
                     dictionaryPerDepth[auxCell.z].Add(auxCell);
                     changesCount++;
-                    print("cell " + cell.id + "="+ cell.pos.ToString() + ", " + "aux Cell " + auxCell.id + "" + auxCell.pos.ToString());
+                    //print("cell " + cell.id + "="+ cell.pos.ToString() + ", " + "aux Cell " + auxCell.id + "" + auxCell.pos.ToString());
                 }
                 else
                 {
@@ -429,9 +436,28 @@ public class PuzzleGenerator : MonoBehaviour
         for(int i = 0; i < positionsBlueprint.Count; i++)
         {
             blueprintObjs[i].transform.localPosition = positionsBlueprint[i].pos;
+        }/*
+        if(taskManager.currentTask == 0 || taskManager.currentTask == 1)
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                GameObject bObj = blueprintObjs[i];
+                bObj.transform.GetComponent<MeshRenderer>().enabled = true;
+            }
+            for (int i = 3; i < blueprintObjs.Count; i++)
+            {
+                GameObject bObj = blueprintObjs[i];
+                bObj.transform.GetComponent<MeshRenderer>().enabled = false;
+            }
         }
-
-        
+        else
+        {
+            for (int i = 0; i < blueprintObjs.Count; i++)
+            {
+                GameObject bObj = blueprintObjs[i];
+                bObj.transform.GetComponent<MeshRenderer>().enabled = true;
+            }
+        }*/
 
         return blueprintObjs;
     }

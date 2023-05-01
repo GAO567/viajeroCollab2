@@ -70,7 +70,9 @@ public class TaskManager : MonoBehaviour
     GameObject headPlayer1;
     GameObject rightHandPlayer1;
     GameObject leftHandPlayer1;
-    GameObject transformRootForP1Blueprint;
+
+    [NonSerialized]
+    public GameObject transformRootForP1Blueprint;
     WireareaDrawer boundaryDrawerP1;
 
     GameObject headPlayer2;
@@ -412,7 +414,7 @@ public class TaskManager : MonoBehaviour
 
         currentTaskLog = new TaskLog((groupId*2)-1, currentTask, "P1", currentTask.ToString(), Player1Area.transform, collabType, boundsSize);
         blueprintObjects = generator.generateBlueprint(new Vector3(0, 0, 0), 6, 4, 3, 0.09f, transformRootForP1Blueprint);
-        listPossiblePositionsForPuzzle =  generator.generatePuzzle(true, Player1Area);
+        listPossiblePositionsForPuzzle = generator.generatePuzzle(true, Player1Area);
         taskStarted = true;
     }
 
@@ -1275,7 +1277,7 @@ public class TaskManager : MonoBehaviour
             //hidecurrenttask
         }
 
-        
+
         blueprintObjects = generator.generateBlueprint(new Vector3(0, 0, 0), 6, 4, 3, 0.09f, dominantRootPuzzle);
         listPossiblePositionsForPuzzle = generator.generatePuzzle(false, dominantArea);
         int idToUse = 0;
