@@ -591,6 +591,8 @@ public class TaskManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+       
         if (currentTask == 0 || currentTask == 1)
             training = true;
         else
