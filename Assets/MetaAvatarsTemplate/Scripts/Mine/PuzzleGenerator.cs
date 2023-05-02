@@ -266,8 +266,8 @@ public class PuzzleGenerator : MonoBehaviour
             {
                 GameObject gObj = piecesOfthePuzzle[u];// rootForObjects.transform.GetChild(u).gameObject;
                 GameObject bObj = blueprintObjs[u];
-                gObj.transform.position = new Vector3(100, 100, 100);
-                bObj.transform.position = new Vector3(100, 100, 100);
+                gObj.transform.position = new Vector3(100, -100, 100);
+                bObj.transform.position = new Vector3(100, -100, 100);
                 //gObj.GetComponent<MeshRenderer>().enabled = false;
             }
         }
