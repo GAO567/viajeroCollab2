@@ -1224,7 +1224,7 @@ public class TaskManager : MonoBehaviour
     [Photon.Pun.PunRPC]
     public void playSound(int audioCLip)
     {
-        //do something
+        //do something and then play a sound
         audioSource.Play();
     }
 
