@@ -285,6 +285,8 @@ public class Raycaster : MonoBehaviour
         }
         if(handTriggered && objectFromDirectTouch)
         {
+            if (!objectFromDirectTouch.Equals(other.gameObject.name))
+                return;
             PhotonView photonV = other.GetComponent<PhotonView>();
             if (photonV)
             {

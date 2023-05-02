@@ -2924,6 +2924,7 @@ MonoBehaviour:
   lowerThreshold: 0.2
   upperThreshold: 5
   stepSize: 0.1
+  rotationStep: 5
 --- !u!4 &871576178
 Transform:
   m_ObjectHideFlags: 0
@@ -5414,6 +5415,7 @@ MonoBehaviour:
   lowerThreshold: 0.2
   upperThreshold: 5
   stepSize: 0.1
+  rotationStep: 5
 --- !u!65 &1707872605
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6181,6 +6183,7 @@ MonoBehaviour:
   lowerThreshold: 0.2
   upperThreshold: 5
   stepSize: 0.1
+  rotationStep: 5
 --- !u!4 &1829114468 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4875755424105542, guid: c6a74181d4000004887343fb87b3c53a, type: 3}
@@ -10050,7 +10053,7 @@ PrefabInstance:
       objectReference: {fileID: 1315192949}
     - target: {fileID: 8465339781447079483, guid: c673a7ed842dd3b41ac8fc8cfe649214, type: 3}
       propertyPath: isRemotePlayer
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8465339781447079483, guid: c673a7ed842dd3b41ac8fc8cfe649214, type: 3}
       propertyPath: networkManager

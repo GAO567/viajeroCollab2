@@ -262,11 +262,23 @@ public class PuzzleGenerator : MonoBehaviour
         }
        
         Destroy(objAux);
+        Dictionary<string, bool> dictionaryIndex = new Dictionary<string, bool>();
+        for(int i = 0; i < numberPieces; i++)
+        {
+            dictionaryIndex.Add("part"+(i+1), false);
+        }
         if(taskManager.currentTask == 0 || taskManager.currentTask == 1)
         {
-            for(int u = numberPiecesTraining; u < blueprintObjs.Count; u++)
+            for(int i = 0;i < numberPiecesTraining; i++)
+            {
+                GameObject bObj = blueprintObjs[i];
+                GameObject gObj = GameObject.Find(bObj.name + "_root(Clone)");
+                dictionaryIndex["part" + (i + 1)] = true;
+            }
+            for(int u = 0; u < blueprintObjs.Count; u++)
             {
                 GameObject gObj = piecesOfthePuzzle[u];// rootForObjects.transform.GetChild(u).gameObject;
+                
                 GameObject bObj = blueprintObjs[u];
                 gObj.transform.position = new Vector3(100, -100, 100);
                 bObj.transform.position = new Vector3(100, -100, 100);

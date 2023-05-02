@@ -622,6 +622,7 @@ MonoBehaviour:
   lowerThreshold: 0.02
   upperThreshold: 5
   stepSize: 0.1
+  rotationStep: 5
 --- !u!120 &2635023487025786535
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -838,6 +839,7 @@ MonoBehaviour:
   lowerThreshold: 0.02
   upperThreshold: 5
   stepSize: 0.1
+  rotationStep: 5
 --- !u!120 &5275426556886177896
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -1361,6 +1363,7 @@ MonoBehaviour:
   lowerThreshold: 0.02
   upperThreshold: 5
   stepSize: 0.1
+  rotationStep: 5
 --- !u!120 &532604917732845513
 LineRenderer:
   m_ObjectHideFlags: 0

@@ -175,6 +175,9 @@ public static class Utils
             return false;
         }
     }
+
+    
+
     public static GridCell nextAvailableCellInPuzzleGrid(GridCell[] arrayCells,GridCell currentCell)
     {
         GridCell aux = currentCell;
