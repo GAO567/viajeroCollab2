@@ -1350,15 +1350,15 @@ public class TaskManager : MonoBehaviour
             {
                 Player1Area.transform.localPosition = new Vector3(0, 0, 0);
                 Player1Area.transform.localEulerAngles = new Vector3(0, 0, 0);
-                Player2Area.transform.localPosition = new Vector3(0.56f, 0, 0.51f);
-                Player2Area.transform.localEulerAngles = new Vector3(0, 116.0f, 0);
+                Player2Area.transform.localPosition = new Vector3(0.363f, 0, 0.647f);
+                Player2Area.transform.localEulerAngles = new Vector3(0, 125.0f, 0);
             }
             else if(collabType == CollabType.Angled90)
             {
                 Player1Area.transform.localPosition = new Vector3(0, 0, 0);
                 Player1Area.transform.localEulerAngles = new Vector3(0, 0, 0);
-                Player2Area.transform.localPosition = new Vector3(0.4f, 0, 0.71f);
-                Player2Area.transform.localEulerAngles = new Vector3(0, -90.0f, 0);
+                Player2Area.transform.localPosition = new Vector3(0.172f, 0, 0.644f);
+                Player2Area.transform.localEulerAngles = new Vector3(0, 90.0f, 0);
             }
             else if (collabType == CollabType.CoupledView)
             {
