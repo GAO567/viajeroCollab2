@@ -36,6 +36,7 @@ public class TaskManager : MonoBehaviour
     [SerializeField] int totalNumberTasks = 4;
     [SerializeField] float totalTimePerTask = 300.0f;
     [SerializeField] float timeTraining = 120.0f;
+    AudioSource audioSource;
     public int avatarId = 0;
     public int groupId = 0;
     public CollabType collabType = CollabType.FacetoFaceIntersect;
@@ -525,6 +526,7 @@ public class TaskManager : MonoBehaviour
         int id = GlobalVariables.Get<int>("userId");
         int avatar = GlobalVariables.Get<int>("avatarId");
         int remote = GlobalVariables.Get<int>("remote");
+        audioSource = GetComponent<AudioSource>();
 
         bool cameFromVideoScene = false;
         cameFromVideoScene = GlobalVariables.Get<bool>("cameFromVideoScene");
@@ -1217,6 +1219,13 @@ public class TaskManager : MonoBehaviour
                 dominantplayer = dominantplayer == "P1 " ? "P2" : "P1"; 
     }
 
+    [Photon.Pun.PunRPC]
+    public void playSound(int audioCLip)
+    {
+        //do something
+        audioSource.Play();
+    }
+
     void nextPuzzle()
     {
 
@@ -1244,6 +1253,11 @@ public class TaskManager : MonoBehaviour
         currentTaskLog.endTask();
         logTasks.Add(currentTaskLog);
         finishActiveBoundaryViolations();
+
+        playSound(0);
+        GetComponent<Photon.Pun.PhotonView>().RPC("playSound", Photon.Pun.RpcTarget.AllBuffered, 0 );
+
+
 
         currentTask++;
         if (currentTask == 0 || currentTask == 1)
