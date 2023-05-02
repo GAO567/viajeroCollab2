@@ -178,7 +178,7 @@ public class PuzzleGenerator : MonoBehaviour
             distractorsPuzzle.Add(parts[i + numberPieces ]);
             //print("distractor - " + (i + numberPieces) + " numberDistractors :" + numberDistractors);
         }
-
+        List<GameObject> piecesAux = piecesOfthePuzzle;
         piecesOfthePuzzle = Utils.ShuffleArray(piecesOfthePuzzle);
         distractorsPuzzle = Utils.ShuffleArray(distractorsPuzzle);
 
@@ -262,40 +262,34 @@ public class PuzzleGenerator : MonoBehaviour
         }
        
         Destroy(objAux);
-        Dictionary<string, bool> dictionaryIndex = new Dictionary<string, bool>();
-        for(int i = 0; i < numberPieces; i++)
-        {
-            dictionaryIndex.Add("part"+(i+1), false);
-        }
+        List<GameObject> dicPiecesToShow = new List<GameObject>();
         if(taskManager.currentTask == 0 || taskManager.currentTask == 1)
         {
-            for(int i = 0;i < numberPiecesTraining; i++)
+
+            for(int i = 3;i < blueprintObjs.Count; i++)
             {
                 GameObject bObj = blueprintObjs[i];
-                GameObject gObj = GameObject.Find(bObj.name + "_root(Clone)");
-                dictionaryIndex["part" + (i + 1)] = true;
+                GameObject gObj = piecesAux[i];
+
+                bObj.transform.position = new Vector3(0, -100, 0);
+                gObj.transform.position = new Vector3(0, -100, 0);
+
             }
-            for(int u = 0; u < blueprintObjs.Count; u++)
-            {
-                GameObject gObj = piecesOfthePuzzle[u];// rootForObjects.transform.GetChild(u).gameObject;
-                
-                GameObject bObj = blueprintObjs[u];
-                gObj.transform.position = new Vector3(100, -100, 100);
-                bObj.transform.position = new Vector3(100, -100, 100);
-                //gObj.GetComponent<MeshRenderer>().enabled = false;
-            }
+
         }
         else
         {
-            for (int u = 0; u < rootForObjects.transform.childCount; u++)
+            /*for (int u = 0; u < rootForObjects.transform.childCount; u++)
             {
                 GameObject gObj = piecesOfthePuzzle[u];
                 GameObject bObj = blueprintObjs[u];
                 //print("GO NAME " + gObj.name);
+
+
                 gObj.GetComponent<MeshRenderer>().enabled = true;
                 bObj.GetComponent<MeshRenderer>().enabled = true;
                 //gObj.GetComponent<MeshRenderer>().enabled = false;
-            }
+            }*/
         }
         return sortedParts;
     }

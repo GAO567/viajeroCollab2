@@ -271,7 +271,10 @@ public class Raycaster : MonoBehaviour
             }
             BoxCollider collider = GetComponent<BoxCollider>();
             other.gameObject.transform.position = collider.ClosestPoint(other.gameObject.transform.position);
-            
+            if (handTriggered)
+            {
+                other.gameObject.transform.rotation = collider.transform.rotation;
+            }
             Vector2 thumbstickValue = OVRInput.Get(OVRInput.Axis2D.PrimaryThumbstick, controllerActive);
 
             float hitDepth = transform.InverseTransformPoint(other.transform.position).z;
@@ -283,9 +286,9 @@ public class Raycaster : MonoBehaviour
                 zDepth = this.transform.InverseTransformPoint(other.transform.position).z;
             }
         }
-        if(handTriggered && objectFromDirectTouch)
+        /*if(handTriggered && objectFromDirectTouch)
         {
-            if (!objectFromDirectTouch.Equals(other.gameObject.name))
+            if (!!objectFromDirectTouch.transform.name.Equals(other.gameObject.transform.name))
                 return;
             PhotonView photonV = other.GetComponent<PhotonView>();
             if (photonV)
@@ -294,7 +297,7 @@ public class Raycaster : MonoBehaviour
             }
             BoxCollider collider = this.gameObject.GetComponent<BoxCollider>();
             other.gameObject.transform.rotation = collider.transform.rotation;
-        }
+        }*/
     }
 
     private void OnTriggerExit(Collider other)
