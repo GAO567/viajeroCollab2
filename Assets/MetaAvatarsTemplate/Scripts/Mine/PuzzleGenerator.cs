@@ -266,8 +266,8 @@ public class PuzzleGenerator : MonoBehaviour
             {
                 GameObject gObj = piecesOfthePuzzle[u];// rootForObjects.transform.GetChild(u).gameObject;
                 GameObject bObj = blueprintObjs[u];
-                gObj.GetComponent<MeshRenderer>().enabled = false;
-                bObj.GetComponent<MeshRenderer>().enabled = false;
+                gObj.transform.position = new Vector3(100, 100, 100);
+                bObj.transform.position = new Vector3(100, 100, 100);
                 //gObj.GetComponent<MeshRenderer>().enabled = false;
             }
         }
@@ -277,7 +277,7 @@ public class PuzzleGenerator : MonoBehaviour
             {
                 GameObject gObj = piecesOfthePuzzle[u];
                 GameObject bObj = blueprintObjs[u];
-                print("GO NAME " + gObj.name);
+                //print("GO NAME " + gObj.name);
                 gObj.GetComponent<MeshRenderer>().enabled = true;
                 bObj.GetComponent<MeshRenderer>().enabled = true;
                 //gObj.GetComponent<MeshRenderer>().enabled = false;
