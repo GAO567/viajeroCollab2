@@ -595,7 +595,7 @@ public class TaskManager : MonoBehaviour
             training = false;
 
         string strTraining = training  ? "training" : "real deal"; 
-        debugTextLabel.text = "USER ID = " + groupId + " current task " + currentTask  + " "+ strTraining + " Current State" + currentTaskState.ToString() + " Collab Type " + collabType.ToString();
+        debugTextLabel.text = "USER ID = " + groupId + " current task " + currentTask  + " "+ " Time Remaining "+ timeRemaining + " Training "+ strTraining + " Current State" + currentTaskState.ToString() + " Collab Type " + collabType.ToString();
 
         if(isRemotePlayer && collabType == CollabType.CoupledView && !hiddenAvatar)
         {
