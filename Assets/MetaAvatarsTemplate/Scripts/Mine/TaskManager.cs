@@ -594,8 +594,21 @@ public class TaskManager : MonoBehaviour
         else
             training = false;
 
-        string strTraining = training  ? "training" : "real deal"; 
-        debugTextLabel.text = "USER ID = " + groupId + " current task " + currentTask  + " "+ " Time Remaining "+ timeRemaining + " Training "+ strTraining + " Current State" + currentTaskState.ToString() + " Collab Type " + collabType.ToString();
+        string strTraining = training  ? "training" : "real deal";
+        int timeRemainingInt = (int)timeRemaining;
+        int seconds = timeRemainingInt % 60;
+        int minutes = (int)timeRemainingInt / 60;
+        string extraZeroString = "0";
+        if(seconds < 10)
+        {
+            extraZeroString += "0";
+        }
+        else
+        {
+            extraZeroString += "";
+        }
+        string timeFormatted = minutes + ":" + extraZeroString +seconds;
+        debugTextLabel.text = "USER ID = " + groupId + " current task " + currentTask  + " "+ " Time Remaining "+ timeFormatted + " Training "+ strTraining + " Current State" + currentTaskState.ToString() + " Collab Type " + collabType.ToString();
 
         if(isRemotePlayer && collabType == CollabType.CoupledView && !hiddenAvatar)
         {
