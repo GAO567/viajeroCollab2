@@ -31,10 +31,17 @@ public class Raycaster : MonoBehaviour
     Vector3 rotationObj;
     float zDepth = 0;
 
+    bool directInteraction = false;
+
     TaskManager taskManager;
     OVRInput.Controller controllerActive;
 
     GameObject lockedObject;
+
+    List<GameObject> objectsHitByRay = new List<GameObject>();
+
+    RaycastHit[] results = new RaycastHit[10];
+
     // Start is called before the first frame update
     void Start()
     {
@@ -87,25 +94,51 @@ public class Raycaster : MonoBehaviour
             timeElapsed += (Time.realtimeSinceStartup - initTimestamp);//time one person is interacting with an object
         }
         //print("triggered ? " + triggered + " button up : " + buttonUp);
-        if (lockedObject)
-            return;
+        
 
         RaycastHit hit;
         // Does the ray intersect any objects excluding the player layer
-        
 
-        if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, upperThreshold,layerMask))
+        Ray rayR = new Ray(transform.position, transform.transform.TransformDirection(Vector3.forward));
+        int hits = Physics.RaycastNonAlloc(rayR, results, upperThreshold, layerMask);
+        float minDistance = 999.0f;
+        RaycastHit hit2 = new RaycastHit() ;
+        int indexResult = -1;
+        for(int i = 0; i < hits; i++)
         {
+            if (transform.InverseTransformPoint(results[i].transform.position).z < minDistance)
+            {
+                minDistance = transform.InverseTransformPoint(results[i].transform.position).z;
+                hit2 = results[i];
+                indexResult = i;
+            }
+        }
+        if (indexResult > -1)
+        {
+            print("()hit object " + results[indexResult].transform.name);
+        }
+        if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, upperThreshold,layerMask) && !directInteraction)
+        {
+            //select the nearest one
             Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
             //Debug.Log("Did Hit");
             Controller_mapping(hit);
             print("@hit" + hit.transform.gameObject.name + "from player " + (taskManager.isRemotePlayer ? "P2" : "P1"));
             Vector3 hitLocalPos = transform.InverseTransformPoint(hit.transform.position);
-
+            
             lineRenderer.SetPosition(0, this.gameObject.transform.TransformPoint(0, 0, 0));
             lineRenderer.SetPosition(1, this.gameObject.transform.TransformPoint(0, 0, hitLocalPos.z));
 
+            if (!lockedObject)
+            {
+                lockedObject = hit.transform.gameObject; // only get the first one
+            }
+            /*else
+            {
+                return;
+            }*/
 
+            
             if (taskManager)
             {
                 if (taskManager.currentTaskState <= TaskState.BothConnected)
@@ -174,9 +207,15 @@ public class Raycaster : MonoBehaviour
         
         if (triggered && !other.gameObject.name.Contains("Raycaster"))
         {
+            directInteraction = true;
             //print("entered");
-            // if (lockedObject)
-            //    return;
+            if (lockedObject)
+                return;
+            PhotonView photonV = other.GetComponent<PhotonView>();
+            if (photonV)
+            {
+                photonV.RequestOwnership();
+            }
             BoxCollider collider = GetComponent<BoxCollider>();
             other.gameObject.transform.position = collider.ClosestPoint(other.gameObject.transform.position);
             Vector2 thumbstickValue = OVRInput.Get(OVRInput.Axis2D.PrimaryThumbstick, controllerActive);
@@ -192,7 +231,8 @@ public class Raycaster : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        lockedObject = null;
+        //lockedObject = null;
+        directInteraction = false;
     }
     void Controller_mapping(RaycastHit hitObj)
     {
@@ -208,6 +248,9 @@ public class Raycaster : MonoBehaviour
                 //photonView.TransferOwnership(this.GetComponent<PhotonView>().ViewID);
                 photonView.RequestOwnership();//request ownership of the object
                 print("requesting ownership of object " + hitObj.transform.name + "from player " + (taskManager.isRemotePlayer ? "P2" : "P1"));
+            }
+            else
+            {
             }
         }
         else if(!photonView)

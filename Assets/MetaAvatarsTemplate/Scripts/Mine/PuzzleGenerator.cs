@@ -133,6 +133,7 @@ public class PuzzleGenerator : MonoBehaviour
             for(int i = 0; i < distractorRoot.transform.childCount; i++)
             {
                 GameObject obj = distractorRoot.transform.GetChild(i).gameObject;// Photon.Pun.PhotonNetwork.Instantiate("DistractorCube", new Vector3(), new Quaternion());
+                obj.GetComponent<Photon.Pun.PhotonView>().RequestOwnership();
                 //obj.AddComponent<M>().color = new Color(1.0f, 0.0f, 0.0f);
                 //obj.GetComponent<MeshRenderer>().material.color = new Color(1.0f, 0.0f, 0.0f);
                 obj.transform.localScale = new Vector3(0.06f, 0.06f, 0.06f);
@@ -250,10 +251,11 @@ public class PuzzleGenerator : MonoBehaviour
         float initialAngle = objAux.transform.localEulerAngles.y;
         for(float f = -135;  f < 135.0f ; f += angleIncrement)
         {
+            
             objAux.transform.localEulerAngles = new Vector3(0, f + initialAngle, 0);
             //print("countIndexArray" + countIndexArray);
             GameObject obj = sortedParts[countIndexArray];// parts[auxIndex[countIndexArray]];
-
+            obj.GetComponent<Photon.Pun.PhotonView>().RequestOwnership();
             obj.transform.position = objAux.transform.TransformPoint(new Vector3(UnityEngine.Random.Range(0.1f,0.2f), UnityEngine.Random.Range(0.0f, 0.25f), UnityEngine.Random.Range(1.3f,2.0f)));//generate y according to proxemics and z randomly
 
             countIndexArray++;
