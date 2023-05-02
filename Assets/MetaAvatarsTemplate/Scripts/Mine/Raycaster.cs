@@ -36,7 +36,8 @@ public class Raycaster : MonoBehaviour
     TaskManager taskManager;
     OVRInput.Controller controllerActive;
 
-    GameObject lockedObject;
+    GameObject objectFromRaycast;
+    GameObject objectFromDirectTouch;
 
     List<GameObject> objectsHitByRay = new List<GameObject>();
 
@@ -53,9 +54,33 @@ public class Raycaster : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
-
         Debug.DrawLine(this.gameObject.transform.TransformPoint(0, 0, 0), this.gameObject.transform.TransformPoint(0, 0, rayLength), Color.cyan);
+        if (objectFromDirectTouch)
+        {
+            PhotonView photonDirectTouch = objectFromDirectTouch.GetComponent<PhotonView>();
+            //if i am not owner anymore do someething
+            if (photonDirectTouch)
+            {
+                if (!photonDirectTouch.AmOwner)
+                {
+                    //photonDirectTouch = null;
+                    objectFromDirectTouch = null;
+                    directInteraction = false;
+                }
+            }
+        }
+        if (objectFromRaycast)
+        {
+            PhotonView photonRaycast = objectFromRaycast.GetComponent<PhotonView>();
+            if (photonRaycast)
+            {
+                if (!photonRaycast.AmOwner)
+                {
+                    objectFromRaycast = null;
+                }
+            }
+            //if i am not owner anymore do something
+        }
         //OVRInput.Get()
     }
 
@@ -102,36 +127,70 @@ public class Raycaster : MonoBehaviour
         Ray rayR = new Ray(transform.position, transform.transform.TransformDirection(Vector3.forward));
         int hits = Physics.RaycastNonAlloc(rayR, results, upperThreshold, layerMask);
         float minDistance = 999.0f;
-        RaycastHit hit2 = new RaycastHit() ;
         int indexResult = -1;
+
+        if(hits == 0)
+        {
+            if (objectFromRaycast)
+            {
+                print("££$no hits");
+                objectFromRaycast = null;
+            }
+        }
+
         for(int i = 0; i < hits; i++)
         {
             if (transform.InverseTransformPoint(results[i].transform.position).z < minDistance)
             {
                 minDistance = transform.InverseTransformPoint(results[i].transform.position).z;
-                hit2 = results[i];
+                //objectFromRaycast = results[i].transform.gameObject;
                 indexResult = i;
             }
         }
-        if (indexResult > -1)
+        if (indexResult > -1 && triggered)
         {
             print("()hit object " + results[indexResult].transform.name);
+            objectFromRaycast = results[indexResult].transform.gameObject;
         }
-        if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, upperThreshold,layerMask) && !directInteraction)
+        if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, upperThreshold,layerMask))
         {
             //select the nearest one
             Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
             //Debug.Log("Did Hit");
-            Controller_mapping(hit);
-            print("@hit" + hit.transform.gameObject.name + "from player " + (taskManager.isRemotePlayer ? "P2" : "P1"));
+            if(triggered && !directInteraction)
+            {
+                Controller_mapping(hit);
+
+                if (taskManager)
+                {
+                    if (taskManager.currentTaskState <= TaskState.BothConnected)
+                        return;
+                    if (taskManager.isRemotePlayer)
+                    {
+                        try
+                        {
+                            taskManager.GetComponent<PhotonView>().RPC("objectInteractedByP2", RpcTarget.AllBuffered, true);
+                        }
+                        catch (Exception ex)
+                        {
+                            print("error in the RPC call for the raycaster" + ex.StackTrace);
+                        }
+                    }
+                    else
+                    {
+                        taskManager.objectInteractedByP1(true);
+                    }
+
+                }
+            }
+            // print("@hit" + hit.transform.gameObject.name + "from player " + (taskManager.isRemotePlayer ? "P2" : "P1"));
             Vector3 hitLocalPos = transform.InverseTransformPoint(hit.transform.position);
             
             lineRenderer.SetPosition(0, this.gameObject.transform.TransformPoint(0, 0, 0));
             lineRenderer.SetPosition(1, this.gameObject.transform.TransformPoint(0, 0, hitLocalPos.z));
 
-            if (!lockedObject)
+            if (!objectFromRaycast)
             {
-                lockedObject = hit.transform.gameObject; // only get the first one
             }
             /*else
             {
@@ -139,27 +198,6 @@ public class Raycaster : MonoBehaviour
             }*/
 
             
-            if (taskManager)
-            {
-                if (taskManager.currentTaskState <= TaskState.BothConnected)
-                    return;
-                if (taskManager.isRemotePlayer)
-                {
-                    try
-                    {
-                        taskManager.GetComponent<PhotonView>().RPC("objectInteractedByP2", RpcTarget.AllBuffered, true);
-                    }
-                    catch(Exception ex)
-                    {
-                        print("error in the RPC call for the raycaster" + ex.StackTrace);
-                    }
-                }
-                else
-                {
-                    taskManager.objectInteractedByP1(true);
-                }
-                
-            }
         }
         else
         {
@@ -204,13 +242,22 @@ public class Raycaster : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        
-        if (triggered && !other.gameObject.name.Contains("Raycaster"))
+        if(other.gameObject.layer == 9)
         {
-            directInteraction = true;
-            //print("entered");
-            if (lockedObject)
-                return;
+            if (!objectFromDirectTouch)
+            {
+                objectFromDirectTouch = other.gameObject;
+            }
+        }
+        
+        if (triggered && !other.gameObject.name.Contains("Raycaster") )
+        {
+            if (objectFromDirectTouch)
+            {
+                if (!objectFromDirectTouch.transform.name.Equals(other.gameObject.transform.name))
+                    return;
+                directInteraction = true;
+            }
             PhotonView photonV = other.GetComponent<PhotonView>();
             if (photonV)
             {
@@ -233,6 +280,13 @@ public class Raycaster : MonoBehaviour
     {
         //lockedObject = null;
         directInteraction = false;
+        if (objectFromDirectTouch)
+        {
+            if (objectFromDirectTouch.gameObject.name == other.gameObject.name)
+            {
+                objectFromDirectTouch = null;
+            }
+        }
     }
     void Controller_mapping(RaycastHit hitObj)
     {
