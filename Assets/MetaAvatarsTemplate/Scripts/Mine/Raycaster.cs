@@ -45,12 +45,15 @@ public class Raycaster : MonoBehaviour
 
     RaycastHit[] results = new RaycastHit[10];
 
+    PhotonView taskManagerPhotonView;
+
     // Start is called before the first frame update
     void Start()
     {
         lineRenderer.SetPosition(0, this.gameObject.transform.TransformPoint(0, 0, rayLength));
         controllerActive = OVRInput.Controller.RTouch;
         taskManager = GameObject.Find("RootAreas").GetComponent<TaskManager>();
+        taskManagerPhotonView = taskManager.GetComponent<PhotonView>();
     }
 
     // Update is called once per frame
@@ -109,8 +112,8 @@ public class Raycaster : MonoBehaviour
         //print("triggered ? " + triggered);
 
         //lasttimeTriggered = triggered;
-        triggered = OVRInput.Get(OVRInput.Button.PrimaryIndexTrigger, controllerActive);
-        handTriggered = OVRInput.Get(OVRInput.Button.PrimaryHandTrigger, controllerActive);
+        triggered = OVRInput.Get(OVRInput.Button.PrimaryIndexTrigger, controllerActive) && taskManagerPhotonView.IsMine;
+        handTriggered = OVRInput.Get(OVRInput.Button.PrimaryHandTrigger, controllerActive) && taskManagerPhotonView.IsMine;
 
         if (!triggered)
         {
