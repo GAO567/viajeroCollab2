@@ -10454,11 +10454,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8465339782317354467, guid: c673a7ed842dd3b41ac8fc8cfe649214, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.81
+      value: -1.33
       objectReference: {fileID: 0}
     - target: {fileID: 8465339782530834406, guid: c673a7ed842dd3b41ac8fc8cfe649214, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.81
+      value: -1.33
       objectReference: {fileID: 0}
     - target: {fileID: 8465339782581099934, guid: c673a7ed842dd3b41ac8fc8cfe649214, type: 3}
       propertyPath: sceneViewId
