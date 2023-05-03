@@ -1386,7 +1386,7 @@ public class TaskManager : MonoBehaviour
             {
                 Player1Area.transform.localPosition = new Vector3(0, 0, 0);
                 Player1Area.transform.localEulerAngles = new Vector3(0, 0, 0);
-                Player2Area.transform.localPosition = new Vector3(0.655f, 0, 0.639f);
+                Player2Area.transform.localPosition = new Vector3(0.651f, 0, 0.639f);
                 Player2Area.transform.localEulerAngles = new Vector3(0, 270.0f, 0);
             }
             else if (collabType == CollabType.CoupledView)
