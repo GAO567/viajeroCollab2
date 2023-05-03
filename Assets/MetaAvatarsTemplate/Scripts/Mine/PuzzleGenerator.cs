@@ -86,6 +86,7 @@ public class PuzzleGenerator : MonoBehaviour
                //obj.AddComponent<M>().color = new Color(1.0f, 0.0f, 0.0f);
                 //obj.GetComponent<MeshRenderer>().material.color = new Color(1.0f, 0.0f, 0.0f);
                 obj.transform.localScale = new Vector3(0.06f, 0.06f, 0.06f);
+                obj.name = "distractor" + i;
                 //obj.name = "distractor" + i;
                 obj.transform.parent = distractorRoot.transform;
                 obj.transform.localRotation = Quaternion.identity;
@@ -272,6 +273,8 @@ public class PuzzleGenerator : MonoBehaviour
                 GameObject bObj = blueprintObjs[i];
                 GameObject gObj = piecesAux[i];
 
+                gObj.GetComponent<Photon.Pun.PhotonView>().RequestOwnership();
+                bObj.GetComponent<Photon.Pun.PhotonView>().RequestOwnership();
                 bObj.transform.position = new Vector3(0, -100, 0);
                 gObj.transform.position = new Vector3(0, -100, 0);
 
