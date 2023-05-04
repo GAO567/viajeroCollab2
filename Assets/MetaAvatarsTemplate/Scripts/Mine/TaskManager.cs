@@ -156,6 +156,8 @@ public class TaskManager : MonoBehaviour
         print("Player Number" + playerNumber);
         if (playerNumber == 1)
         {
+            isRemotePlayer = !GetComponent<Photon.Pun.PhotonView>().IsMine;
+            print("remote player?" + !GetComponent<Photon.Pun.PhotonView>().IsMine);
             GameObject go = GameObject.Find("Local Network Player");
             OVRCameraRig player1 = obj.GetComponent<OVRCameraRig>();
             
@@ -175,6 +177,8 @@ public class TaskManager : MonoBehaviour
         }
         else if (playerNumber == 2)
         {
+            isRemotePlayer = GetComponent<Photon.Pun.PhotonView>().IsMine;
+            print("remote player = " + isRemotePlayer);
             if (obj.name == "RemoteAvatar")
             {
                 for (int i = 0; i < obj.transform.childCount; i++)
