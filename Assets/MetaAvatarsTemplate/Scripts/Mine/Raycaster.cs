@@ -315,7 +315,7 @@ public class Raycaster : MonoBehaviour
             }
         }
     }
-    void Controller_mapping(RaycastHit hitObj)
+    void Controller_mapping(RaycastHit hitObj) 
     {
         Vector3 hitPosition = hitObj.transform.position;
         float hitDepth = transform.InverseTransformPoint(hitPosition).z;
@@ -393,7 +393,7 @@ public class Raycaster : MonoBehaviour
                 //hitObj.transform.parent = this.gameObject.transform;
                 //hitObj.transform.eulerAngles = rotationObj;//lockRotation
             }
-            if(thumbstickValue.y > 0)
+            if(thumbstickValue.y > 0 && taskManagerPhotonView.IsMine)
             {
                 if(handTriggered || triggered)
                 {
@@ -409,7 +409,7 @@ public class Raycaster : MonoBehaviour
                 }
             }
                 
-            else if(thumbstickValue.y < 0)
+            else if(thumbstickValue.y < 0 && taskManagerPhotonView.IsMine)
             {
                 if(triggered || handTriggered)
                 {
