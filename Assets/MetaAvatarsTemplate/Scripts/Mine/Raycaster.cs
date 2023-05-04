@@ -112,9 +112,17 @@ public class Raycaster : MonoBehaviour
         //print("triggered ? " + triggered);
 
         //lasttimeTriggered = triggered;
-        triggered = OVRInput.Get(OVRInput.Button.PrimaryIndexTrigger, controllerActive) && taskManagerPhotonView.IsMine;
-        handTriggered = OVRInput.Get(OVRInput.Button.PrimaryHandTrigger, controllerActive) && taskManagerPhotonView.IsMine;
+        if (taskManager.isRemotePlayer)
+        {
+            triggered = OVRInput.Get(OVRInput.Button.PrimaryIndexTrigger, controllerActive) && !taskManagerPhotonView.IsMine;
+            handTriggered = OVRInput.Get(OVRInput.Button.PrimaryHandTrigger, controllerActive) && !taskManagerPhotonView.IsMine;
+        }
+        else
+        {
+            triggered = OVRInput.Get(OVRInput.Button.PrimaryIndexTrigger, controllerActive) && taskManagerPhotonView.IsMine;
+            handTriggered = OVRInput.Get(OVRInput.Button.PrimaryHandTrigger, controllerActive) && taskManagerPhotonView.IsMine;
 
+        }
         if (!triggered)
         {
             //transform.DetachChildren();
