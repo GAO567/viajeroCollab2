@@ -36,6 +36,8 @@ public class TaskManager : MonoBehaviour
     [SerializeField] int totalNumberTasks = 4;
     [SerializeField] float totalTimePerTask = 300.0f;
     [SerializeField] float timeTraining = 120.0f;
+    [SerializeField] float player1Height = -1.54f;
+    [SerializeField] float player2Height = -1.54f;
     AudioSource audioSource;
     public int avatarId = 0;
     public int groupId = 0;
@@ -615,6 +617,8 @@ public class TaskManager : MonoBehaviour
         {
             extraZeroString += "";
         }
+
+
         string timeFormatted = minutes3 + ":" + extraZeroString +seconds3;
         debugTextLabel.text = "USER ID = " + groupId + " current task " + currentTask  +" Time Remaining "+ timeFormatted + " Training "+ strTraining + " Current State" + currentTaskState.ToString() + " Collab Type " + collabType.ToString();
 
