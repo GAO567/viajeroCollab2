@@ -401,7 +401,7 @@ public class Raycaster : MonoBehaviour
                 //hitObj.transform.parent = this.gameObject.transform;
                 //hitObj.transform.eulerAngles = rotationObj;//lockRotation
             }
-            if(thumbstickValue.y > 0 && taskManagerPhotonView.IsMine)
+            if(thumbstickValue.y > 0 )
             {
                 if(handTriggered || triggered)
                 {
@@ -417,7 +417,7 @@ public class Raycaster : MonoBehaviour
                 }
             }
                 
-            else if(thumbstickValue.y < 0 && taskManagerPhotonView.IsMine)
+            else if(thumbstickValue.y < 0 )
             {
                 if(triggered || handTriggered)
                 {
