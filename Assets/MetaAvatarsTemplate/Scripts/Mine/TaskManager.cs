@@ -622,7 +622,44 @@ public class TaskManager : MonoBehaviour
         string timeFormatted = minutes3 + ":" + extraZeroString +seconds3;
         debugTextLabel.text = "USER ID = " + groupId + " current task " + currentTask  +" Time Remaining "+ timeFormatted + " Training "+ strTraining + " Current State" + currentTaskState.ToString() + " Collab Type " + collabType.ToString();
 
-        if(isRemotePlayer && collabType == CollabType.CoupledView && !hiddenAvatar)
+        if(currentTaskState >= TaskState.Connected)
+        {
+            bool downPress = Input.GetKeyDown(KeyCode.DownArrow) || OVRInput.GetDown(OVRInput.Button.One);
+            bool upPress = Input.GetKeyDown(KeyCode.UpArrow) || OVRInput.GetDown(OVRInput.Button.Two);
+
+            if(upPress || downPress)
+            {
+                GameObject rootPlayerArea = GameObject.Find("Area1Center");
+                if (isRemotePlayer)
+                {
+                    rootPlayerArea = GameObject.Find("Area2Center");
+                }
+                else
+                {
+                    //get guy
+                }
+
+                if (rootPlayerArea)
+                {
+                    if (rootPlayerArea.transform.childCount > 0)
+                    {
+                        //GameObject currentPlayer = GameObject.Find("Area1Center");
+                        if (downPress)
+                        {
+                            rootPlayerArea.transform.localPosition -= new Vector3(0, 0.10f, 0);
+                        }
+                        else if (upPress)
+                        {
+                            rootPlayerArea.transform.localPosition += new Vector3(0, 0.10f, 0);
+                        }
+                    }
+                }
+            }
+        }
+
+
+
+        if (isRemotePlayer && collabType == CollabType.CoupledView && !hiddenAvatar)
         {
             GameObject spawnPointRemotePlayer = GameObject.Find("RemoteAvatar");
             if (spawnPointRemotePlayer)
@@ -673,6 +710,8 @@ public class TaskManager : MonoBehaviour
         {
             initTask();
         }
+
+
         if(isRemotePlayer && taskStartedP2 && timeRemaining > 0)
         {
             int timeRemainingInt = (int)timeRemaining;
