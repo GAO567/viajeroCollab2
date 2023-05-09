@@ -1275,9 +1275,10 @@ public class TaskManager : MonoBehaviour
         audioSource.Play();
     }
 
-    void nextPuzzle()
+    public void nextPuzzle()
     {
-
+        if (isRemotePlayer)
+            return;
         string str = "";
         for(int i = 0;i < blueprintObjects.Count; i++)
         {
