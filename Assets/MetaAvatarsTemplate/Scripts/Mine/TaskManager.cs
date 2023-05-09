@@ -622,7 +622,8 @@ public class TaskManager : MonoBehaviour
         string timeFormatted = minutes3 + ":" + extraZeroString +seconds3;
         debugTextLabel.text = "USER ID = " + groupId + " current task " + currentTask  +" Time Remaining "+ timeFormatted + " Training "+ strTraining + " Current State" + currentTaskState.ToString() + " Collab Type " + collabType.ToString();
 
-        if(currentTaskState >= TaskState.Connected)
+        //change user height
+        if(currentTaskState >= TaskState.Connected && !taskStarted)
         {
             bool downPress = Input.GetKeyDown(KeyCode.DownArrow) || OVRInput.GetDown(OVRInput.Button.One);
             bool upPress = Input.GetKeyDown(KeyCode.UpArrow) || OVRInput.GetDown(OVRInput.Button.Two);
