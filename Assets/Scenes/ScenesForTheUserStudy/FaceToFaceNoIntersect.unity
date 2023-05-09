@@ -1194,7 +1194,7 @@ MonoBehaviour:
       m_Image: {fileID: 0}
     - m_Text: SideBySide
       m_Image: {fileID: 0}
-    - m_Text: AngledFaceToFace
+    - m_Text: Angled90
       m_Image: {fileID: 0}
     - m_Text: CoupledView
       m_Image: {fileID: 0}
@@ -3723,7 +3723,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   timeRemaining: 10
   id: 4
-  collabType: 0
+  collabType: 1
   avatarId: 5
   isRemote: 0
   userIdDropdown: {fileID: 1998616787}

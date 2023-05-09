@@ -16,7 +16,7 @@ using TMPro;
 
 public enum CollabType
 {
-    FacetoFaceIntersect, FaceToFaceNoIntersect, SideBySide, CoupledView, Angled45, Angled90
+    FacetoFaceIntersect, FaceToFaceNoIntersect, SideBySide, Angled90, CoupledView
 };
 
 public enum TaskState
@@ -1383,7 +1383,7 @@ public class TaskManager : MonoBehaviour
 
 
             }
-            else if (collabType == CollabType.Angled45)
+            else if (collabType == CollabType.Angled90)
             {
                 Player1Area.transform.localPosition = new Vector3(0, 0, 0);
                 Player1Area.transform.localEulerAngles = new Vector3(0, 0, 0);
