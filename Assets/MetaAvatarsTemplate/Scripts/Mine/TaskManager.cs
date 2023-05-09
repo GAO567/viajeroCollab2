@@ -818,7 +818,7 @@ public class TaskManager : MonoBehaviour
         bool nextTaskButtonLeftController = OVRInput.Get(OVRInput.Button.One, OVRInput.Controller.LHand);
         bool nextTaskButtonKeyboard = Input.GetKeyDown(KeyCode.N);
 
-        if (nextTaskButtonRightController || nextTaskButtonLeftController || nextTaskButtonKeyboard)
+        if (nextTaskButtonKeyboard)
         {
             if (!taskStarted)
             {
