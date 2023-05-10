@@ -1391,6 +1391,7 @@ public class TaskManager : MonoBehaviour
         dominantplayer = "P1";
         taskStartedP2 = true;
         timeRemaining = totalTimePerTask;
+        isRemotePlayer = true;
     }
 
     void initializeTask()
