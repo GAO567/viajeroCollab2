@@ -536,6 +536,7 @@ public class TaskManager : MonoBehaviour
         cameFromVideoScene = GlobalVariables.Get<bool>("cameFromVideoScene");
         if (cameFromVideoScene)
         {
+            print("came from video scene");
             groupId = id;
             collabType = (CollabType)globalCollabType;
             avatarId = avatar;
