@@ -158,7 +158,7 @@ public class TaskManager : MonoBehaviour
         print("Player Number" + playerNumber);
         if (playerNumber == 1)
         {
-            isRemotePlayer = !GetComponent<Photon.Pun.PhotonView>().IsMine;
+            //isRemotePlayer = !GetComponent<Photon.Pun.PhotonView>().IsMine;
             print("remote player?" + !GetComponent<Photon.Pun.PhotonView>().IsMine);
             GameObject go = GameObject.Find("Local Network Player");
             OVRCameraRig player1 = obj.GetComponent<OVRCameraRig>();
