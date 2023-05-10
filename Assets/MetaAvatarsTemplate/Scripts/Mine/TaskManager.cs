@@ -177,7 +177,7 @@ public class TaskManager : MonoBehaviour
         }
         else if (playerNumber == 2)
         {
-            isRemotePlayer = GetComponent<Photon.Pun.PhotonView>().IsMine;
+            //isRemotePlayer = GetComponent<Photon.Pun.PhotonView>().IsMine;
             print("remote player = " + isRemotePlayer);
             if (obj.name == "RemoteAvatar")
             {
