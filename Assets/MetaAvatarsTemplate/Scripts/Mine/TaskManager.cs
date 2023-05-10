@@ -618,7 +618,9 @@ public class TaskManager : MonoBehaviour
         }
         string timeFormatted = minutes3 + ":" + extraZeroString +seconds3;
         debugTextLabel.text = "USER ID = " + groupId + " current task " + currentTask  +" Time Remaining "+ timeFormatted + " Training "+ strTraining + " Current State" + currentTaskState.ToString() + " Collab Type " + collabType.ToString();
-        /*
+        
+        
+        
         //change user height
         if(!taskStarted)
         {
@@ -655,7 +657,7 @@ public class TaskManager : MonoBehaviour
             }
         }
 
-        */
+        
 
         if (isRemotePlayer && collabType == CollabType.CoupledView && !hiddenAvatar)
         {
