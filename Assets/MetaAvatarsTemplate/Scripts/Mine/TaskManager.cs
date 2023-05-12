@@ -1430,14 +1430,14 @@ public class TaskManager : MonoBehaviour
 
 
 
-            }
+            }/*
             else if (collabType == CollabType.Angled90)
             {
                 Player1Area.transform.localPosition = new Vector3(0, 0, 0);
                 Player1Area.transform.localEulerAngles = new Vector3(0, 0, 0);
                 Player2Area.transform.localPosition = new Vector3(0.731f, 0, 0.29f);
                 Player2Area.transform.localEulerAngles = new Vector3(0, -45.0f, 0);
-            }
+            }*/
             else if(collabType == CollabType.Angled90)
             {
                 Player1Area.transform.localPosition = new Vector3(0, 0, 0);
