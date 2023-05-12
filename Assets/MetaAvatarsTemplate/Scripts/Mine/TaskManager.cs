@@ -632,7 +632,15 @@ public class TaskManager : MonoBehaviour
                 GameObject rootPlayerArea = GameObject.Find("Area1Center");
                 if (isRemotePlayer)
                 {
-                    rootPlayerArea = GameObject.Find("Area2Center");
+                    if (collabType == CollabType.CoupledView)
+                    {
+                        rootPlayerArea = GameObject.Find("Area1Center");
+                    }
+                    else
+                    {
+                        rootPlayerArea = GameObject.Find("Area2Center");
+                    }
+                    
                 }
                 else
                 {
