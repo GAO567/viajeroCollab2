@@ -405,7 +405,7 @@ public class Raycaster : MonoBehaviour
             }
             if(thumbstickValue.y > 0 )
             {
-                if(handTriggered || triggered)
+                if(triggered)
                 {
                     if (hitDepth < upperThreshold)
                     {
@@ -421,7 +421,7 @@ public class Raycaster : MonoBehaviour
                 
             else if(thumbstickValue.y < 0 )
             {
-                if(triggered || handTriggered)
+                if(triggered)
                 {
                     if (hitDepth > lowerThreshold)
                     {
