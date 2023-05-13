@@ -251,18 +251,53 @@ public class PuzzleGenerator : MonoBehaviour
         //left Quadrant
         int countIndexArray = 0;
         float initialAngle = objAux.transform.localEulerAngles.y;
-        for(float f = -135;  f < 135.0f ; f += angleIncrement)
+        //take this out if it does not work
+        if (taskManager)
         {
-            
-            objAux.transform.localEulerAngles = new Vector3(0, f + initialAngle, 0);
-            //print("countIndexArray" + countIndexArray);
-            GameObject obj = sortedParts[countIndexArray];// parts[auxIndex[countIndexArray]];
-            obj.GetComponent<Photon.Pun.PhotonView>().RequestOwnership();
-            obj.transform.position = objAux.transform.TransformPoint(new Vector3(UnityEngine.Random.Range(0.1f,0.2f), UnityEngine.Random.Range(0.0f, 0.25f), UnityEngine.Random.Range(1.3f,2.0f)));//generate y according to proxemics and z randomly
-            obj.transform.localEulerAngles = new Vector3(0, 0, 0);
-            countIndexArray++;
+            if (taskManager.collabType == CollabType.CoupledView || taskManager.collabType == CollabType.SideBySide)
+            {
+                for (float f = -75; f < 75.0f; f += angleIncrement)
+                {
+                    objAux.transform.localEulerAngles = new Vector3(0, f + initialAngle, 0);
+                    //print("countIndexArray" + countIndexArray);
+                    GameObject obj = sortedParts[countIndexArray];// parts[auxIndex[countIndexArray]];
+                    obj.GetComponent<Photon.Pun.PhotonView>().RequestOwnership();
+                    obj.transform.position = objAux.transform.TransformPoint(new Vector3(UnityEngine.Random.Range(0.1f, 0.2f), UnityEngine.Random.Range(0.0f, 0.25f), UnityEngine.Random.Range(1.3f, 2.0f)));//generate y according to proxemics and z randomly
+                    obj.transform.localEulerAngles = new Vector3(0, 0, 0);
+                    countIndexArray++;
+                }
+            }
+            else
+            {
+                for (float f = -135; f < 135.0f; f += angleIncrement)
+                {
+
+                    objAux.transform.localEulerAngles = new Vector3(0, f + initialAngle, 0);
+                    //print("countIndexArray" + countIndexArray);
+                    GameObject obj = sortedParts[countIndexArray];// parts[auxIndex[countIndexArray]];
+                    obj.GetComponent<Photon.Pun.PhotonView>().RequestOwnership();
+                    obj.transform.position = objAux.transform.TransformPoint(new Vector3(UnityEngine.Random.Range(0.1f, 0.2f), UnityEngine.Random.Range(0.0f, 0.25f), UnityEngine.Random.Range(1.3f, 2.0f)));//generate y according to proxemics and z randomly
+                    obj.transform.localEulerAngles = new Vector3(0, 0, 0);
+                    countIndexArray++;
+                }
+            }
         }
-       
+        else
+        {
+            for (float f = -135; f < 135.0f; f += angleIncrement)
+            {
+
+                objAux.transform.localEulerAngles = new Vector3(0, f + initialAngle, 0);
+                //print("countIndexArray" + countIndexArray);
+                GameObject obj = sortedParts[countIndexArray];// parts[auxIndex[countIndexArray]];
+                obj.GetComponent<Photon.Pun.PhotonView>().RequestOwnership();
+                obj.transform.position = objAux.transform.TransformPoint(new Vector3(UnityEngine.Random.Range(0.1f, 0.2f), UnityEngine.Random.Range(0.0f, 0.25f), UnityEngine.Random.Range(1.3f, 2.0f)));//generate y according to proxemics and z randomly
+                obj.transform.localEulerAngles = new Vector3(0, 0, 0);
+                countIndexArray++;
+            }
+        }
+
+
         Destroy(objAux);
         List<GameObject> dicPiecesToShow = new List<GameObject>();
         if(taskManager.currentTask == 0 || taskManager.currentTask == 1)
