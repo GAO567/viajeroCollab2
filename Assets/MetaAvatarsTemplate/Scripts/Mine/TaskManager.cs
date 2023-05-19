@@ -468,12 +468,18 @@ public class TaskManager : MonoBehaviour
                 violatingP2 = "ViolationP2";
             }
             
-            player1InteractionStr += ((groupId * 2)-1) + "," + dominantplayer + "," + collabType.ToString() + "," + Time.realtimeSinceStartup + "," + currentTask + "," + (dominantplayer == "P2" ? true : false) + "," + violatingP2 + "," + Utils.vector3ToString(Player1Area.transform.position) + "," + Utils.vector3ToString(Player1Area.transform.eulerAngles) + ","
-                                    + Utils.vector3ToString(headPlayer1.transform.position) + "," + Utils.vector3ToString(headPlayer1.transform.eulerAngles) + ","+ Utils.vector3ToString(rightHandPlayer1.transform.position) + "," + Utils.vector3ToString(rightHandPlayer1.transform.eulerAngles) +
-                                     Utils.vector3ToString(leftHandPlayer1.transform.position) + "," + Utils.vector3ToString(leftHandPlayer1.transform.eulerAngles);
-            if (player1Interacting && getInteractPart("P1"))
+            try
             {
-                player1InteractionStr += "," + Utils.vector3ToString(getInteractPart("P1").transform.position) + "," + Utils.vector3ToString(getInteractPart("P1").transform.eulerAngles) + "\n";
+                player1InteractionStr += ((groupId * 2) - 1) + "," + dominantplayer + "," + collabType.ToString() + "," + Time.realtimeSinceStartup + "," + currentTask + "," + (dominantplayer == "P2" ? true : false) + "," + violatingP2 + "," + Utils.vector3ToString(Player1Area.transform.position) + "," + Utils.vector3ToString(Player1Area.transform.eulerAngles) + ","
+                                        + Utils.vector3ToString(headPlayer1.transform.position) + "," + Utils.vector3ToString(headPlayer1.transform.eulerAngles) + "," + Utils.vector3ToString(rightHandPlayer1.transform.position) + "," + Utils.vector3ToString(rightHandPlayer1.transform.eulerAngles) +
+                                         Utils.vector3ToString(leftHandPlayer1.transform.position) + "," + Utils.vector3ToString(leftHandPlayer1.transform.eulerAngles);
+            }catch(Exception ex)
+            {
+
+            }
+            if (player1Interacting)
+            {
+                player1InteractionStr += ",InteractedP1\n";
                
             }
             else
@@ -496,14 +502,19 @@ public class TaskManager : MonoBehaviour
                                 + Utils.vecNameToString("headPosP2") + "," + Utils.vecNameToString("headRotP2") + "," + Utils.vecNameToString("rightHandPosP2") + Utils.vecNameToString("rightHandRotP2")
                                  + Utils.vecNameToString("leftHandPosP2") + "," + Utils.vecNameToString("leftHandRotP2") ;
 
-
-            player2InteractionStr += (groupId*2) + ","+dominantplayer+","+ collabType.ToString() + "," + Time.realtimeSinceStartup + "," + currentTask + "," + (dominantplayer == "P2" ? true : false) + "," + violatingP2 + ","+ Utils.vector3ToString(Player2Area.transform.position) + "," + Utils.vector3ToString(Player2Area.transform.eulerAngles) + ","
-                                    + Utils.vector3ToString(headPlayer2.transform.position) + "," + Utils.vector3ToString(headPlayer2.transform.eulerAngles) + ","+Utils.vector3ToString(rightHandPlayer2.transform.position) + "," + Utils.vector3ToString(rightHandPlayer2.transform.eulerAngles) +
-                                     Utils.vector3ToString(leftHandPlayer2.transform.position) + "," + Utils.vector3ToString(leftHandPlayer2.transform.eulerAngles);
-            
-            if (player2Interacting && getInteractPart("P2"))
+            try
             {
-                player2InteractionStr += "," + Utils.vector3ToString(getInteractPart("P2").transform.position) + "," + Utils.vector3ToString(getInteractPart("P2").transform.eulerAngles) + "\n";
+                player2InteractionStr += (groupId * 2) + "," + dominantplayer + "," + collabType.ToString() + "," + Time.realtimeSinceStartup + "," + currentTask + "," + (dominantplayer == "P2" ? true : false) + "," + violatingP2 + "," + Utils.vector3ToString(Player2Area.transform.position) + "," + Utils.vector3ToString(Player2Area.transform.eulerAngles) + ","
+                                        + Utils.vector3ToString(headPlayer2.transform.position) + "," + Utils.vector3ToString(headPlayer2.transform.eulerAngles) + "," + Utils.vector3ToString(rightHandPlayer2.transform.position) + "," + Utils.vector3ToString(rightHandPlayer2.transform.eulerAngles) +
+                                         Utils.vector3ToString(leftHandPlayer2.transform.position) + "," + Utils.vector3ToString(leftHandPlayer2.transform.eulerAngles);
+            }catch(Exception ex)
+            {
+
+            }
+
+            if (player2Interacting)
+            {
+                player2InteractionStr += "," + "InteractedP2\n";
             }
             else
             {
