@@ -95,6 +95,8 @@ public class TaskManager : MonoBehaviour
     GameObject objP1;// = new GameObject("partBeingInteracted");
     GameObject objP2;// = new G
 
+
+
     public string PathDirectory { get => pathDirectory; set => pathDirectory = value; }
     
 

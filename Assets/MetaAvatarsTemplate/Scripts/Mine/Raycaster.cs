@@ -191,7 +191,7 @@ public class Raycaster : MonoBehaviour
             }*/
 
             
-            if (taskManager)
+            if (taskManager && triggered)
             {
                 if (taskManager.currentTaskState <= TaskState.BothConnected)
                     return;
