@@ -61,7 +61,7 @@ public class InitSceneLoader : MonoBehaviour
         Debug.Log("Time has run out! loading scene");
         GlobalVariables.Set("userId", userIdDropdown.value +1);
         GlobalVariables.Set("collabType", collabTypeDropdown.value);
-        GlobalVariables.Set("camefromVideoScene", true);
+        GlobalVariables.Set("cameFromVideoScene", 1);
         SceneManager.LoadScene("NetworkScene", LoadSceneMode.Single);
         GlobalVariables.Set("remote", userTypeDropdown.value);
 

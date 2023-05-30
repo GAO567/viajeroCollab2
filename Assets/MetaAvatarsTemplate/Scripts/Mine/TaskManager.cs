@@ -545,9 +545,8 @@ public class TaskManager : MonoBehaviour
         int remote = GlobalVariables.Get<int>("remote");
         audioSource = GetComponent<AudioSource>();
 
-        bool cameFromVideoScene = false;
-        cameFromVideoScene = GlobalVariables.Get<bool>("cameFromVideoScene");
-        if (cameFromVideoScene)
+        int cameFromVideoScene = GlobalVariables.Get<int>("cameFromVideoScene");// == 1 ? true : false;
+        if (cameFromVideoScene ==1)
         {
             print("came from video scene");
             groupId = id;
