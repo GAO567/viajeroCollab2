@@ -537,6 +537,18 @@ public class TaskManager : MonoBehaviour
         }
     }
 
+    public void nextTaskFromButton()
+    {
+        if (!taskStarted)
+        {
+            initTask();
+        }
+        else
+        {
+            nextPuzzle();
+        }
+    }
+
     private void Awake()
     {
         int globalCollabType = GlobalVariables.Get<int>("collabType");
