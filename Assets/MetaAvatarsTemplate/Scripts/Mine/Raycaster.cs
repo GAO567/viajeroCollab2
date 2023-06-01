@@ -271,23 +271,27 @@ public class Raycaster : MonoBehaviour
         
         if (triggered && objectFromDirectTouch )
         {
+            PhotonView photonV = other.GetComponent<PhotonView>();
+            BoxCollider collider = GetComponent<BoxCollider>();
             if (objectFromDirectTouch)
             {
-                if (!objectFromDirectTouch.transform.name.Equals(other.gameObject.transform.name))
-                    return;
-                directInteraction = true;
+                if (objectFromDirectTouch.transform.name.Equals(other.gameObject.transform.name))
+                {
+                    directInteraction = true;
+
+                    if (photonV)
+                    {
+                        photonV.RequestOwnership();
+                    }
+                    other.gameObject.transform.position = collider.ClosestPoint(other.gameObject.transform.position);
+                    if (handTriggered)
+                    {
+                        other.gameObject.transform.rotation = collider.transform.rotation;
+                    }
+                }
             }
-            PhotonView photonV = other.GetComponent<PhotonView>();
-            if (photonV)
-            {
-                photonV.RequestOwnership();
-            }
-            BoxCollider collider = GetComponent<BoxCollider>();
-            other.gameObject.transform.position = collider.ClosestPoint(other.gameObject.transform.position);
-            if (handTriggered)
-            {
-                other.gameObject.transform.rotation = collider.transform.rotation;
-            }
+            
+           
             Vector2 thumbstickValue = OVRInput.Get(OVRInput.Axis2D.PrimaryThumbstick, controllerActive);
 
             float hitDepth = transform.InverseTransformPoint(other.transform.position).z;
@@ -316,12 +320,13 @@ public class Raycaster : MonoBehaviour
     private void OnTriggerExit(Collider other)
     {
         //lockedObject = null;
-        directInteraction = false;
+        
         if (objectFromDirectTouch)
         {
             if (objectFromDirectTouch.gameObject.name == other.gameObject.name)
             {
                 objectFromDirectTouch = null;
+                directInteraction = false;
             }
         }
     }
