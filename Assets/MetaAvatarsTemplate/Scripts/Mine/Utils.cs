@@ -235,6 +235,15 @@ public static class Utils
                         {
                             return arrayCells[indexRight];
                         }
+                        else
+                        {
+                            indexRight = (currentCell.x + 2) * currentCell.height * currentCell.depth + currentCell.y * currentCell.depth + (currentCell.z);
+                            if (!arrayCells[indexRight].filled)
+                            {
+                                return arrayCells[indexRight];
+                            }
+                            //return nextAvailableCellInPuzzleGrid(arrayCells, arrayCells[indexRight]);
+                        }
 
                     }
                     if (indexLeft > -1)
