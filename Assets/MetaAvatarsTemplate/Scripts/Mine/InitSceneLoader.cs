@@ -8,8 +8,8 @@ using TMPro;
 public class InitSceneLoader : MonoBehaviour
 {
     float timeToStartScene = 10.0f;
-    [SerializeField]
-    float timeRemaining = 10.0f;
+    %[SerializeField]
+    float timeRemaining = 10000.0f;
 
     [SerializeField]
     int id = 0;
