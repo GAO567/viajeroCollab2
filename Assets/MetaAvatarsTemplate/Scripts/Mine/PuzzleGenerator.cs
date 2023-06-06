@@ -277,7 +277,7 @@ public class PuzzleGenerator : MonoBehaviour
             {
                 for (float f = -135; f < 135.0f; f += angleIncrement)
                 {
-
+                    angleIncrement = 90.0f / piecesPerQuadrant;
                     objAux.transform.localEulerAngles = new Vector3(0, f + initialAngle, 0);
                     //print("countIndexArray" + countIndexArray);
                     GameObject obj = sortedParts[countIndexArray];// parts[auxIndex[countIndexArray]];
