@@ -828,6 +828,7 @@ public class TaskManager : MonoBehaviour
             else if(currentTaskState == TaskState.EndTask)
             {
                 dominantplayerLabel.text = "GAME OVER";
+                gameObject.GetComponent<Photon.Pun.PhotonView>().RPC("nextPuzzleP2", Photon.Pun.RpcTarget.AllBuffered, (int) TaskState.EndTask );
                 dominantplayerLabel.color = Color.red;
             }
             else
@@ -844,8 +845,10 @@ public class TaskManager : MonoBehaviour
         
         gameObject.GetComponent<Photon.Pun.PhotonView>().RPC("setDominantPlayer", Photon.Pun.RpcTarget.AllBuffered, dominantplayer);
         gameObject.GetComponent<Photon.Pun.PhotonView>().RPC("updateTimer", Photon.Pun.RpcTarget.AllBuffered, timeRemaining);
-            
-        
+        if(currentTaskState == TaskState.EndTask)
+        {
+        }
+
         bool nextTaskButtonRightController = OVRInput.Get(OVRInput.Button.One, OVRInput.Controller.RHand);
         bool nextTaskButtonLeftController = OVRInput.Get(OVRInput.Button.One, OVRInput.Controller.LHand);
         bool nextTaskButtonKeyboard = Input.GetKeyDown(KeyCode.N);

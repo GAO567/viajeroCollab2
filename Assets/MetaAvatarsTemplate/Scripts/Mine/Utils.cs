@@ -238,9 +238,14 @@ public static class Utils
                         else
                         {
                             indexRight = (currentCell.x + 2) * currentCell.height * currentCell.depth + currentCell.y * currentCell.depth + (currentCell.z);
-                            if (!arrayCells[indexRight].filled)
+                            if (!arrayCells[indexRight].filled && indexRight < currentCell.width -1)
                             {
                                 return arrayCells[indexRight];
+                            }
+                            else
+                            {
+                                indexUp = (currentCell.x) * currentCell.height * currentCell.depth + currentCell.y * currentCell.depth + (currentCell.z + 1);
+                                return arrayCells[indexUp];
                             }
                             //return nextAvailableCellInPuzzleGrid(arrayCells, arrayCells[indexRight]);
                         }
