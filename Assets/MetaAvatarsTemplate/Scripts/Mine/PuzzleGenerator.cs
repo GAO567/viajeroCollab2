@@ -264,10 +264,7 @@ public class PuzzleGenerator : MonoBehaviour
                     GameObject obj = sortedParts[countIndexArray];// parts[auxIndex[countIndexArray]];
                     obj.GetComponent<Photon.Pun.PhotonView>().RequestOwnership();
                     obj.transform.position = objAux.transform.TransformPoint(new Vector3(UnityEngine.Random.Range(0.1f, 0.2f), UnityEngine.Random.Range(0.0f, 0.25f), UnityEngine.Random.Range(1.3f, 2.0f)));//generate y according to proxemics and z randomly
-                    if(obj.transform.localPosition.y > 100.0f || obj.transform.localPosition.z < -100.0f)
-                    {
-                        obj.transform.localPosition = new Vector3(obj.transform.localPosition.x, 0.24f, obj.transform.localPosition.z);
-                    }
+                    
                     
                     obj.transform.localEulerAngles = new Vector3(0, 0, 0);
                     countIndexArray++;

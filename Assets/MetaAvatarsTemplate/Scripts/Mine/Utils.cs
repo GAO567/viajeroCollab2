@@ -242,8 +242,9 @@ public static class Utils
                             {
                                 return arrayCells[indexRight];
                             }
-                            else
+                            else if(indexLeft > 0)
                             {
+                                return arrayCells[indexLeft];
                                 //indexUp = (currentCell.x) * currentCell.height * currentCell.depth + currentCell.y * currentCell.depth + (currentCell.z + 1);
                                 //return arrayCells[indexUp];
                             }
