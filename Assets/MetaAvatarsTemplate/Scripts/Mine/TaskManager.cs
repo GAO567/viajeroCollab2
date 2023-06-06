@@ -1327,7 +1327,7 @@ public class TaskManager : MonoBehaviour
                 float threshold = 0.3f;
                 bool correctObject = false;
                 float distanceBetweenBlueprintAndUserPlacedObject = Vector3.Distance(blueprintObjects[i].transform.position, obj.transform.position);
-                if (distanceBetweenBlueprintAndUserPlacedObject > threshold)
+                if (distanceBetweenBlueprintAndUserPlacedObject < threshold)
                 {
                     correctObjectsPerTask++;
                     correctObject = true;
