@@ -1297,10 +1297,15 @@ public class TaskManager : MonoBehaviour
     public void nextPuzzleP2(int currentState)
     {
         TaskState tState = (TaskState)currentState;
-            if (tState == TaskState.EndTask)
-                dominantplayer = "Game OVER";
-            else
-                dominantplayer = dominantplayer == "P1 " ? "P2" : "P1"; 
+        if (tState == TaskState.EndTask)
+        {
+            if(dominantplayerLabel)
+                dominantplayerLabel.text = "GAME OVER";
+        }
+        else
+        {
+            dominantplayer = dominantplayer == "P1 " ? "P2" : "P1";
+        }
     }
 
     [Photon.Pun.PunRPC]
