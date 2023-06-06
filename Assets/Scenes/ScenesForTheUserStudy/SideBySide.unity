@@ -3721,9 +3721,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 267773b30f638a3448390b805d51251c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeRemaining: 10
   id: 4
-  collabType: 3
+  collabType: 2
   avatarId: 5
   isRemote: 0
   userIdDropdown: {fileID: 1998616787}
