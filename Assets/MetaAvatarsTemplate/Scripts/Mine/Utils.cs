@@ -244,8 +244,8 @@ public static class Utils
                             }
                             else
                             {
-                                indexUp = (currentCell.x) * currentCell.height * currentCell.depth + currentCell.y * currentCell.depth + (currentCell.z + 1);
-                                return arrayCells[indexUp];
+                                //indexUp = (currentCell.x) * currentCell.height * currentCell.depth + currentCell.y * currentCell.depth + (currentCell.z + 1);
+                                //return arrayCells[indexUp];
                             }
                             //return nextAvailableCellInPuzzleGrid(arrayCells, arrayCells[indexRight]);
                         }

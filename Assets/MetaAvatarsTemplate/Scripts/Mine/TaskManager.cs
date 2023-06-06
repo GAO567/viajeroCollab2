@@ -420,7 +420,8 @@ public class TaskManager : MonoBehaviour
         currentTaskState = TaskState.Player1Dominant;
 
         currentTaskLog = new TaskLog((groupId*2)-1, currentTask, "P1", currentTask.ToString(), Player1Area.transform, collabType, boundsSize);
-        blueprintObjects = generator.generateBlueprint(new Vector3(0, 0, 0), 6, 4, 3, 0.09f, transformRootForP1Blueprint);
+            blueprintObjects = generator.generateBlueprint(new Vector3(0, 0, 0), 6, 4, 3, 0.09f, transformRootForP1Blueprint);
+        
         listPossiblePositionsForPuzzle = generator.generatePuzzle(true, Player1Area);
         taskStarted = true;
     }
