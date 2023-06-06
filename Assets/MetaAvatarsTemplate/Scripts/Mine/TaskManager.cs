@@ -1334,7 +1334,7 @@ public class TaskManager : MonoBehaviour
                 }
                 Vector3 distanceByAxis = obj.transform.position - blueprintObjects[i].transform.position;
                 logTaskAccuracy += groupId + "," + collabType + ","+ dominantplayer + ","+ currentTask + ","  + blueprintObjects[i].name + ","+ Utils.vector3ToString(blueprintObjects[i].transform.position) + "," 
-                    +obj.name + Utils.vector3ToString(obj.transform.position) + ","+ obj.name + "," + Utils.vector3ToString(distanceByAxis) + "," + distanceBetweenBlueprintAndUserPlacedObject + ","+correctObject +"\n" ;
+                    +obj.name + ","+ Utils.vector3ToString(obj.transform.position) + ","+ obj.name + "," + Utils.vector3ToString(distanceByAxis) + "," + distanceBetweenBlueprintAndUserPlacedObject + ","+correctObject +"\n" ;
                 
             }
         }
