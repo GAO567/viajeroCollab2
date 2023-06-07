@@ -237,10 +237,13 @@ public static class Utils
                         }
                         else
                         {
-                            indexRight = (currentCell.x + 2) * currentCell.height * currentCell.depth + currentCell.y * currentCell.depth + (currentCell.z);
-                            if (!arrayCells[indexRight].filled && indexRight < currentCell.width -1)
+                            int indexRightPlus = (currentCell.x + 2) * currentCell.height * currentCell.depth + currentCell.y * currentCell.depth + (currentCell.z);
+                            if (indexRightPlus < currentCell.width -1)
                             {
-                                return arrayCells[indexRight];
+                                Debug.Log("??????indexRightPlus????");
+                                indexRight = indexRightPlus;
+                                if (!arrayCells[indexRight].filled)
+                                    return arrayCells[indexRight];
                             }
                             else if(indexLeft > 0)
                             {

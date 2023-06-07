@@ -306,10 +306,12 @@ public class PuzzleGenerator : MonoBehaviour
         if(taskManager.currentTask == 0 || taskManager.currentTask == 1)
         {
 
-            for(int i = 3;i < blueprintObjs.Count; i++)
+            for(int i = numberPiecesTraining;i < blueprintObjs.Count; i++)
             {
                 GameObject bObj = blueprintObjs[i];
                 GameObject gObj = piecesAux[i];
+
+                //i have to shuffle this
 
                 gObj.GetComponent<Photon.Pun.PhotonView>().RequestOwnership();
                 bObj.GetComponent<Photon.Pun.PhotonView>().RequestOwnership();
@@ -321,17 +323,22 @@ public class PuzzleGenerator : MonoBehaviour
         }
         else
         {
-            /*for (int u = 0; u < rootForObjects.transform.childCount; u++)
+
+            //shuffle blueprintObjs
+            blueprintObjs = Utils.ShuffleArray(blueprintObjs);
+            for (int i = numberPieces - 3; i < blueprintObjs.Count; i++)
             {
-                GameObject gObj = piecesOfthePuzzle[u];
-                GameObject bObj = blueprintObjs[u];
-                //print("GO NAME " + gObj.name);
+                GameObject bObj = blueprintObjs[i];
+                GameObject gObj = piecesAux[i];
 
+                //shuffle blueprintObjs[i]
 
-                gObj.GetComponent<MeshRenderer>().enabled = true;
-                bObj.GetComponent<MeshRenderer>().enabled = true;
-                //gObj.GetComponent<MeshRenderer>().enabled = false;
-            }*/
+                gObj.GetComponent<Photon.Pun.PhotonView>().RequestOwnership();
+                bObj.GetComponent<Photon.Pun.PhotonView>().RequestOwnership();
+                bObj.transform.position = new Vector3(0, -100, 0);
+                //gObj.transform.position = new Vector3(0, -100, 0);
+
+            }
         }
         return sortedParts;
     }
@@ -372,7 +379,7 @@ public class PuzzleGenerator : MonoBehaviour
             }
             else 
             {
-                numberObjects = numberPieces;
+                numberObjects = numberPieces - 3;
             }
 
             for (int i = 0; i < rootForObjects.transform.childCount; i++)
@@ -464,8 +471,15 @@ public class PuzzleGenerator : MonoBehaviour
         {
             for(int j = 0; j < dictionaryPerDepth[i].Count;j++)
             {
+                GridCell auxCell = null;
                 GridCell cell = dictionaryPerDepth[i][j];
-                GridCell auxCell = Utils.nextAvailableCellInPuzzleGrid(arrayCells, cell); 
+                try
+                {
+                    auxCell = Utils.nextAvailableCellInPuzzleGrid(arrayCells, cell);
+                }catch(Exception ex)
+                {
+                    auxCell = cell;//if there is an exception, use the old one
+                }
                 if(cell.id != auxCell.id)
                 {
                     cell.filled = false;

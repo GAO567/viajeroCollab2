@@ -310,6 +310,18 @@ public class TaskManager : MonoBehaviour
         if (!isRemotePlayer)
             return;
         dominantplayer = dominantStr;
+
+        bool enableBlueprint = false;
+
+        if (dominantplayer == "P2")
+            enableBlueprint = true;
+        else
+            enableBlueprint = false;
+
+        foreach (GameObject blueprintObj in blueprintObjects)
+        {
+            blueprintObj.GetComponent<MeshRenderer>().enabled = enableBlueprint;
+        }
     }
 
     [Photon.Pun.PunRPC]
@@ -420,8 +432,15 @@ public class TaskManager : MonoBehaviour
         currentTaskState = TaskState.Player1Dominant;
 
         currentTaskLog = new TaskLog((groupId*2)-1, currentTask, "P1", currentTask.ToString(), Player1Area.transform, collabType, boundsSize);
+        try
+        {
+            //if things go wrong, just do it again
             blueprintObjects = generator.generateBlueprint(new Vector3(0, 0, 0), 6, 4, 3, 0.09f, transformRootForP1Blueprint);
-        
+        }catch(Exception ex)
+        {
+            print("found an exception generating the blueprint, trying again now");
+            blueprintObjects = generator.generateBlueprint(new Vector3(0, 0, 0), 6, 4, 3, 0.09f, transformRootForP1Blueprint);
+        }
         listPossiblePositionsForPuzzle = generator.generatePuzzle(true, Player1Area);
         taskStarted = true;
     }
@@ -1382,6 +1401,11 @@ public class TaskManager : MonoBehaviour
             currentTaskState = TaskState.Player1Dominant;
             dominantArea = Player1Area.gameObject;
             dominantRootPuzzle = transformRootForP1Blueprint;
+            foreach (GameObject blueprintObj in blueprintObjects)
+            {
+                blueprintObj.GetComponent<MeshRenderer>().enabled = true;
+            }
+            //show blueprint
             //hidecurrenttask
         }
         else
@@ -1391,6 +1415,11 @@ public class TaskManager : MonoBehaviour
             currentTaskState = TaskState.Player2Dominant;
             dominantArea = Player2Area;
             dominantRootPuzzle = transformRootForP2Blueprint;
+            //hide blueprint
+            foreach(GameObject blueprintObj in blueprintObjects)
+            {
+                blueprintObj.GetComponent<MeshRenderer>().enabled = false;
+            }
             //hidecurrenttask
         }
 

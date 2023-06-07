@@ -10460,6 +10460,10 @@ PrefabInstance:
       propertyPath: numberPieces
       value: 12
       objectReference: {fileID: 0}
+    - target: {fileID: 8465339781447079480, guid: c673a7ed842dd3b41ac8fc8cfe649214, type: 3}
+      propertyPath: numberPiecesTraining
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 8465339781447079481, guid: c673a7ed842dd3b41ac8fc8cfe649214, type: 3}
       propertyPath: m_Enabled
       value: 0
