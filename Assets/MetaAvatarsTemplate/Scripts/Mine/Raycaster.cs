@@ -263,7 +263,7 @@ public class Raycaster : MonoBehaviour
     {
         if(other.gameObject.layer == 9)
         {
-            if (!objectFromDirectTouch)
+            if (!objectFromDirectTouch /*&& other.gameObject.GetComponent<MeshRenderer>().enabled*/) //tests with the object can be seen
             {
                 objectFromDirectTouch = other.gameObject;
             }
