@@ -490,6 +490,13 @@ public class TaskManager : MonoBehaviour
                     }
                 }
             }
+            else
+            {
+                foreach(GameObject puzzleObject in listPossiblePositionsForPuzzle)
+                {
+                    puzzleObject.GetComponent<MeshRenderer>().enabled = true;
+                }
+            }
         }
         else
         {
@@ -515,6 +522,13 @@ public class TaskManager : MonoBehaviour
                             puzzleObject.GetComponent<MeshRenderer>().enabled = false;
                         }
                     }
+                }
+            }
+            else
+            {
+                foreach (GameObject puzzleObject in listPossiblePositionsForPuzzle)
+                {
+                    puzzleObject.GetComponent<MeshRenderer>().enabled = true;
                 }
             }
         }
