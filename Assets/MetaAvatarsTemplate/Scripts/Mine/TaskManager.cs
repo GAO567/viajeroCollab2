@@ -459,6 +459,66 @@ public class TaskManager : MonoBehaviour
             }
         }
     }
+
+
+    void checkIfPuzzleObjectsAreVisible()
+    {
+        if (isRemotePlayer)
+        {
+            //
+            if (dominantplayer == "P2")
+            {
+                if (listPossiblePositionsForPuzzle != null)
+                {
+                    foreach (GameObject puzzleObject in listPossiblePositionsForPuzzle)
+                    {
+                        float thresholdZ = 0.4f;
+                        float thresholdX = 0.2f;
+
+                        Vector3 distanceLocalCoordsFromCenter = transformRootForP2Blueprint.transform.InverseTransformPoint(puzzleObject.transform.position);
+                        float distanceFromCenter = Vector3.Distance(new Vector3(puzzleObject.transform.position.x, 0, puzzleObject.transform.position.z),
+                                                                    new Vector3(transformRootForP2Blueprint.transform.position.x, 0, transformRootForP2Blueprint.transform.position.z));
+
+                        if (distanceFromCenter < thresholdZ)
+                        {
+                            puzzleObject.GetComponent<MeshRenderer>().enabled = true;
+                        }
+                        else
+                        {
+                            puzzleObject.GetComponent<MeshRenderer>().enabled = false;
+                        }
+                    }
+                }
+            }
+        }
+        else
+        {
+            if (dominantplayer == "P1")
+            {
+                if (listPossiblePositionsForPuzzle != null)
+                {
+                    foreach (GameObject puzzleObject in listPossiblePositionsForPuzzle)
+                    {
+                        float thresholdZ = 0.4f;
+                        float thresholdX = 0.2f;
+
+                        Vector3 distanceLocalCoordsFromCenter = transformRootForP1Blueprint.transform.InverseTransformPoint(puzzleObject.transform.position);
+                        float distanceFromCenter = Vector3.Distance(new Vector3(puzzleObject.transform.position.x, 0, puzzleObject.transform.position.z), 
+                                                                    new Vector3(transformRootForP1Blueprint.transform.position.x, 0, transformRootForP1Blueprint.transform.position.z));
+
+                        if (distanceFromCenter < thresholdZ)
+                        {
+                            puzzleObject.GetComponent<MeshRenderer>().enabled = true;
+                        }
+                        else
+                        {
+                            puzzleObject.GetComponent<MeshRenderer>().enabled = false;
+                        }
+                    }
+                }
+            }
+        }
+    }
     
      bool isViolatingP1()
     {
@@ -890,6 +950,7 @@ public class TaskManager : MonoBehaviour
         if(currentTaskState > TaskState.BothConnected && currentTaskState < TaskState.EndTask)
         {
             calculateBoundaryViolation();
+            checkIfPuzzleObjectsAreVisible();//test this
         }
 
         if(!debug && currentTaskState > TaskState.BothConnected && currentTaskState < TaskState.EndTask)
