@@ -311,17 +311,7 @@ public class TaskManager : MonoBehaviour
             return;
         dominantplayer = dominantStr;
 
-        bool enableBlueprint = false;
-
-        if (dominantplayer == "P2")
-            enableBlueprint = true;
-        else
-            enableBlueprint = false;
-
-        foreach (GameObject blueprintObj in blueprintObjects)
-        {
-            blueprintObj.GetComponent<MeshRenderer>().enabled = enableBlueprint;
-        }
+        
     }
 
     [Photon.Pun.PunRPC]
@@ -443,6 +433,7 @@ public class TaskManager : MonoBehaviour
         }
         listPossiblePositionsForPuzzle = generator.generatePuzzle(true, Player1Area);
         taskStarted = true;
+        gameObject.GetComponent<Photon.Pun.PhotonView>().RPC("nextPuzzleP2", Photon.Pun.RpcTarget.AllBuffered, (int) currentTaskState);
     }
 
     void logUsersMovementsSplitByUser()
@@ -465,6 +456,7 @@ public class TaskManager : MonoBehaviour
     {
         if (isRemotePlayer)
         {
+            listPossiblePositionsForPuzzle = new List<GameObject>(GameObject.FindGameObjectsWithTag("PuzzlePiece"));
             //
             if (dominantplayer == "P2")
             {
@@ -492,9 +484,16 @@ public class TaskManager : MonoBehaviour
             }
             else
             {
-                foreach(GameObject puzzleObject in listPossiblePositionsForPuzzle)
+                try
                 {
-                    puzzleObject.GetComponent<MeshRenderer>().enabled = true;
+                    
+                    foreach (GameObject puzzleObject in listPossiblePositionsForPuzzle)
+                    {
+                        puzzleObject.GetComponent<MeshRenderer>().enabled = true;
+                    }
+                }catch(Exception ex)
+                {
+
                 }
             }
         }
@@ -799,12 +798,37 @@ public class TaskManager : MonoBehaviour
                 }
             }
         }
-        if(isRemotePlayer)
+
+        if (isRemotePlayer && taskStartedP2)
+        {
+            //calculateBoundaryViolation();
+            //here is the case where 
+            checkIfPuzzleObjectsAreVisible();//test this
+
+            bool enableBlueprint = false;
+
+            if (dominantplayer == "P2")
+                enableBlueprint = true;
+            else if(dominantplayer == "P1")
+                enableBlueprint = false;
+            
+            foreach (GameObject blueprintObj in blueprintObjects)
+            {
+                blueprintObj.GetComponent<MeshRenderer>().enabled = enableBlueprint;
+                print("F!!@#@#@ Enabling blueprint for remote person?" + enableBlueprint);
+            }
+        }
+
+        if (isRemotePlayer)
         {
             return;
         }
+        /////////////////////////////////
+        ///here things are only executed for the host client
+        ////////////////////////////////
+        
 
-        if(currentTaskState == TaskState.Connected)
+        if (currentTaskState == TaskState.Connected)
         {
             if (GameObject.Find("RemoteAvatar"))
             {
@@ -935,6 +959,7 @@ public class TaskManager : MonoBehaviour
         else if(timeRemaining <= 0 && taskStarted)
         {
             nextPuzzle();
+            gameObject.GetComponent<Photon.Pun.PhotonView>().RPC("nextPuzzleP2", Photon.Pun.RpcTarget.AllBuffered, (int) currentTaskState );
         }
         
         gameObject.GetComponent<Photon.Pun.PhotonView>().RPC("setDominantPlayer", Photon.Pun.RpcTarget.AllBuffered, dominantplayer);
@@ -1396,10 +1421,13 @@ public class TaskManager : MonoBehaviour
         {
             if(dominantplayerLabel)
                 dominantplayerLabel.text = "GAME OVER";
+            taskStartedP2 = false;
         }
         else
         {
             dominantplayer = dominantplayer == "P1 " ? "P2" : "P1";
+
+            taskStartedP2 = true;
         }
     }
 

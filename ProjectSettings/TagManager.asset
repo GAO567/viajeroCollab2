@@ -8,6 +8,7 @@ TagManager:
   - Bullet
   - SamplesInfoPanel
   - PuzzlePiece
+  - Blueprintpart
   layers:
   - Default
   - TransparentFX
