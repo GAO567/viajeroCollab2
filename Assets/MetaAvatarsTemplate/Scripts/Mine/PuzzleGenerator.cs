@@ -66,7 +66,7 @@ public class PuzzleGenerator : MonoBehaviour
 
 
 
-    public void generatePuzzleAndBlueprint(bool generate, GameObject headObj, GameObject rootObject)
+    public void generatePuzzleAndBlueprint(bool generate, GameObject headObj, GameObject rootObject, ref List<GameObject> blueprintObjecsManager, ref List<GameObject> listPuzzleObjectsManager)
     {
         List<int> auxIndex = new List<int>();
 
@@ -98,17 +98,19 @@ public class PuzzleGenerator : MonoBehaviour
 
         for(int i = numberPieces; i < numberPieces + numberDistractors; i++)
         {
-            blueprintPartsAux[i].transform.position = Vector3.negativeInfinity;//hide the other ones
+            blueprintPartsAux[i].transform.position = new Vector3(0, -100, 0);// Vector3.negativeInfinity;//hide the other ones
         }
 
-        taskManager.blueprintObjects =  generateBlueprint2(new Vector3(0, 0, 0), 6, 4, 3, 0.09f, blueprintObjs, rootObject);//here we generate the blueprint
+        blueprintObjecsManager =  generateBlueprint2(new Vector3(0, 0, 0), 6, 4, 3, 0.09f, blueprintObjs, rootObject);//here we generate the blueprint
 
         //now that we generated the blueprint let's use the same principle to generate the puzzle
 
-        List<GameObject> puzzleObjectsAux = new List<GameObject>(GameObject.FindGameObjectsWithTag("PuzzleObject"));
+        List<GameObject> puzzleObjectsAux = new List<GameObject>(GameObject.FindGameObjectsWithTag("PuzzlePiece"));
 
         puzzleObjectsAux = Utils.ShuffleArray(puzzleObjectsAux, auxIndex);
 
+        listPuzzleObjectsManager = generatePuzzle2(headObj, puzzleObjectsAux);
+        
 
 
     }
@@ -143,12 +145,12 @@ public class PuzzleGenerator : MonoBehaviour
         {
 
             print("adding i " + i + " number Distractors");
-            distractorsPuzzle.Add(parts[i + numberPieces]);
+            distractorsPuzzle.Add(partsObjects[i + numberPieces]);
             //print("distractor - " + (i + numberPieces) + " numberDistractors :" + numberDistractors);
         }
-        List<GameObject> piecesAux = piecesOfthePuzzle;
-        piecesOfthePuzzle = Utils.ShuffleArray(piecesOfthePuzzle);
-        distractorsPuzzle = Utils.ShuffleArray(distractorsPuzzle);
+        //List<GameObject> piecesAux = piecesOfthePuzzle;
+        //piecesOfthePuzzle = Utils.ShuffleArray(piecesOfthePuzzle);
+        //distractorsPuzzle = Utils.ShuffleArray(distractorsPuzzle);
 
         float piecesPerQuadrant = (numberPieces + numberDistractors) / 3.0f;
         float angleIncrement = 90.0f / piecesPerQuadrant;
@@ -212,9 +214,9 @@ public class PuzzleGenerator : MonoBehaviour
             }
             else
             {
+                angleIncrement = 90.0f / piecesPerQuadrant;
                 for (float f = -135; f < 135.0f; f += angleIncrement)
                 {
-                    angleIncrement = 90.0f / piecesPerQuadrant;
                     objAux.transform.localEulerAngles = new Vector3(0, f + initialAngle, 0);
                     //print("countIndexArray" + countIndexArray);
                     GameObject obj = sortedParts[countIndexArray];// parts[auxIndex[countIndexArray]];
@@ -249,15 +251,20 @@ public class PuzzleGenerator : MonoBehaviour
             for (int i = numberPiecesTraining; i < blueprintObjs.Count; i++)
             {
                 GameObject bObj = blueprintObjs[i];
-                GameObject gObj = piecesAux[i];
+                //GameObject gObj = piecesOfthePuzzle[i];
 
                 //i have to shuffle this
 
-                gObj.GetComponent<Photon.Pun.PhotonView>().RequestOwnership();
+                //gObj.GetComponent<Photon.Pun.PhotonView>().RequestOwnership();
                 bObj.GetComponent<Photon.Pun.PhotonView>().RequestOwnership();
                 bObj.transform.position = new Vector3(0, -100, 0);
-                gObj.transform.position = new Vector3(0, -100, 0);
+                //gObj.transform.position = new Vector3(0, -100, 0);
 
+            }
+            for(int i = numberPiecesTraining; i < (numberPieces); i++)
+            {
+                GameObject gObj = piecesOfthePuzzle[i];
+                gObj.transform.position = new Vector3(0, -100, 0);
             }
 
         }
@@ -266,14 +273,14 @@ public class PuzzleGenerator : MonoBehaviour
 
             //shuffle blueprintObjs
             blueprintObjs = Utils.ShuffleArray(blueprintObjs);
-            for (int i = numberPieces - 3; i < blueprintObjs.Count; i++)
+            for (int i = numberPieces; i < blueprintObjs.Count; i++)
             {
                 GameObject bObj = blueprintObjs[i];
-                GameObject gObj = piecesAux[i];
+                //GameObject gObj = piecesOfthePuzzle[i];
 
                 //shuffle blueprintObjs[i]
 
-                gObj.GetComponent<Photon.Pun.PhotonView>().RequestOwnership();
+                //gObj.GetComponent<Photon.Pun.PhotonView>().RequestOwnership();
                 bObj.GetComponent<Photon.Pun.PhotonView>().RequestOwnership();
                 bObj.transform.position = new Vector3(0, -100, 0);
                 //gObj.transform.position = new Vector3(0, -100, 0);
@@ -556,7 +563,7 @@ public class PuzzleGenerator : MonoBehaviour
 
             //shuffle blueprintObjs
             blueprintObjs = Utils.ShuffleArray(blueprintObjs);
-            for (int i = numberPieces - 3; i < blueprintObjs.Count; i++)
+            for (int i = numberPieces; i < blueprintObjs.Count; i++)
             {
                 GameObject bObj = blueprintObjs[i];
                 GameObject gObj = piecesAux[i];
@@ -607,7 +614,7 @@ public class PuzzleGenerator : MonoBehaviour
             }
             else
             {
-                numberObjects = numberPieces - 3;
+                numberObjects = numberPieces;
             }
 
             for (int i = 0; i < rootForObjects.transform.childCount; i++)
@@ -758,7 +765,7 @@ public class PuzzleGenerator : MonoBehaviour
 
     public List<GameObject> generateBlueprint2(Vector3 offset, int width,int height, int depth, float sizeCube, List<GameObject> blueprintObjects, GameObject root)
     {
-        GameObject obj = GameObject.Find("blueprintObjects");
+        GameObject obj = GameObject.Find("blueprintParts");
         
 
         if (root)
@@ -780,7 +787,7 @@ public class PuzzleGenerator : MonoBehaviour
             }
             else 
             {
-                numberObjects = numberPieces - 3;
+                numberObjects = numberPieces;
             }
 
             for (int i = 0; i < blueprintObjects.Count; i++)

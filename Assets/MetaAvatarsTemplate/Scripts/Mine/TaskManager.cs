@@ -427,13 +427,15 @@ public class TaskManager : MonoBehaviour
         try
         {
             //if things go wrong, just do it again
-            blueprintObjects = generator.generateBlueprint(new Vector3(0, 0, 0), 6, 4, 3, 0.09f, transformRootForP1Blueprint);
+            //blueprintObjects = generator.generateBlueprint(new Vector3(0, 0, 0), 6, 4, 3, 0.09f, transformRootForP1Blueprint);
+            generator.generatePuzzleAndBlueprint(false, Player1Area, transformRootForP1Blueprint, ref blueprintObjects, ref listPossiblePositionsForPuzzle);
         }catch(Exception ex)
         {
             print("found an exception generating the blueprint, trying again now");
-            blueprintObjects = generator.generateBlueprint(new Vector3(0, 0, 0), 6, 4, 3, 0.09f, transformRootForP1Blueprint);
+            generator.generatePuzzleAndBlueprint(false, Player1Area, transformRootForP1Blueprint, ref blueprintObjects, ref listPossiblePositionsForPuzzle);
+            //blueprintObjects = generator.generateBlueprint(new Vector3(0, 0, 0), 6, 4, 3, 0.09f, transformRootForP1Blueprint);
         }
-        listPossiblePositionsForPuzzle = generator.generatePuzzle(false, Player1Area);
+        //listPossiblePositionsForPuzzle = generator.generatePuzzle(false, Player1Area);
         taskStarted = true;
         gameObject.GetComponent<Photon.Pun.PhotonView>().RPC("nextPuzzleP2", Photon.Pun.RpcTarget.AllBuffered, (int) currentTaskState);
     }
@@ -806,7 +808,7 @@ public class TaskManager : MonoBehaviour
         {
             //calculateBoundaryViolation();
             //here is the case where 
-            checkIfPuzzleObjectsAreVisible();//test this
+            // checkIfPuzzleObjectsAreVisible();//test this
 
             bool enableBlueprint = false;
 
@@ -995,7 +997,7 @@ public class TaskManager : MonoBehaviour
         if(currentTaskState > TaskState.BothConnected && currentTaskState < TaskState.EndTask)
         {
             calculateBoundaryViolation();
-            checkIfPuzzleObjectsAreVisible();//test this
+            //checkIfPuzzleObjectsAreVisible();//test this
         }
 
         if(!debug && currentTaskState > TaskState.BothConnected && currentTaskState < TaskState.EndTask)
@@ -1533,8 +1535,9 @@ public class TaskManager : MonoBehaviour
         }
 
 
-        blueprintObjects = generator.generateBlueprint(new Vector3(0, 0, 0), 6, 4, 3, 0.09f, dominantRootPuzzle);
-        listPossiblePositionsForPuzzle = generator.generatePuzzle(false, dominantArea);
+        generator.generatePuzzleAndBlueprint(false, dominantRootPuzzle, dominantArea, ref blueprintObjects, ref listPossiblePositionsForPuzzle);
+            //generateBlueprint(new Vector3(0, 0, 0), 6, 4, 3, 0.09f, dominantRootPuzzle);
+        //listPossiblePositionsForPuzzle = generator.generatePuzzle(false, dominantArea);
         int idToUse = 0;
         GameObject player;
         if(currentTaskState == TaskState.Player1Dominant)
