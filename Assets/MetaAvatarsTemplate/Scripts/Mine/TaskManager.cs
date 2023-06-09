@@ -422,6 +422,8 @@ public class TaskManager : MonoBehaviour
         currentTaskState = TaskState.Player1Dominant;
 
         currentTaskLog = new TaskLog((groupId*2)-1, currentTask, "P1", currentTask.ToString(), Player1Area.transform, collabType, boundsSize);
+
+
         try
         {
             //if things go wrong, just do it again
@@ -431,7 +433,7 @@ public class TaskManager : MonoBehaviour
             print("found an exception generating the blueprint, trying again now");
             blueprintObjects = generator.generateBlueprint(new Vector3(0, 0, 0), 6, 4, 3, 0.09f, transformRootForP1Blueprint);
         }
-        listPossiblePositionsForPuzzle = generator.generatePuzzle(true, Player1Area);
+        listPossiblePositionsForPuzzle = generator.generatePuzzle(false, Player1Area);
         taskStarted = true;
         gameObject.GetComponent<Photon.Pun.PhotonView>().RPC("nextPuzzleP2", Photon.Pun.RpcTarget.AllBuffered, (int) currentTaskState);
     }
@@ -467,9 +469,9 @@ public class TaskManager : MonoBehaviour
                         float thresholdZ = 0.4f;
                         float thresholdX = 0.2f;
 
-                        Vector3 distanceLocalCoordsFromCenter = transformRootForP2Blueprint.transform.InverseTransformPoint(puzzleObject.transform.position);
+                        Vector3 distanceLocalCoordsFromCenter = Player2Area.transform.InverseTransformPoint(puzzleObject.transform.position);
                         float distanceFromCenter = Vector3.Distance(new Vector3(puzzleObject.transform.position.x, 0, puzzleObject.transform.position.z),
-                                                                    new Vector3(transformRootForP2Blueprint.transform.position.x, 0, transformRootForP2Blueprint.transform.position.z));
+                                                                    new Vector3(Player2Area.transform.position.x, 0, Player2Area.transform.position.z));
 
                         if (distanceFromCenter < thresholdZ)
                         {
@@ -508,9 +510,9 @@ public class TaskManager : MonoBehaviour
                         float thresholdZ = 0.4f;
                         float thresholdX = 0.2f;
 
-                        Vector3 distanceLocalCoordsFromCenter = transformRootForP1Blueprint.transform.InverseTransformPoint(puzzleObject.transform.position);
+                        Vector3 distanceLocalCoordsFromCenter = Player1Area.transform.InverseTransformPoint(puzzleObject.transform.position);
                         float distanceFromCenter = Vector3.Distance(new Vector3(puzzleObject.transform.position.x, 0, puzzleObject.transform.position.z), 
-                                                                    new Vector3(transformRootForP1Blueprint.transform.position.x, 0, transformRootForP1Blueprint.transform.position.z));
+                                                                    new Vector3(Player1Area.transform.position.x, 0, Player1Area.transform.position.z));
 
                         if (distanceFromCenter < thresholdZ)
                         {
@@ -811,11 +813,14 @@ public class TaskManager : MonoBehaviour
                 enableBlueprint = true;
             else if(dominantplayer == "P1")
                 enableBlueprint = false;
-            
-            foreach (GameObject blueprintObj in blueprintObjects)
+            List<GameObject> blueprintObjectsAux = new List<GameObject>(GameObject.FindGameObjectsWithTag("Blueprintpart"));
+            if(blueprintObjectsAux != null)
             {
-                blueprintObj.GetComponent<MeshRenderer>().enabled = enableBlueprint;
-                print("F!!@#@#@ Enabling blueprint for remote person?" + enableBlueprint);
+                foreach (GameObject blueprintObj in blueprintObjectsAux)
+                {
+                    blueprintObj.GetComponent<MeshRenderer>().enabled = enableBlueprint;
+                    print("F!!@#@#@ Enabling blueprint for remote person?" + enableBlueprint);
+                }
             }
         }
 

@@ -1,0 +1,13 @@
+UserId,collaborationType,dominantPlayer,currentTask,NameBlueprintObj,blueprintPosX,blueprintPosY,blueprintPosZ,NameUserPlacedObj,UserPlacedPosX,UserPlacedPosY,UserPlacedPosZ,AbsoluteDistance,RelativeDistanceX,RelativeDistanceY,RelativeDistanceZ,correctObject
+1,SideBySide,P1,0,part1,-1.598901,0.6069965,0.2467508,part1_root(Clone),0,0,0,part1_root(Clone),1.598901,-0.6069965,-0.2467508,1.727951,False
+1,SideBySide,P1,0,part2,-1.319869,0.7128164,0.4793379,part2_root(Clone),0,0,0,part2_root(Clone),1.319869,-0.7128164,-0.4793379,1.574778,False
+1,SideBySide,P1,0,part3,-1.289126,0.6957201,0.6453192,part3_root(Clone),0,0,0,part3_root(Clone),1.289126,-0.6957201,-0.6453192,1.600722,False
+1,SideBySide,P1,0,part4,0,-100,0,part4_root(Clone),0,0,0,part4_root(Clone),0,100,0,100,False
+1,SideBySide,P1,0,part5,0,-100,0,part5_root(Clone),0,0,0,part5_root(Clone),0,100,0,100,False
+1,SideBySide,P1,0,part6,0,-100,0,part6_root(Clone),0,0,0,part6_root(Clone),0,100,0,100,False
+1,SideBySide,P1,0,part7,0,-100,0,part7_root(Clone),0,0,0,part7_root(Clone),0,100,0,100,False
+1,SideBySide,P1,0,part8,0,-100,0,part8_root(Clone),0,0,0,part8_root(Clone),0,100,0,100,False
+1,SideBySide,P1,0,part9,0,-100,0,part9_root(Clone),0,0,0,part9_root(Clone),0,100,0,100,False
+1,SideBySide,P1,0,part10,0,-100,0,part10_root(Clone),0,0,0,part10_root(Clone),0,100,0,100,False
+1,SideBySide,P1,0,part11,0,-100,0,part11_root(Clone),0,0,0,part11_root(Clone),0,100,0,100,False
+1,SideBySide,P1,0,part12,0,-100,0,part12_root(Clone),0,0,0.312,part12_root(Clone),0,100,0.312,100.0005,False

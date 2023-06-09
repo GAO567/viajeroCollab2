@@ -76,6 +76,20 @@ public static class Utils
         return aux;
     }
 
+    public static List<GameObject> ShuffleArray(List<GameObject> arrayToShuffle, List<int> indexList)
+    {
+        List<GameObject> aux = new List<GameObject>();// arrayToShuffle;
+
+        
+        for (int i = 0; i < arrayToShuffle.Count; i++)
+        {
+            int j = indexList[i];
+            aux.Add(arrayToShuffle[indexList[i]]);
+        }
+
+        return aux;
+    }
+
     public static Vector3 snapToPlane(Transform anchorObj, Transform planeObj, Vector3 lastPositionAnchor, Vector3 currentPosAnchor, Vector3 handDisplacement)
     {
         //remember that the anchorObj and planeObj are the parents
