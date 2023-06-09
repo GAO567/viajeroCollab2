@@ -501,6 +501,7 @@ public class TaskManager : MonoBehaviour
         }
         else
         {
+            listPossiblePositionsForPuzzle = new List<GameObject>(GameObject.FindGameObjectsWithTag("PuzzlePiece"));
             if (dominantplayer == "P1")
             {
                 if (listPossiblePositionsForPuzzle != null)
