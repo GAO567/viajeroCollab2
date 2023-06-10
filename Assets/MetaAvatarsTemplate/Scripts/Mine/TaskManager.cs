@@ -950,7 +950,10 @@ public class TaskManager : MonoBehaviour
             }
             else
             {
-                timerText.text = minutes + ":" + seconds;
+                string zero = "";
+                if (seconds < 10)
+                    zero = "0";
+                timerText.text = minutes + ":" + zero + ""+seconds;
             }
             if(dominantplayer == "P1")
             {
