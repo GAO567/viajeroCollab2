@@ -148,9 +148,9 @@ public class PuzzleGenerator : MonoBehaviour
             distractorsPuzzle.Add(partsObjects[i + numberPieces]);
             //print("distractor - " + (i + numberPieces) + " numberDistractors :" + numberDistractors);
         }
-        //List<GameObject> piecesAux = piecesOfthePuzzle;
-        //piecesOfthePuzzle = Utils.ShuffleArray(piecesOfthePuzzle);
-        //distractorsPuzzle = Utils.ShuffleArray(distractorsPuzzle);
+        List<GameObject> piecesAux = piecesOfthePuzzle;
+        piecesOfthePuzzle = Utils.ShuffleArray(piecesOfthePuzzle);
+        distractorsPuzzle = Utils.ShuffleArray(distractorsPuzzle);
 
         float piecesPerQuadrant = (numberPieces + numberDistractors) / 3.0f;
         float angleIncrement = 90.0f / piecesPerQuadrant;
@@ -263,7 +263,7 @@ public class PuzzleGenerator : MonoBehaviour
             }
             for(int i = numberPiecesTraining; i < (numberPieces); i++)
             {
-                GameObject gObj = piecesOfthePuzzle[i];
+                GameObject gObj = piecesAux[i];
                 gObj.transform.position = new Vector3(0, -100, 0);
             }
 
