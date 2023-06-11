@@ -480,14 +480,24 @@ public class TaskManager : MonoBehaviour
                         float distanceFromCenter = Vector3.Distance(new Vector3(puzzleObject.transform.position.x, 0, puzzleObject.transform.position.z),
                                                                     new Vector3(Player2Area.transform.position.x, 0, Player2Area.transform.position.z));
 
-                        if (distanceFromCenter < thresholdZ)
+
+                        if(distanceLocalCoordsFromCenter.x < boundsSize.x && distanceLocalCoordsFromCenter.x > -boundsSize.x)
                         {
                             puzzleObject.GetComponent<MeshRenderer>().enabled = true;
                         }
                         else
                         {
-                            puzzleObject.GetComponent<MeshRenderer>().enabled = false;
+                            if (distanceFromCenter < thresholdZ)
+                            {
+                                puzzleObject.GetComponent<MeshRenderer>().enabled = true;
+                            }
+                            else
+                            {
+                                puzzleObject.GetComponent<MeshRenderer>().enabled = false;
+                            }
                         }
+
+                        
                     }
                 }
             }
@@ -522,13 +532,20 @@ public class TaskManager : MonoBehaviour
                         float distanceFromCenter = Vector3.Distance(new Vector3(puzzleObject.transform.position.x, 0, puzzleObject.transform.position.z), 
                                                                     new Vector3(Player1Area.transform.position.x, 0, Player1Area.transform.position.z));
 
-                        if (distanceFromCenter < thresholdZ)
+                        if (distanceLocalCoordsFromCenter.x < thresholdX && distanceLocalCoordsFromCenter.x > -thresholdX)
                         {
                             puzzleObject.GetComponent<MeshRenderer>().enabled = true;
                         }
                         else
                         {
-                            puzzleObject.GetComponent<MeshRenderer>().enabled = false;
+                            if (distanceFromCenter < thresholdZ)
+                            {
+                                puzzleObject.GetComponent<MeshRenderer>().enabled = true;
+                            }
+                            else
+                            {
+                                puzzleObject.GetComponent<MeshRenderer>().enabled = false;
+                            }
                         }
                     }
                 }
