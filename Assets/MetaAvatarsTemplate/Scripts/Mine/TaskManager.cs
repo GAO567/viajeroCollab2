@@ -1439,6 +1439,8 @@ public class TaskManager : MonoBehaviour
     public void nextPuzzleP2(int currentState)
     {
         TaskState tState = (TaskState)currentState;
+        if (!isRemotePlayer)
+            return;
         if (tState == TaskState.EndTask)
         {
             if(dominantplayerLabel)
@@ -1450,6 +1452,24 @@ public class TaskManager : MonoBehaviour
             dominantplayer = dominantplayer == "P1 " ? "P2" : "P1";
 
             taskStartedP2 = true;
+            if(dominantplayer == "P2")
+            {
+                GameObject[] blueprints = GameObject.FindGameObjectsWithTag("Blueprintpart");
+                foreach(GameObject blueprintPart in blueprints)
+                {
+                    blueprintPart.GetComponent<MeshRenderer>().enabled = true;
+                }
+            }
+            else
+            {
+                GameObject[] blueprints = GameObject.FindGameObjectsWithTag("Blueprintpart");
+                foreach (GameObject blueprintPart in blueprints)
+                {
+                    blueprintPart.GetComponent<MeshRenderer>().enabled = false;
+                }
+            }
+
+
         }
     }
 
@@ -1462,7 +1482,6 @@ public class TaskManager : MonoBehaviour
 
     public void nextPuzzle()
     {
-        
         string str = "";
         for(int i = 0;i < blueprintObjects.Count; i++)
         {
@@ -1526,10 +1545,8 @@ public class TaskManager : MonoBehaviour
             currentTaskState = TaskState.Player1Dominant;
             dominantArea = Player1Area.gameObject;
             dominantRootPuzzle = transformRootForP1Blueprint;
-            foreach (GameObject blueprintObj in blueprintObjects)
-            {
-                blueprintObj.GetComponent<MeshRenderer>().enabled = true;
-            }
+
+            
             //show blueprint
             //hidecurrenttask
         }
@@ -1541,15 +1558,21 @@ public class TaskManager : MonoBehaviour
             dominantArea = Player2Area;
             dominantRootPuzzle = transformRootForP2Blueprint;
             //hide blueprint
-            foreach(GameObject blueprintObj in blueprintObjects)
-            {
-                blueprintObj.GetComponent<MeshRenderer>().enabled = false;
-            }
+
+            
             //hidecurrenttask
         }
 
+        bool enableBlueprintRenderers = (dominantplayer == "P1" ? true : false);
+        generator.generatePuzzleAndBlueprint(false, dominantArea, dominantRootPuzzle, ref blueprintObjects, ref listPossiblePositionsForPuzzle);
+        
+        List<GameObject> allBlueprints = new List<GameObject>(GameObject.FindGameObjectsWithTag("Blueprintpart"));
+        foreach (GameObject blueprintObj in allBlueprints)
+        {
+            blueprintObj.GetComponent<MeshRenderer>().enabled = enableBlueprintRenderers;
+        }
 
-        generator.generatePuzzleAndBlueprint(false, dominantRootPuzzle, dominantArea, ref blueprintObjects, ref listPossiblePositionsForPuzzle);
+
             //generateBlueprint(new Vector3(0, 0, 0), 6, 4, 3, 0.09f, dominantRootPuzzle);
         //listPossiblePositionsForPuzzle = generator.generatePuzzle(false, dominantArea);
         int idToUse = 0;

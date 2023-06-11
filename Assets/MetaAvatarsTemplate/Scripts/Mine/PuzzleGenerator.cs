@@ -208,7 +208,7 @@ public class PuzzleGenerator : MonoBehaviour
                     obj.transform.position = objAux.transform.TransformPoint(new Vector3(UnityEngine.Random.Range(0.1f, 0.2f), UnityEngine.Random.Range(0.0f, 0.25f), UnityEngine.Random.Range(1.3f, 2.0f)));//generate y according to proxemics and z randomly
 
 
-                    obj.transform.localEulerAngles = new Vector3(0, 0, 0);
+                    obj.transform.localEulerAngles = new Vector3(0, 180, 0);
                     countIndexArray++;
                 }
             }
@@ -222,7 +222,7 @@ public class PuzzleGenerator : MonoBehaviour
                     GameObject obj = sortedParts[countIndexArray];// parts[auxIndex[countIndexArray]];
                     obj.GetComponent<Photon.Pun.PhotonView>().RequestOwnership();
                     obj.transform.position = objAux.transform.TransformPoint(new Vector3(UnityEngine.Random.Range(0.1f, 0.2f), UnityEngine.Random.Range(0.0f, 0.25f), UnityEngine.Random.Range(1.3f, 2.0f)));//generate y according to proxemics and z randomly
-                    obj.transform.localEulerAngles = new Vector3(0, 0, 0);
+                    obj.transform.localEulerAngles = new Vector3(0, 180, 0);
                     countIndexArray++;
                 }
             }
@@ -237,7 +237,7 @@ public class PuzzleGenerator : MonoBehaviour
                 GameObject obj = sortedParts[countIndexArray];// parts[auxIndex[countIndexArray]];
                 obj.GetComponent<Photon.Pun.PhotonView>().RequestOwnership();
                 obj.transform.position = objAux.transform.TransformPoint(new Vector3(UnityEngine.Random.Range(0.1f, 0.2f), UnityEngine.Random.Range(0.0f, 0.25f), UnityEngine.Random.Range(1.3f, 2.0f)));//generate y according to proxemics and z randomly
-                obj.transform.localEulerAngles = new Vector3(0, 0, 0);
+                obj.transform.localEulerAngles = new Vector3(0, 180, 0);
                 countIndexArray++;
             }
         }
@@ -503,7 +503,7 @@ public class PuzzleGenerator : MonoBehaviour
                     obj.transform.position = objAux.transform.TransformPoint(new Vector3(UnityEngine.Random.Range(0.1f, 0.2f), UnityEngine.Random.Range(0.0f, 0.25f), UnityEngine.Random.Range(1.3f, 2.0f)));//generate y according to proxemics and z randomly
                     
                     
-                    obj.transform.localEulerAngles = new Vector3(0, 0, 0);
+                    obj.transform.localEulerAngles = new Vector3(0, 180, 0);
                     countIndexArray++;
                 }
             }
@@ -517,7 +517,7 @@ public class PuzzleGenerator : MonoBehaviour
                     GameObject obj = sortedParts[countIndexArray];// parts[auxIndex[countIndexArray]];
                     obj.GetComponent<Photon.Pun.PhotonView>().RequestOwnership();
                     obj.transform.position = objAux.transform.TransformPoint(new Vector3(UnityEngine.Random.Range(0.1f, 0.2f), UnityEngine.Random.Range(0.0f, 0.25f), UnityEngine.Random.Range(1.3f, 2.0f)));//generate y according to proxemics and z randomly
-                    obj.transform.localEulerAngles = new Vector3(0, 0, 0);
+                    obj.transform.localEulerAngles = new Vector3(0, 180, 0);
                     countIndexArray++;
                 }
             }
@@ -532,7 +532,7 @@ public class PuzzleGenerator : MonoBehaviour
                 GameObject obj = sortedParts[countIndexArray];// parts[auxIndex[countIndexArray]];
                 obj.GetComponent<Photon.Pun.PhotonView>().RequestOwnership();
                 obj.transform.position = objAux.transform.TransformPoint(new Vector3(UnityEngine.Random.Range(0.1f, 0.2f), UnityEngine.Random.Range(0.0f, 0.25f), UnityEngine.Random.Range(1.3f, 2.0f)));//generate y according to proxemics and z randomly
-                obj.transform.localEulerAngles = new Vector3(0, 0, 0);
+                obj.transform.localEulerAngles = new Vector3(0, 180, 0);
                 countIndexArray++;
             }
         }
@@ -737,8 +737,8 @@ public class PuzzleGenerator : MonoBehaviour
         {
             blueprintObjs[i].transform.localPosition = positionsBlueprint[i].pos;
             print("blueprintobjs count = " + blueprintObjs.Count + " positionsBlueprintCount = " + positionsBlueprint.Count);
-        }/*
-        if(taskManager.currentTask == 0 || taskManager.currentTask == 1)
+        }
+        /*if(taskManager.currentTask == 0 || taskManager.currentTask == 1)
         {
             for (int i = 0; i < 3; i++)
             {
@@ -909,7 +909,7 @@ public class PuzzleGenerator : MonoBehaviour
         {
             blueprintObjs[i].transform.localPosition = positionsBlueprint[i].pos;
             print("blueprintobjs count = " + blueprintObjs.Count + " positionsBlueprintCount = " + positionsBlueprint.Count);
-        }/*
+        }
         if(taskManager.currentTask == 0 || taskManager.currentTask == 1)
         {
             for (int i = 0; i < 3; i++)
@@ -930,7 +930,7 @@ public class PuzzleGenerator : MonoBehaviour
                 GameObject bObj = blueprintObjs[i];
                 bObj.transform.GetComponent<MeshRenderer>().enabled = true;
             }
-        }*/
+        }
 
         return blueprintObjs;
     }
