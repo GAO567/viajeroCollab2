@@ -1452,22 +1452,12 @@ public class TaskManager : MonoBehaviour
             dominantplayer = dominantplayer == "P1 " ? "P2" : "P1";
 
             taskStartedP2 = true;
-            if(dominantplayer == "P2")
-            {
+            bool enableBluePrints =  (dominantplayer == "P2" ? true : false);
                 GameObject[] blueprints = GameObject.FindGameObjectsWithTag("Blueprintpart");
                 foreach(GameObject blueprintPart in blueprints)
                 {
-                    blueprintPart.GetComponent<MeshRenderer>().enabled = true;
+                    blueprintPart.GetComponent<MeshRenderer>().enabled = enableBluePrints;
                 }
-            }
-            else
-            {
-                GameObject[] blueprints = GameObject.FindGameObjectsWithTag("Blueprintpart");
-                foreach (GameObject blueprintPart in blueprints)
-                {
-                    blueprintPart.GetComponent<MeshRenderer>().enabled = false;
-                }
-            }
 
 
         }
