@@ -14,7 +14,7 @@ public class Raycaster : MonoBehaviour
         LTouch, RTouch, Keyboard
     };
 
-
+    [SerializeField] NetworkPlayer networkPlayer;
     [SerializeField] DeviceType deviceType = DeviceType.Keyboard;
     [SerializeField] LineRenderer lineRenderer;
     [SerializeField] Color colorOfRay;
@@ -46,6 +46,7 @@ public class Raycaster : MonoBehaviour
     RaycastHit[] results = new RaycastHit[10];
 
     PhotonView taskManagerPhotonView;
+    PhotonView networkPlayerPhotonView;
 
     // Start is called before the first frame update
     void Start()
@@ -54,6 +55,19 @@ public class Raycaster : MonoBehaviour
         controllerActive = OVRInput.Controller.RTouch;
         taskManager = GameObject.Find("RootAreas").GetComponent<TaskManager>();
         taskManagerPhotonView = taskManager.GetComponent<PhotonView>();
+
+
+        networkPlayerPhotonView =  networkPlayer.GetComponent<PhotonView>();
+        string strAuxPView = "";
+        if (networkPlayerPhotonView != null)
+        {
+            strAuxPView = networkPlayerPhotonView.IsMine.ToString();
+        }
+        else
+        {
+            strAuxPView = "NULL";
+        }
+        print(" @@@ ACTOR = " + PhotonNetwork.LocalPlayer.ActorNumber + " Network Player Creator " + strAuxPView +" Type - " + deviceType.ToString() + " photonTaskManagerView isMine? "+ taskManagerPhotonView.IsMine);
     }
 
     // Update is called once per frame
@@ -115,14 +129,14 @@ public class Raycaster : MonoBehaviour
         if (taskManager.isRemotePlayer)
         {
             //print("remote" + taskManagerPhotonView.IsMine);
-            triggered = OVRInput.Get(OVRInput.Button.PrimaryIndexTrigger, controllerActive) && !taskManagerPhotonView.IsMine;
-            handTriggered = OVRInput.Get(OVRInput.Button.PrimaryHandTrigger, controllerActive) && !taskManagerPhotonView.IsMine;
+            triggered = OVRInput.Get(OVRInput.Button.PrimaryIndexTrigger, controllerActive) && !networkPlayerPhotonView.IsMine;
+            handTriggered = OVRInput.Get(OVRInput.Button.PrimaryHandTrigger, controllerActive) && !networkPlayerPhotonView.IsMine;
         }
         else
         {
             //print("local" + taskManagerPhotonView.IsMine);
-            triggered = OVRInput.Get(OVRInput.Button.PrimaryIndexTrigger, controllerActive) && taskManagerPhotonView.IsMine;
-            handTriggered = OVRInput.Get(OVRInput.Button.PrimaryHandTrigger, controllerActive) && taskManagerPhotonView.IsMine;
+            triggered = OVRInput.Get(OVRInput.Button.PrimaryIndexTrigger, controllerActive) && networkPlayerPhotonView.IsMine;
+            handTriggered = OVRInput.Get(OVRInput.Button.PrimaryHandTrigger, controllerActive) && networkPlayerPhotonView.IsMine;
 
         }
         if (!triggered)
@@ -344,6 +358,7 @@ public class Raycaster : MonoBehaviour
                 //photonView.TransferOwnership(this.GetComponent<PhotonView>().ViewID);
                 photonView.RequestOwnership();//request ownership of the object
                 print("requesting ownership of object " + hitObj.transform.name + "from player " + (taskManager.isRemotePlayer ? "P2" : "P1"));
+                //objectFromRaycast = hitObj.transform.gameObject;
             }
             else
             {

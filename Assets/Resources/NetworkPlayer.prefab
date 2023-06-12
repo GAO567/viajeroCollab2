@@ -615,6 +615,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c5deb69584f0f445b64ebfdc26773d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  networkPlayer: {fileID: 6082318275401340433}
   deviceType: 1
   lineRenderer: {fileID: 2635023487025786535}
   colorOfRay: {r: 0, g: 0, b: 0, a: 0}
@@ -832,6 +833,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c5deb69584f0f445b64ebfdc26773d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  networkPlayer: {fileID: 6082318275401340433}
   deviceType: 0
   lineRenderer: {fileID: 5275426556886177896}
   colorOfRay: {r: 0, g: 0, b: 0, a: 0}
@@ -1356,6 +1358,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c5deb69584f0f445b64ebfdc26773d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  networkPlayer: {fileID: 0}
   deviceType: 0
   lineRenderer: {fileID: 532604917732845513}
   colorOfRay: {r: 0, g: 0, b: 0, a: 0}

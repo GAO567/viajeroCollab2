@@ -830,7 +830,7 @@ public class TaskManager : MonoBehaviour
         {
             //calculateBoundaryViolation();
             //here is the case where 
-            //checkIfPuzzleObjectsAreVisible();//test this
+            checkIfPuzzleObjectsAreVisible();//test this
 
             bool enableBlueprint = false;
 
@@ -1028,7 +1028,7 @@ public class TaskManager : MonoBehaviour
         if(currentTaskState > TaskState.BothConnected && currentTaskState < TaskState.EndTask)
         {
             calculateBoundaryViolation();
-            //checkIfPuzzleObjectsAreVisible();//test this
+            checkIfPuzzleObjectsAreVisible();//test this
         }
 
         if(!debug && currentTaskState > TaskState.BothConnected && currentTaskState < TaskState.EndTask)
