@@ -135,7 +135,10 @@ public class Raycaster : MonoBehaviour
         else
         {
             //print("local" + taskManagerPhotonView.IsMine);
+            //bool keyPressed = Input.GetKeyDown(KeyCode.O);
+            //print(" ?????? input event ; keyPressed?  " + keyPressed + " networkPlayerViewIsMine? " + networkPlayerPhotonView.IsMine + " TaskManager PhotonView " + taskManagerPhotonView.IsMine);
             triggered = OVRInput.Get(OVRInput.Button.PrimaryIndexTrigger, controllerActive) && networkPlayerPhotonView.IsMine;
+
             handTriggered = OVRInput.Get(OVRInput.Button.PrimaryHandTrigger, controllerActive) && networkPlayerPhotonView.IsMine;
 
         }
