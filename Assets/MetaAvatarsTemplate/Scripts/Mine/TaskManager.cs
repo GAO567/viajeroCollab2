@@ -474,14 +474,14 @@ public class TaskManager : MonoBehaviour
                     foreach (GameObject puzzleObject in listPossiblePositionsForPuzzle)
                     {
                         float thresholdZ = 0.4f;
-                        float thresholdX = 0.2f;
+                        float thresholdX = boundsSize.x;
 
                         Vector3 distanceLocalCoordsFromCenter = Player2Area.transform.InverseTransformPoint(puzzleObject.transform.position);
                         float distanceFromCenter = Vector3.Distance(new Vector3(puzzleObject.transform.position.x, 0, puzzleObject.transform.position.z),
                                                                     new Vector3(Player2Area.transform.position.x, 0, Player2Area.transform.position.z));
 
 
-                        if(distanceLocalCoordsFromCenter.x < boundsSize.x && distanceLocalCoordsFromCenter.x > -boundsSize.x)
+                        if(distanceLocalCoordsFromCenter.x < thresholdX && distanceLocalCoordsFromCenter.x > -thresholdX)
                         {
                             puzzleObject.GetComponent<MeshRenderer>().enabled = true;
                         }
@@ -526,7 +526,7 @@ public class TaskManager : MonoBehaviour
                     foreach (GameObject puzzleObject in listPossiblePositionsForPuzzle)
                     {
                         float thresholdZ = 0.4f;
-                        float thresholdX = 0.2f;
+                        float thresholdX = boundsSize.x;// 0.2f;
 
                         Vector3 distanceLocalCoordsFromCenter = Player1Area.transform.InverseTransformPoint(puzzleObject.transform.position);
                         float distanceFromCenter = Vector3.Distance(new Vector3(puzzleObject.transform.position.x, 0, puzzleObject.transform.position.z), 
@@ -830,7 +830,7 @@ public class TaskManager : MonoBehaviour
         {
             //calculateBoundaryViolation();
             //here is the case where 
-            checkIfPuzzleObjectsAreVisible();//test this
+            //checkIfPuzzleObjectsAreVisible();//test this
 
             bool enableBlueprint = false;
 
@@ -1028,7 +1028,7 @@ public class TaskManager : MonoBehaviour
         if(currentTaskState > TaskState.BothConnected && currentTaskState < TaskState.EndTask)
         {
             calculateBoundaryViolation();
-            checkIfPuzzleObjectsAreVisible();//test this
+            //checkIfPuzzleObjectsAreVisible();//test this
         }
 
         if(!debug && currentTaskState > TaskState.BothConnected && currentTaskState < TaskState.EndTask)
