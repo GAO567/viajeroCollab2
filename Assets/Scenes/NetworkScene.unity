@@ -4574,6 +4574,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c5deb69584f0f445b64ebfdc26773d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  networkPlayer: {fileID: 0}
   deviceType: 2
   lineRenderer: {fileID: 871576176}
   colorOfRay: {r: 0, g: 0, b: 0, a: 0}
@@ -8526,6 +8527,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c5deb69584f0f445b64ebfdc26773d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  networkPlayer: {fileID: 0}
   deviceType: 1
   lineRenderer: {fileID: 1707872603}
   colorOfRay: {r: 0, g: 0, b: 0, a: 0}
@@ -9368,6 +9370,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c5deb69584f0f445b64ebfdc26773d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  networkPlayer: {fileID: 0}
   deviceType: 0
   lineRenderer: {fileID: 1797714301}
   colorOfRay: {r: 0, g: 0, b: 0, a: 0}
@@ -14666,7 +14669,7 @@ PrefabInstance:
       objectReference: {fileID: 706748078}
     - target: {fileID: 8465339781447079483, guid: c673a7ed842dd3b41ac8fc8cfe649214, type: 3}
       propertyPath: collabType
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8465339781447079483, guid: c673a7ed842dd3b41ac8fc8cfe649214, type: 3}
       propertyPath: textToShow
