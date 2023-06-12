@@ -1544,14 +1544,18 @@ public class TaskManager : MonoBehaviour
 
         //
         GameObject dominantArea;
-        GameObject dominantRootPuzzle;
+        GameObject dominantRootBlueprint;
+        GameObject nonDominantArea;
+        GameObject nondominantRootPuzzle;
         if(dominantplayer == "P2")
         {
             
             dominantplayer = "P1";
             currentTaskState = TaskState.Player1Dominant;
             dominantArea = Player1Area.gameObject;
-            dominantRootPuzzle = transformRootForP1Blueprint;
+            nonDominantArea = Player2Area.gameObject;
+            dominantRootBlueprint = transformRootForP1Blueprint;
+            nondominantRootPuzzle = transformRootForP2Blueprint;
 
             
             //show blueprint
@@ -1563,7 +1567,10 @@ public class TaskManager : MonoBehaviour
             dominantplayer = "P2";
             currentTaskState = TaskState.Player2Dominant;
             dominantArea = Player2Area;
-            dominantRootPuzzle = transformRootForP2Blueprint;
+            dominantRootBlueprint = transformRootForP2Blueprint;
+
+            nonDominantArea = Player1Area;
+            nondominantRootPuzzle = transformRootForP1Blueprint;
             //hide blueprint
 
             
@@ -1571,7 +1578,7 @@ public class TaskManager : MonoBehaviour
         }
 
         bool enableBlueprintRenderers = (dominantplayer == "P1" ? true : false);
-        generator.generatePuzzleAndBlueprint(false, dominantArea, dominantRootPuzzle, ref blueprintObjects, ref listPossiblePositionsForPuzzle);
+        generator.generatePuzzleAndBlueprint(false, dominantArea, dominantRootBlueprint, ref blueprintObjects, ref listPossiblePositionsForPuzzle);
         
         List<GameObject> allBlueprints = new List<GameObject>(GameObject.FindGameObjectsWithTag("Blueprintpart"));
         foreach (GameObject blueprintObj in allBlueprints)
