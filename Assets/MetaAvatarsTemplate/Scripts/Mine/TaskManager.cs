@@ -433,11 +433,15 @@ public class TaskManager : MonoBehaviour
         {
             //if things go wrong, just do it again
             //blueprintObjects = generator.generateBlueprint(new Vector3(0, 0, 0), 6, 4, 3, 0.09f, transformRootForP1Blueprint);
-            generator.generatePuzzleAndBlueprint(false, Player1Area, transformRootForP1Blueprint, ref blueprintObjects, ref listPossiblePositionsForPuzzle);
-        }catch(Exception ex)
+            //generator.generatePuzzleAndBlueprint(false, Player1Area, transformRootForP1Blueprint, ref blueprintObjects, ref listPossiblePositionsForPuzzle);
+            generator.generatePuzzleAndBlueprint(false, Player2Area, transformRootForP1Blueprint, ref blueprintObjects, ref listPossiblePositionsForPuzzle);
+
+        }
+        catch (Exception ex)
         {
             print("found an exception generating the blueprint, trying again now");
-            generator.generatePuzzleAndBlueprint(false, Player1Area, transformRootForP1Blueprint, ref blueprintObjects, ref listPossiblePositionsForPuzzle);
+            //generator.generatePuzzleAndBlueprint(false, Player1Area, transformRootForP1Blueprint, ref blueprintObjects, ref listPossiblePositionsForPuzzle);
+            generator.generatePuzzleAndBlueprint(false, Player2Area, transformRootForP1Blueprint, ref blueprintObjects, ref listPossiblePositionsForPuzzle);
             //blueprintObjects = generator.generateBlueprint(new Vector3(0, 0, 0), 6, 4, 3, 0.09f, transformRootForP1Blueprint);
         }
         //listPossiblePositionsForPuzzle = generator.generatePuzzle(false, Player1Area);
@@ -1579,7 +1583,9 @@ public class TaskManager : MonoBehaviour
 
         bool enableBlueprintRenderers = (dominantplayer == "P1" ? true : false);
         generator.generatePuzzleAndBlueprint(false, dominantArea, dominantRootBlueprint, ref blueprintObjects, ref listPossiblePositionsForPuzzle);
-        
+
+        generator.generatePuzzleAndBlueprint(false, nonDominantArea, dominantRootBlueprint, ref blueprintObjects, ref listPossiblePositionsForPuzzle);
+
         List<GameObject> allBlueprints = new List<GameObject>(GameObject.FindGameObjectsWithTag("Blueprintpart"));
         foreach (GameObject blueprintObj in allBlueprints)
         {
