@@ -2055,6 +2055,8 @@ MonoBehaviour:
   sizeViewport: {x: 0.15, y: 0.15}
   distanceFromCamera: 0.6
   lineRenderer: {fileID: 0}
+  remoteMaterial: {fileID: 2100000, guid: 90623549d4482f042ade35d8a0758e35, type: 2}
+  localMaterial: {fileID: 2100000, guid: f0e40fc865770de4cb1577c051163a9d, type: 2}
 --- !u!120 &6779302763102290056
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -2096,11 +2098,11 @@ LineRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Positions:
-  - {x: 0, y: 0, z: 0}
-  - {x: 0.15, y: 0, z: 0}
-  - {x: 0.15, y: 0.15, z: 0}
-  - {x: 0, y: 0.15, z: 0}
-  - {x: 0, y: 0, z: 0}
+  - {x: -0.075, y: -0.075, z: 0.6}
+  - {x: -0.075, y: 0.075, z: 0.6}
+  - {x: 0.075, y: 0.075, z: 0.6}
+  - {x: 0.075, y: -0.075, z: 0.6}
+  - {x: -0.075, y: -0.075, z: 0.6}
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1
