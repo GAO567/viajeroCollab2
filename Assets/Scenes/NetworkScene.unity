@@ -14785,7 +14785,7 @@ PrefabInstance:
       objectReference: {fileID: 1315192949}
     - target: {fileID: 8465339781447079483, guid: c673a7ed842dd3b41ac8fc8cfe649214, type: 3}
       propertyPath: timeTraining
-      value: 90
+      value: 120
       objectReference: {fileID: 0}
     - target: {fileID: 8465339781447079483, guid: c673a7ed842dd3b41ac8fc8cfe649214, type: 3}
       propertyPath: playerManager
@@ -14805,7 +14805,7 @@ PrefabInstance:
       objectReference: {fileID: 687736363}
     - target: {fileID: 8465339781447079483, guid: c673a7ed842dd3b41ac8fc8cfe649214, type: 3}
       propertyPath: totalTimePerTask
-      value: 180
+      value: 240
       objectReference: {fileID: 0}
     - target: {fileID: 8465339781447079483, guid: c673a7ed842dd3b41ac8fc8cfe649214, type: 3}
       propertyPath: dominantplayerLabel
