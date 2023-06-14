@@ -249,7 +249,7 @@ public static class Utils
                         {
                             return arrayCells[indexRight];
                         }
-                        /*else
+                        else
                         {
                             int indexRightPlus = (currentCell.x + 2) * currentCell.height * currentCell.depth + currentCell.y * currentCell.depth + (currentCell.z);
                             if (indexRightPlus < currentCell.width -1)
@@ -258,15 +258,15 @@ public static class Utils
                                 indexRight = indexRightPlus;
                                 if (!arrayCells[indexRight].filled)
                                     return arrayCells[indexRight];
-                            }
+                            }/*
                             else if(indexLeft > 0)
                             {
                                 return arrayCells[indexLeft];
                                 //indexUp = (currentCell.x) * currentCell.height * currentCell.depth + currentCell.y * currentCell.depth + (currentCell.z + 1);
                                 //return arrayCells[indexUp];
-                            }
+                            }*/
                             //return nextAvailableCellInPuzzleGrid(arrayCells, arrayCells[indexRight]);
-                        }*/
+                        }
 
                     }
                     if (indexLeft > -1)

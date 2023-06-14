@@ -44,6 +44,68 @@ public class PuzzleGenerator : MonoBehaviour
 
     int currentPhotonId = 200;
 
+    List<List<Vector3>> positions;
+
+
+
+    void populatePositionsArray()
+    {
+        positions = new List<List<Vector3>>();
+        string previousLine = "";
+        if (File.Exists("TaskReport_blueprints.txt"))
+        {
+            int counter = 0;
+            // Read file using StreamReader. Reads file line by line
+            List<Vector3> auxList = null;// = new List<Vector3>();
+            using (StreamReader file = new StreamReader("TaskReport_blueprints.txt"))
+            {
+                string ln;
+
+                while ((ln = file.ReadLine()) != null)
+                {
+                    if(ln == "-----")
+                       print("##");
+                    
+
+                    if(ln!="-----")
+                    {
+                        if (previousLine == "-----")
+                        {
+                            auxList = new List<Vector3>();
+                            string[] str = ln.Split(',');
+                            string strAux = str[1] + "," + str[2] + ","+str[3];
+
+                            Vector3 auxVec3 = Utils.stringToVector3(strAux, ',');
+                            auxList.Add(auxVec3);
+
+
+                        }
+                        else
+                        {
+                            string[] str = ln.Split(',');
+                            string strAux = str[1] + "," + str[2] + "," + str[3];
+
+                            Vector3 auxVec3 = Utils.stringToVector3(strAux, ',');
+                            auxList.Add(auxVec3);
+                        }
+
+                    }
+                    else if(ln == "-----")
+                    {
+                        if(auxList !=null)
+                            positions.Add(auxList);
+                    }
+                    previousLine = ln;
+                }
+                file.Close();
+            }
+        }
+
+
+
+    }
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -56,6 +118,7 @@ public class PuzzleGenerator : MonoBehaviour
 
         
         taskManager = this.GetComponent<TaskManager>();
+        populatePositionsArray();
         //GameObject rootObj = GameObject.Find("rootForObjsP1");
         //generateBlueprint(new Vector3(0, 0, 0), 6, 4, 3, 0.09f, rootObj);
         //generatePuzzle();
@@ -101,8 +164,8 @@ public class PuzzleGenerator : MonoBehaviour
             blueprintPartsAux[i].transform.position = new Vector3(0, -100, 0);// Vector3.negativeInfinity;//hide the other ones
         }
 
-        blueprintObjecsManager =  generateBlueprint2(new Vector3(0, 0, 0), 6, 4, 3, 0.09f, blueprintObjs, rootObject);//here we generate the blueprint
-
+        //blueprintObjecsManager =  generateBlueprint2(new Vector3(0, 0, 0), 6, 4, 3, 0.09f, blueprintObjs, rootObject);//here we generate the blueprint
+        blueprintObjecsManager = generateBlueprintFromPreRecordedArray(blueprintObjs, rootObject);
         //now that we generated the blueprint let's use the same principle to generate the puzzle
 
         List<GameObject> puzzleObjectsAux = new List<GameObject>(GameObject.FindGameObjectsWithTag("PuzzlePiece"));
@@ -731,6 +794,8 @@ public class PuzzleGenerator : MonoBehaviour
                     positionsBlueprint.Add(cell);
                 }
             }
+            GameObject[] blueprints = GameObject.FindGameObjectsWithTag("Blueprintpart");
+            
         }
 
         for (int i = 0; i < blueprintObjs.Count; i++)
@@ -887,6 +952,7 @@ public class PuzzleGenerator : MonoBehaviour
                 }catch(Exception ex)
                 {
                     auxCell = cell;//if there is an exception, use the old one
+                    print("exception to the rule");
                 }
                 if(cell.id != auxCell.id)
                 {
@@ -940,14 +1006,101 @@ public class PuzzleGenerator : MonoBehaviour
         return x * height * depth + y * depth + z;
     }
 
+    public List<GameObject> generateBlueprintFromPreRecordedArray(List<GameObject> blueprintObjects, GameObject root)
+    {
+        GameObject obj = GameObject.Find("blueprintParts");
+
+
+        if (root)
+        {
+            rootForObjects.transform.position = root.transform.position;
+            rootForObjects.transform.rotation = root.transform.rotation;
+        }
+
+        if (rootForObjects && blueprintObjects != null)
+        {
+            obj.transform.position = rootForObjects.transform.position;
+            obj.transform.rotation = rootForObjects.transform.rotation;
+            obj.transform.parent = rootForObjects.transform.parent;
+            int numberObjects = this.numberPieces;
+            //testar isso
+            if (taskManager.currentTask == 0 || taskManager.currentTask == 1)
+            {
+                numberObjects = numberPiecesTraining;// numberPieces - 3;
+            }
+            else
+            {
+                numberObjects = numberPieces;
+            }
+
+            for (int i = 0; i < blueprintObjects.Count; i++)
+            {
+                //blueprintObjs.Add(rootForObjects.transform.GetChild(i).gameObject);
+
+                Material mat = blueprintObjects[i].GetComponent<MeshRenderer>().material;
+                mat.color = new Color(1, 1, 1, 0.3f);
+                
+            }
+        }
+
+        List<int> auxIndex = new List<int>();
+        var random = new System.Random();
+
+        for(int i =0;i < positions.Count; i++)
+        {
+            auxIndex.Add(i);
+        }
+
+        auxIndex = auxIndex.OrderBy(x => random.Next()).ToList();
+
+        for (int i = 0; i < blueprintObjs.Count; i++)
+        {
+            blueprintObjs[i].transform.localPosition = positions[auxIndex[0]][i];// positionsBlueprint[i].pos;
+            //print("blueprintobjs count = " + blueprintObjs.Count + " positionsBlueprintCount = " + positions[0][i].Count);
+        }
+        if (taskManager.currentTask == 0 || taskManager.currentTask == 1)
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                GameObject bObj = blueprintObjs[i];
+                bObj.transform.GetComponent<MeshRenderer>().enabled = true;
+            }
+            for (int i = 3; i < blueprintObjs.Count; i++)
+            {
+                GameObject bObj = blueprintObjs[i];
+                bObj.transform.GetComponent<MeshRenderer>().enabled = false;
+            }
+        }
+        else
+        {
+            for (int i = 0; i < blueprintObjs.Count; i++)
+            {
+                GameObject bObj = blueprintObjs[i];
+                bObj.transform.GetComponent<MeshRenderer>().enabled = true;
+            }
+        }
+
+        return blueprintObjects;
+    }
+
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.R))
+        if (Input.GetKeyDown(KeyCode.P))
         {
-            generateBlueprint(new Vector3(0, 0, 0), 6, 4, 3, 0.09f, null);
-            generatePuzzle( false,dominantPlayerPos);
+            string logTask = "\n-----\n";
+            GameObject[] blueprints = GameObject.FindGameObjectsWithTag("Blueprintpart");
+            if (blueprints != null)
+            {
+                foreach(GameObject blueprintObjj in blueprints)
+                {
+                    if(blueprintObjj.transform.localPosition.y > -100)
+                        logTask += blueprintObjj.name + ","+ Utils.vector3ToString(blueprintObjj.transform.localPosition) +  "\n";
+                }
+            }
+
+            System.IO.File.AppendAllText("TaskReport_blueprints.csv", logTask);
         }
     }
 
