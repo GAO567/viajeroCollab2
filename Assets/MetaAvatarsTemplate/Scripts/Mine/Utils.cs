@@ -178,9 +178,26 @@ public static class Utils
         return Math.Log((targetsDistance / targetWidth + 1), 2);
     }
 
+    public static bool isViolatingBoundary(GameObject jointObj, GameObject playerArea, Vector3 boundsSize)
+    {
+
+        Vector3 jointObjLocal = playerArea.transform.InverseTransformPoint(jointObj.transform.position);
+
+        jointObjLocal = new Vector3(Mathf.Abs(jointObjLocal.x), Mathf.Abs(jointObjLocal.y), Mathf.Abs(jointObjLocal.z));
+        if (jointObjLocal.x > boundsSize.x / 2.0f || jointObjLocal.y > boundsSize.y / 2.0f || jointObjLocal.z > boundsSize.z / 2.0f)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+
     public static bool IsViolatingBoundary(Vector3 jointPos, Vector3 boundPos)
     {
-        if (jointPos.x > boundPos.x || jointPos.y > boundPos.y || jointPos.z > boundPos.z)
+        if (jointPos.x > boundPos.x / 2.0f|| jointPos.z > boundPos.z/2.0f)
         {
             return true;
         }
