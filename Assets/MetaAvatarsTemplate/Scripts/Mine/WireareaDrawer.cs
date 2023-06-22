@@ -76,8 +76,8 @@ public class WireareaDrawer : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (taskManager)
-            taskManager.incrementTimeOutsideBounds(Time.realtimeSinceStartup - startTime);
+        //if (taskManager)
+        //    taskManager.incrementTimeOutsideBounds(Time.realtimeSinceStartup - startTime);
     }
 
     [PunRPC]
