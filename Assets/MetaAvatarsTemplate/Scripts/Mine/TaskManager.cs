@@ -1496,7 +1496,7 @@ public class TaskManager : MonoBehaviour
         string str = "";
         for(int i = 0;i < blueprintObjects.Count; i++)
         {
-            GameObject obj = GameObject.Find(blueprintObjects[i].name+"_root(Clone)");//part2_root(Clone)
+            GameObject obj = GameObject.Find(blueprintObjects[i].name+"_root");//part2_root(Clone)
             if (obj)
             {
                 float threshold = 0.3f;
