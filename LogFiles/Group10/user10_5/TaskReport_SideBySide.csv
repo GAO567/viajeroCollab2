@@ -1,0 +1,3 @@
+userId,collabType,trialNumber,dominantPlayer,puzzleId,centerPosAreaX,centerPosAreaY,centerPosAreaZ,centerRotAreaX,centerRotAreaY,centerRotAreaZ,SideBySide,boundsSizeX,boundsSizeY,boundsSizeZ,numberOfBoundViolationsP1,timeOutsideBoundsP1,numberOfBoundViolationsP2,timeOutsideBoundsP2,totalTime,isTraining
+19,SideBySide,0,P1,2,0,0.471,-0.372,0,0,0,SideBySide,0.6,1,0.8,4,12.75525,14,12.54669,229.2923
+20,SideBySide,0,P2,3,0.59,0.471,-0.372,0,0,0,SideBySide,0.6,1,0.8,4,1.558655,4,-2.194885,113.6261
