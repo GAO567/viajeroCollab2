@@ -49,7 +49,15 @@ public static class Utils
     public static Vector3 stringToVector3(string str, char separator)
     {
         string[] strArray = str.Split(separator);
-        Vector3 vecAux = new Vector3(float.Parse(strArray[0]), float.Parse(strArray[1]), float.Parse(strArray[2]));
+        Vector3 vecAux;
+        try
+        {
+            vecAux = new Vector3(float.Parse(strArray[0]), float.Parse(strArray[1]), float.Parse(strArray[2]));
+        }
+        catch (Exception ex)
+        {
+            return new Vector3(0, 0, 0);
+        }
         return vecAux;
     }
 
