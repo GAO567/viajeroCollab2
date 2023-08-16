@@ -14,7 +14,8 @@ public class ProcessCSVMovementsLog : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        processCollisions();
+         processCollisions();
+        //processCSV2();
     }
 
     // Update is called once per frame
@@ -179,25 +180,27 @@ public class ProcessCSVMovementsLog : MonoBehaviour
                                 Vector3 headLocal = new Vector3(Mathf.Abs(head.transform.localPosition.x), Mathf.Abs(head.transform.localPosition.y), Mathf.Abs(head.transform.localPosition.z)); 
                                 Vector3 rightHandLocal = new Vector3(Mathf.Abs(rightHand.transform.localPosition.x), Mathf.Abs(rightHand.transform.localPosition.y), Mathf.Abs(rightHand.transform.localPosition.z));
                                 Vector3 leftHandLocal = new Vector3(Mathf.Abs(leftHand.transform.localPosition.x), Mathf.Abs(leftHand.transform.localPosition.y), Mathf.Abs(leftHand.transform.localPosition.z));
-
-                                if (Utils.IsViolatingBoundary(rightHand.transform.localPosition, boundsSize) || Utils.IsViolatingBoundary(leftHand.transform.localPosition, boundsSize) || Utils.IsViolatingBoundary(head.transform.localPosition, boundsSize))
+                                if (!isDominant)
                                 {
-                                    if(lastFrameTimestamp == 0)
+                                    if (Utils.IsViolatingBoundary(rightHandLocal, boundsSize) || Utils.IsViolatingBoundary(leftHandLocal, boundsSize) || Utils.IsViolatingBoundary(headLocal, boundsSize))
                                     {
-                                        lastFrameTimestamp = currentTimestamp;
-                                        //timeOutsideBounds += lastFrameTimestamp;
+                                        if (lastFrameTimestamp == 0)
+                                        {
+                                            lastFrameTimestamp = currentTimestamp;
+                                            //timeOutsideBounds += lastFrameTimestamp;
+                                        }
+                                        else
+                                        {
+                                            //currentTimestamp = 
+                                            timeOutsideBounds += (currentTimestamp - lastFrameTimestamp);
+                                            lastFrameTimestamp = currentTimestamp;
+                                        }
+
                                     }
                                     else
                                     {
-                                        currentTimestamp = 
-                                        timeOutsideBounds += (currentTimestamp - lastFrameTimestamp);
-                                        lastFrameTimestamp = currentTimestamp;
+                                        lastFrameTimestamp = 0;
                                     }
-                                   
-                                }
-                                else
-                                {
-                                    lastFrameTimestamp = 0;
                                 }
                             }
 
@@ -206,7 +209,7 @@ public class ProcessCSVMovementsLog : MonoBehaviour
 
                     }
                     stringToSave += user + "," + condition + "," + dominant + "," + timeOutsideBounds + "\n";
-                    System.IO.File.AppendAllText(basePath + "reportBoundaryViolation.csv", stringToSave);
+                    System.IO.File.AppendAllText(basePath + "reportBoundaryViolation2.csv", stringToSave);
                    
                     //stringToSave += (user + "," + passiveHaptics + "," + orientation + "," + Utils.vector3ToString(calibratedPlanePos) + "," + Utils.vector3ToString(calibratedPlaneAngles) + "\n");
 
@@ -332,7 +335,7 @@ public class ProcessCSVMovementsLog : MonoBehaviour
 
                                 if (isDominant)
                                 {
-                                    if (head.transform.localEulerAngles.y <= 15 && head.transform.localEulerAngles.y >= -15)
+                                    if (head.transform.localEulerAngles.y <= 30 && head.transform.localEulerAngles.y >= -30)
                                     {
                                         if (lastFrameInside == 0)
                                         {
@@ -358,7 +361,7 @@ public class ProcessCSVMovementsLog : MonoBehaviour
                                 if (isDominant)
                                 {
 
-                                    if ((head.transform.localEulerAngles.y > 15.0f && head.transform.localEulerAngles.y <= 37.5f) )
+                                    if ((head.transform.localEulerAngles.y > 35 && head.transform.localEulerAngles.y <= 60) )
                                     {
                                         if (lastFrameSecondZone == 0)
                                         {
@@ -374,7 +377,7 @@ public class ProcessCSVMovementsLog : MonoBehaviour
                                             
                                         }
                                     }
-                                    else if((head.transform.localEulerAngles.y < -15.0f && head.transform.localEulerAngles.y >= -37.5f))
+                                    else if((head.transform.localEulerAngles.y < -30 && head.transform.localEulerAngles.y >= -60))
                                     {
                                         if (lastFrameSecondZone == 0)
                                         {
@@ -400,7 +403,7 @@ public class ProcessCSVMovementsLog : MonoBehaviour
                                 if (isDominant)
                                 {
 
-                                    if ((head.transform.localEulerAngles.y > 37.5f && head.transform.localEulerAngles.y <= 90.0f) )
+                                    if ((head.transform.localEulerAngles.y > 60 && head.transform.localEulerAngles.y <= 90.0f) )
                                     {
                                         if (lastFrameOutside == 0)
                                         {
@@ -415,7 +418,7 @@ public class ProcessCSVMovementsLog : MonoBehaviour
                                             lastFrameOutside = currentTimestamp;
                                         }
                                     }
-                                    else if ((head.transform.localEulerAngles.y < -37.5f && head.transform.localEulerAngles.y >= -90.0f))
+                                    else if ((head.transform.localEulerAngles.y < -60 && head.transform.localEulerAngles.y >= -90.0f))
                                     {
                                         if (lastFrameOutside == 0)
                                         {
@@ -472,7 +475,7 @@ public class ProcessCSVMovementsLog : MonoBehaviour
                     //if (dominant == "TRUE")
 
                     stringToSave += (user + "," + condition + "," + dominant + "," + totalTime +"," + totalTimeSecondZone+ "," + totalTimeOutside + "," + (tTime) + "," +
-                    (totalTime / (tTime)) * 100.0f) + "," + ((totalTimeSecondZone)/tTime)*100.0f +  "," +  (totalTimeOutside / (tTime)) * 100.0f + ","+countOutside+ "\n";
+                    (totalTime / (tTime)) * 100.0f) + "," + ((totalTimeSecondZone)/tTime)*100.0f +  "," +  (totalTimeOutside / (tTime)) * 100.0f + ","+ countSecondZone + ","+countOutside+ "\n";
 
                     totalTime = 0;
                     totalTimeSecondZone = 0;
@@ -482,7 +485,7 @@ public class ProcessCSVMovementsLog : MonoBehaviour
                     lastFrameOutside = 0;
                     //stringToSave += (user + "," + passiveHaptics + "," + orientation + "," + Utils.vector3ToString(calibratedPlanePos) + "," + Utils.vector3ToString(calibratedPlaneAngles) + "\n");
 
-                    System.IO.File.AppendAllText(basePath + "reportTimeGazeViolationDominantew.csv", stringToSave);
+                    System.IO.File.AppendAllText(basePath + "reportTimeGazeViolationDominantew21.csv", stringToSave);
                     stringToSave = "";
                 }
             }
@@ -684,7 +687,7 @@ public class ProcessCSVMovementsLog : MonoBehaviour
                     totalTime = 0;
                     //stringToSave += (user + "," + passiveHaptics + "," + orientation + "," + Utils.vector3ToString(calibratedPlanePos) + "," + Utils.vector3ToString(calibratedPlaneAngles) + "\n");
 
-                    System.IO.File.AppendAllText(basePath + "reportTimeGazeViolationNoDominant2.csv", stringToSave);
+                    System.IO.File.AppendAllText(basePath + "reportTimeGazeViolationNoDominant3.csv", stringToSave);
                     stringToSave = "";
                 }
             }
