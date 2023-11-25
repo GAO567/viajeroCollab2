@@ -1,0 +1,10 @@
+userId,collabType,currentTask,bPart,distance,timeElapsed
+1,FacetoFaceIntersect,0,HeadP1,1.54,1.049013
+1,FacetoFaceIntersect,0,rightHandP1,1.54,1.04845
+1,FacetoFaceIntersect,0,leftHandP1,1.54,1.048445
+1,FacetoFaceIntersect,1,HeadP1,1.54,2.178946
+1,FacetoFaceIntersect,1,rightHandP1,1.54,2.178946
+1,FacetoFaceIntersect,1,leftHandP1,1.54,2.178944
+1,FacetoFaceIntersect,2,HeadP1,1.54,240.9346
+1,FacetoFaceIntersect,2,rightHandP1,1.54,240.9346
+1,FacetoFaceIntersect,2,leftHandP1,1.54,240.9346

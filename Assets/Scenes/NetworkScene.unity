@@ -3186,6 +3186,27 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5848076533691757919, guid: d0377a811c2a95841ba015ae0b2c8d45, type: 3}
   m_PrefabInstance: {fileID: 515620275}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &519196812 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8465339781447079473, guid: c673a7ed842dd3b41ac8fc8cfe649214, type: 3}
+  m_PrefabInstance: {fileID: 8465339782850755974}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &519196814
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 519196812}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab21107ebbe26a64a91a80925fd15a18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  BoundsSize: {x: 0.5, y: 1, z: 0.8}
+  lineRenderer: {fileID: 1610013937}
+  stuff: {x: 0, y: 0, z: 0}
+  viewportDepth: 0
 --- !u!1 &530164590
 GameObject:
   m_ObjectHideFlags: 0
@@ -15309,7 +15330,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8465339781447079481, guid: c673a7ed842dd3b41ac8fc8cfe649214, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8465339781447079482, guid: c673a7ed842dd3b41ac8fc8cfe649214, type: 3}
       propertyPath: m_Name
@@ -15341,7 +15362,7 @@ PrefabInstance:
       objectReference: {fileID: 706748078}
     - target: {fileID: 8465339781447079483, guid: c673a7ed842dd3b41ac8fc8cfe649214, type: 3}
       propertyPath: collabType
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8465339781447079483, guid: c673a7ed842dd3b41ac8fc8cfe649214, type: 3}
       propertyPath: textToShow
@@ -15449,6 +15470,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8465339781447079492, guid: c673a7ed842dd3b41ac8fc8cfe649214, type: 3}
       propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8465339781447079494, guid: c673a7ed842dd3b41ac8fc8cfe649214, type: 3}
+      propertyPath: drawAreas
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8465339781447079494, guid: c673a7ed842dd3b41ac8fc8cfe649214, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8465339781447079494, guid: c673a7ed842dd3b41ac8fc8cfe649214, type: 3}
+      propertyPath: drawBoundaries
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8465339781447079495, guid: c673a7ed842dd3b41ac8fc8cfe649214, type: 3}
@@ -15676,18 +15709,18 @@ PrefabInstance:
       value: -0.471
       objectReference: {fileID: 0}
     m_RemovedComponents:
-    - {fileID: 7986061896018239824, guid: c673a7ed842dd3b41ac8fc8cfe649214, type: 3}
-    - {fileID: 7986061896971598294, guid: c673a7ed842dd3b41ac8fc8cfe649214, type: 3}
-    - {fileID: 7986061896857466239, guid: c673a7ed842dd3b41ac8fc8cfe649214, type: 3}
-    - {fileID: 7986061896096362508, guid: c673a7ed842dd3b41ac8fc8cfe649214, type: 3}
-    - {fileID: 7986061896289057893, guid: c673a7ed842dd3b41ac8fc8cfe649214, type: 3}
-    - {fileID: 7986061897679222613, guid: c673a7ed842dd3b41ac8fc8cfe649214, type: 3}
-    - {fileID: 7986061896007011537, guid: c673a7ed842dd3b41ac8fc8cfe649214, type: 3}
-    - {fileID: 7986061896709061726, guid: c673a7ed842dd3b41ac8fc8cfe649214, type: 3}
-    - {fileID: 7986061897687650316, guid: c673a7ed842dd3b41ac8fc8cfe649214, type: 3}
-    - {fileID: 7986061896924238134, guid: c673a7ed842dd3b41ac8fc8cfe649214, type: 3}
-    - {fileID: 7986061896378304539, guid: c673a7ed842dd3b41ac8fc8cfe649214, type: 3}
-    - {fileID: 7986061896124835064, guid: c673a7ed842dd3b41ac8fc8cfe649214, type: 3}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: c673a7ed842dd3b41ac8fc8cfe649214, type: 3}
 --- !u!33 &8482381506624555236
 MeshFilter:
