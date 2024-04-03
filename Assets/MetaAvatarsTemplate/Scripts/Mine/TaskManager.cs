@@ -68,17 +68,17 @@ public class TaskManager : MonoBehaviour
     public float angleBetween;
     private string dominantplayer;
 
-    GameObject headPlayer1;
-    GameObject rightHandPlayer1;
-    GameObject leftHandPlayer1;
+    public GameObject headPlayer1;
+    public GameObject rightHandPlayer1;
+    public GameObject leftHandPlayer1;
 
     [NonSerialized]
     public GameObject transformRootForP1Blueprint;
     WireareaDrawer boundaryDrawerP1;
 
-    GameObject headPlayer2;
-    GameObject leftHandPlayer2;
-    GameObject rightHandPlayer2;
+    public GameObject headPlayer2;
+    public GameObject leftHandPlayer2;
+    public GameObject rightHandPlayer2;
     GameObject transformRootForP2Blueprint;
     WireareaDrawer boundaryDrawerP2;
     
