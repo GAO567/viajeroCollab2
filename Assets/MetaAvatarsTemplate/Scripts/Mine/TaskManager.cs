@@ -68,6 +68,7 @@ public class TaskManager : MonoBehaviour
     public float angleBetween;
     private string dominantplayer;
 
+    //gets pos of head of the player
     public GameObject headPlayer1;
     public GameObject rightHandPlayer1;
     public GameObject leftHandPlayer1;
