@@ -155,13 +155,19 @@ namespace Chiligames.MetaAvatarsPun
                         rootCoupledViewGO.transform.parent = spawnPoints[PhotonNetwork.LocalPlayer.ActorNumber - 1].transform;
                         rootCoupledViewGO.transform.localPosition = Vector3.zero;
                         rootCoupledViewGO.transform.localRotation = Quaternion.identity;
-                        /*MeshRenderer[] listRenderers = rootCoupledViewGO.GetComponentsInChildren<MeshRenderer>();
-                        foreach(MeshRenderer meshR in listRenderers)
-                        {
-                            meshR.enabled = false;
-                        }*/
+                    /*MeshRenderer[] listRenderers = rootCoupledViewGO.GetComponentsInChildren<MeshRenderer>();
+                    foreach(MeshRenderer meshR in listRenderers)
+                    {
+                        meshR.enabled = false;
+                    }*/
                     //}
                     //ChangeMyAvatar(taskManager.localUserId.ToString());
+
+                    ///
+                    //add Awareness prefab to local player's area
+                    GameObject awareness = PhotonNetwork.Instantiate("Awareness", Vector3.zero, Quaternion.identity);
+                    awareness.transform.parent = spawnPoints[PhotonNetwork.LocalPlayer.ActorNumber - 1].transform.parent;
+                    awareness.GetComponent<GetHeadRotation>().playerAreaCenter = spawnPoints[PhotonNetwork.LocalPlayer.ActorNumber - 1].gameObject;                 
                 }
             }
             else

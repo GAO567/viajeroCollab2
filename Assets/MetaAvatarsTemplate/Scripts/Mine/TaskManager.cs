@@ -126,7 +126,8 @@ public class TaskManager : MonoBehaviour
     bool objInteractedP2 = false;
     float objP2InteractedInitTIme = 0;
 
-    bool taskStarted = false;
+    //make it public for now
+    public bool taskStarted = false;
 
     [NonSerialized]
     public bool taskStartedP2 = false;
