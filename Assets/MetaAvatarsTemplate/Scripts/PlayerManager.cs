@@ -165,7 +165,7 @@ namespace Chiligames.MetaAvatarsPun
 
                     ///
                     //add Awareness prefab to local player's area
-                    GameObject awareness = PhotonNetwork.Instantiate("Awareness", Vector3.zero, Quaternion.identity);
+                    GameObject awareness = PhotonNetwork.Instantiate("Awareness", Vector3.zero, spawnPoints[PhotonNetwork.LocalPlayer.ActorNumber - 1].transform.rotation);
                     awareness.transform.parent = spawnPoints[PhotonNetwork.LocalPlayer.ActorNumber - 1].transform.parent;
                     awareness.GetComponent<GetHeadRotation>().playerAreaCenter = spawnPoints[PhotonNetwork.LocalPlayer.ActorNumber - 1].gameObject;                 
                 }

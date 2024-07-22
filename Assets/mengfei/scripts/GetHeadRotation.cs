@@ -21,9 +21,10 @@ public class GetHeadRotation : MonoBehaviourPun, IPunObservable
 
     #region Private field
     private RotationManager rotationManager;
-    private int Remote;
+    private int Remote; //1 for left avatar, 2 for right avatar, use pun to send to others' client
     private float headRotationY;
-    bool avatarTransformed = false;
+    private bool avatarTransformed = false;
+    private bool Angled90;
     #endregion
 
  
@@ -39,10 +40,57 @@ public class GetHeadRotation : MonoBehaviourPun, IPunObservable
         //left avatar
         SetChildrenTransparency(avatar, transparency);
         //right avatar
-            SetChildrenTransparency(avatar2, transparency);
+        SetChildrenTransparency(avatar2, transparency);
+
+        Angled90 = false;
+        // for sidebyside condition
+        if (taskManager.collabType == CollabType.SideBySide)
+        {
+            //hide the right avatar of localplayer,hide the left avatar of remoteplayer
+            if (taskManager.isRemotePlayer)
+            {
+                if (photonView.IsMine)
+                {
+                    leftT.gameObject.SetActive(false);
+
+                }
+                else
+                {
+                    rightT.gameObject.SetActive(false);
+                }
+            }
+            else
+            {
+                if (photonView.IsMine)
+                {
+                    rightT.gameObject.SetActive(false);
+                }
+                else
+                {
+                    leftT.gameObject.SetActive(false);
+                }
+            }
+
+        }else if (taskManager.collabType == CollabType.Angled90){
+            //the avatars that intersect with each other 
+            //(local' right avatar and remote's left avatar)
+            //share the same transparency(the bigger one)
+            Angled90 = true;
+
+        }
+        else if (taskManager.collabType == CollabType.CoupledView)
+        {
+            //for coupled view, we don't need the photon transform view and material view
+            //just let the avatars be lcoal
+            photonView.Synchronization = ViewSynchronization.Off;
+
+        }
+
     }
     void Update()
     {
+       
+
         if (!head)
         {
             getHead();
@@ -90,11 +138,11 @@ public class GetHeadRotation : MonoBehaviourPun, IPunObservable
             avatar2.transform.rotation = Quaternion.Euler(0f, rotation2.eulerAngles.y, 0f);
 
         }*/
-
+            
         if (photonView.IsMine)
         {
             transform.localPosition = playerAreaCenter.transform.localPosition;
-            transform.localRotation = playerAreaCenter.transform.parent.localRotation;
+            //transform.localRotation = playerAreaCenter.transform.localRotation;
 
             if (rotationManager.isHeadGain)
             {
@@ -122,7 +170,7 @@ public class GetHeadRotation : MonoBehaviourPun, IPunObservable
             }
 
 
-
+            //check which avatar to show,  right or left
             bool left = false;
 
             headRotationY = head.localEulerAngles.y;
@@ -132,6 +180,9 @@ public class GetHeadRotation : MonoBehaviourPun, IPunObservable
                 headRotationY = 360-headRotationY;
             }
             transparency = headRotationY > 90f ? 1f : headRotationY/90.0f;
+            //
+           
+            //
             //notify intrusion 
             if (headRotationY < 30.0f)
             {
@@ -168,6 +219,7 @@ public class GetHeadRotation : MonoBehaviourPun, IPunObservable
         }
         else
         {
+            //when puntonview is not mine
             if(Remote == 1)
             {
                 SetChildrenTransparency(avatar, transparency);
@@ -187,7 +239,21 @@ public class GetHeadRotation : MonoBehaviourPun, IPunObservable
                 SetChildrenTransparency(avatar2, 0);
 
             }
+            //maxmium 3 avatars in the scene, so make one invisable
+            if (Angled90)
+            {
+                if (taskManager.isRemotePlayer)
+                {
+                    SetChildrenTransparency(avatar2, 0);
+                }
+                else
+                {
+                    SetChildrenTransparency(avatar, 0);
+                }
+            }
         }
+
+ 
     }
 
     private void getHead()
