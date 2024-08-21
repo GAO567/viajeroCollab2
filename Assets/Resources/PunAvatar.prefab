@@ -47,6 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f904c8edae737a74b906d03bc7452096, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  taskManager: {fileID: 0}
   head: {fileID: 0}
   adjustRotaion: {x: 0, y: 0, z: 0, w: 0}
 --- !u!114 &7372849811945795890

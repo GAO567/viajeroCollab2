@@ -11,8 +11,12 @@ public class GetHeadRotation : MonoBehaviourPun, IPunObservable
     public GameObject playerAreaCenter;
     public TaskManager taskManager;
     public Transform head;
+   
     public GameObject avatar;
     public GameObject avatar2;
+    public GameObject leftCapsule;
+    public GameObject rightCapsule;
+    public GameObject commonCapsule;
     public Transform leftT;
     public Transform rightT;
     [Range(0.0f, 1.0f)] public float transparency = 0f;
@@ -25,9 +29,12 @@ public class GetHeadRotation : MonoBehaviourPun, IPunObservable
     private float headRotationY;
     private bool avatarTransformed = false;
     private bool Angled90;
+    private bool sideByside;
+    private GameObject leftBystander;
+    private GameObject rightBystander;
     #endregion
 
- 
+
     #region MonoBehaviour Callbacks
     void Start()
     {
@@ -35,23 +42,129 @@ public class GetHeadRotation : MonoBehaviourPun, IPunObservable
         rotationManager = GameObject.FindObjectOfType<RotationManager>();
 
 
-//        head = Camera.main.transform;
-        
+        if(rotationManager.bystanderType != BystanderType.Avatar)
+        {
+
+            // mix just for angled90 
+            if (taskManager.collabType == CollabType.Angled90)
+            {
+                if (taskManager.isRemotePlayer)
+                {
+
+                    if (photonView.IsMine)
+                    {
+                        //set left to commoncapsule,hide leftavatar and leftcapsule
+                        avatar.SetActive(false);
+                        leftCapsule.SetActive(false);
+                        leftBystander = commonCapsule;
+                        if (rotationManager.bystanderType == BystanderType.Capsule) 
+                        { 
+                            rightBystander = rightCapsule;
+                            avatar2.SetActive(false);
+                        } 
+                        else{
+                            rightBystander = avatar2;
+                            rightCapsule.SetActive(false);
+                        }
+
+                    }
+                    else
+                    {
+                        avatar2.SetActive(false);
+                        rightCapsule.SetActive(false);
+                        rightBystander = commonCapsule;
+                        commonCapsule.SetActive(false);
+                        if (rotationManager.bystanderType == BystanderType.Capsule)
+                        { 
+                            leftBystander = leftCapsule;
+                            avatar.SetActive(false) ;
+                        }
+                        else { 
+                            leftBystander = avatar;
+                            leftCapsule.SetActive(false);
+
+                        }
+
+
+                    }
+                }
+                else
+                {
+                    if (photonView.IsMine)
+                    {
+                        avatar2.SetActive(false);
+                        rightCapsule.SetActive(false);
+                        rightBystander = commonCapsule;
+                        if (rotationManager.bystanderType == BystanderType.Capsule)
+                        { 
+                            leftBystander = leftCapsule;
+                            avatar.SetActive(false);
+                        }
+                        else { 
+                            leftBystander = avatar;
+                            leftCapsule.SetActive(false);
+                        }
+
+
+                    }
+                    else
+                    {
+                        avatar.SetActive(false);
+                        leftCapsule.SetActive(false);
+                        leftBystander = commonCapsule;
+                        commonCapsule.SetActive(false);
+                        if (rotationManager.bystanderType == BystanderType.Capsule)
+                        { 
+                            rightBystander = rightCapsule;
+                            avatar2.SetActive(false);
+                        }
+                        else { 
+                            rightBystander = avatar2;
+                            rightCapsule.SetActive(false);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                //just keep capusles for other conditions
+                avatar.SetActive(false) ;
+                avatar2.SetActive(false) ;
+                commonCapsule.SetActive(false);
+                leftBystander = leftCapsule;
+                rightBystander = rightCapsule;
+            }
+                
+        } 
+       
+        else
+        {
+            leftCapsule.SetActive(false);
+            rightCapsule.SetActive(false);
+            commonCapsule.SetActive(false);
+            leftBystander = avatar;
+            rightBystander = avatar2;
+        }
+        //        head = Camera.main.transform;
+
         //left avatar
-        SetChildrenTransparency(avatar, transparency);
+        SetChildrenTransparency(leftBystander, 0);
         //right avatar
-        SetChildrenTransparency(avatar2, transparency);
+        SetChildrenTransparency(rightBystander, 0);
+        //avatar in the corner (angled90)
+        SetChildrenTransparency(commonCapsule, 0);
+
 
         Angled90 = false;
         // for sidebyside condition
         if (taskManager.collabType == CollabType.SideBySide)
         {
-            //hide the right avatar of localplayer,hide the left avatar of remoteplayer
+            //hide the avatar to avoid blocking user's view
             if (taskManager.isRemotePlayer)
             {
                 if (photonView.IsMine)
                 {
-                    leftT.gameObject.SetActive(false);
+                    //leftT.gameObject.SetActive(false);
 
                 }
                 else
@@ -63,18 +176,17 @@ public class GetHeadRotation : MonoBehaviourPun, IPunObservable
             {
                 if (photonView.IsMine)
                 {
-                    rightT.gameObject.SetActive(false);
+                   // rightT.gameObject.SetActive(false);
                 }
                 else
                 {
                     leftT.gameObject.SetActive(false);
                 }
             }
+            sideByside = true;
 
         }else if (taskManager.collabType == CollabType.Angled90){
-            //the avatars that intersect with each other 
-            //(local' right avatar and remote's left avatar)
-            //share the same transparency(the bigger one)
+
             Angled90 = true;
 
         }
@@ -89,7 +201,7 @@ public class GetHeadRotation : MonoBehaviourPun, IPunObservable
     }
     void Update()
     {
-       
+        
 
         if (!head)
         {
@@ -180,7 +292,24 @@ public class GetHeadRotation : MonoBehaviourPun, IPunObservable
                 headRotationY = 360-headRotationY;
             }
             transparency = headRotationY > 90f ? 1f : headRotationY/90.0f;
-            //
+            //for sidebyside, make the transparency range to 0-0.9(only for the avatar that may occlude the player avtar)
+            if (sideByside)
+            {
+                if(taskManager.isRemotePlayer)
+                {
+                    if (left)
+                    {
+                        transparency = transparency * 0.9f;
+                    }
+                }
+                else
+                {
+                    if(!left)
+                    {
+                        transparency = transparency * 0.9f;
+                    }
+                }
+            }
            
             //
             //notify intrusion 
@@ -197,21 +326,21 @@ public class GetHeadRotation : MonoBehaviourPun, IPunObservable
             else
             {
                 //angles greater than 90
-                SetChildrenTransparency(avatar, 0);
-                SetChildrenTransparency(avatar2, 0);
+                SetChildrenTransparency(leftBystander, 0);
+                SetChildrenTransparency(rightBystander, 0);
 
 
             }
             if (left)
             {
-                SetChildrenTransparency(avatar, transparency);
-                SetChildrenTransparency(avatar2, 0);
+                SetChildrenTransparency(leftBystander, transparency);
+                SetChildrenTransparency(rightBystander, 0);
 
                 Remote = 1;
             }
             else {
-                SetChildrenTransparency(avatar2, transparency);
-                SetChildrenTransparency(avatar, 0);
+                SetChildrenTransparency(rightBystander, transparency);
+                SetChildrenTransparency(leftBystander, 0);
 
                 Remote = 2;
             }
@@ -222,38 +351,63 @@ public class GetHeadRotation : MonoBehaviourPun, IPunObservable
             //when puntonview is not mine
             if(Remote == 1)
             {
-                SetChildrenTransparency(avatar, transparency);
-                SetChildrenTransparency(avatar2, 0);
+                SetChildrenTransparency(leftBystander, transparency);
+                SetChildrenTransparency(rightBystander, 0);
 
 
             }
             else if (Remote == 2)
             {
-                SetChildrenTransparency(avatar2, transparency);
-                SetChildrenTransparency(avatar, 0);
+                SetChildrenTransparency(rightBystander, transparency);
+                SetChildrenTransparency(leftBystander, 0);
 
             }
             else
             {
-                SetChildrenTransparency(avatar, 0);
-                SetChildrenTransparency(avatar2, 0);
+                SetChildrenTransparency(leftBystander, 0);
+                SetChildrenTransparency(rightBystander, 0);
 
             }
-            //maxmium 3 avatars in the scene, so make one invisable
-            if (Angled90)
+
+            
+        }
+        if (Angled90)
+        {
+            if (!taskManager.isRemotePlayer)
             {
-                if (taskManager.isRemotePlayer)
+                //slightly change the position of the corner avatar
+                if (photonView.IsMine)
                 {
-                    SetChildrenTransparency(avatar2, 0);
+                    commonCapsule.transform.position = new Vector3(0.6f, 0.1f, -0.4f);
                 }
-                else
+                /*else
                 {
-                    SetChildrenTransparency(avatar, 0);
-                }
+                    float left_x = leftCapsule.transform.position.x;
+                    float left_z = leftCapsule.transform.position.z;
+                    leftCapsule.transform.position = new Vector3(left_x, 0.1f, left_z);
+
+                }*/
             }
+            else
+            {
+                if (photonView.IsMine)
+                {
+                    commonCapsule.transform.localRotation = Quaternion.Euler(new Vector3(0, 135, 0));
+                    commonCapsule.transform.position = new Vector3(0.6f, 0.1f, -0.4f);
+
+                }
+                /*else
+                {
+                    float right_x = rightCapsule.transform.position.x;
+                    float right_z = rightCapsule.transform.position.z;
+                    rightCapsule.transform.position = new Vector3(right_x, 0.1f, right_z);
+                }*/
+            }
+
         }
 
- 
+
+
     }
 
     private void getHead()
@@ -274,7 +428,7 @@ public class GetHeadRotation : MonoBehaviourPun, IPunObservable
 
     void SetChildrenTransparency(GameObject parent, float alpha)
     {
-          
+
         if (parent != null)
         {
             // Get all the MeshRenderers in the children
@@ -309,13 +463,45 @@ public class GetHeadRotation : MonoBehaviourPun, IPunObservable
                         }
                         else
                         {
+                            //outline color and width
                             material.SetFloat("_OutlineWidth", 6);
                             material.SetColor("_OutlineColor", Color.white);
                         }
                     }
                     else
                     {
-                        Color color = material.color;
+                        if (rotationManager.bystanderType == BystanderType.Capsule)
+                        {
+                            if (material.name.Contains("Capsule")) {
+                                if (taskManager.isRemotePlayer)
+                                {
+                                    if (photonView.IsMine)
+                                    {
+                                        material.color = Color.blue;
+
+                                    }
+                                    else
+                                    {
+                                        material.color = Color.red;
+                                    }
+                                }
+                                else
+                                {
+                                    if (photonView.IsMine)
+                                    {
+                                        material.color = Color.red;
+
+                                    }
+                                    else
+                                    {
+                                        material.color = Color.blue;
+                                    }
+                                }
+                            }
+
+                            
+                        }
+                            Color color = material.color;
                         color.a = alpha;
                         material.color = color;
                     }

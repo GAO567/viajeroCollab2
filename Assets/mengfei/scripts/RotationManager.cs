@@ -9,9 +9,15 @@ public enum RealVirtualType
     RAvatar_VArrow, RArrow_VAvatar
 }
 
+public enum BystanderType
+{
+    Avatar,Capsule,Mix_90
+}
+
 public class RotationManager : MonoBehaviour
 {
     public RealVirtualType real_virtualType = RealVirtualType.RArrow_VAvatar;
+    public BystanderType bystanderType = BystanderType.Avatar;
     public bool isHeadGain = true;
     public bool isArrow = false;
     public bool isFrustum = false;

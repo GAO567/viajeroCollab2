@@ -78,7 +78,7 @@ public class NetworkPlayer : MonoBehaviour
                     }
                     //if (manager.taskStartedP2)
                     //{
-                        manager.drawBoundaryViolationP2(head.gameObject, rightHand.gameObject, leftHand.gameObject);
+                        //manager.drawBoundaryViolationP2(head.gameObject, rightHand.gameObject, leftHand.gameObject);
                     //}
                 }
                 else
@@ -120,7 +120,7 @@ public class NetworkPlayer : MonoBehaviour
                     }
                     //if (manager.taskStartedP2)
                     //{
-                        manager.drawBoundaryViolationP2(head.gameObject, rightHand.gameObject, leftHand.gameObject);
+                        //manager.drawBoundaryViolationP2(head.gameObject, rightHand.gameObject, leftHand.gameObject);
                     //}
                 }
                 else
@@ -135,6 +135,8 @@ public class NetworkPlayer : MonoBehaviour
                         viewportDrawer.lineRenderer.material = remoteMaterial;
                         viewportDrawer.gameObject.gameObject.SetActive(false);
                     }
+                    //manager.drawBoundaryViolationP2(head.gameObject, rightHand.gameObject, leftHand.gameObject);
+
                 }
 
 
