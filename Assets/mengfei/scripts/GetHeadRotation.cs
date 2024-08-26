@@ -19,6 +19,7 @@ public class GetHeadRotation : MonoBehaviourPun, IPunObservable
     public GameObject commonCapsule;
     public Transform leftT;
     public Transform rightT;
+    public eyeBlink eye;
     [Range(0.0f, 1.0f)] public float transparency = 0f;
 
     #endregion
@@ -40,9 +41,10 @@ public class GetHeadRotation : MonoBehaviourPun, IPunObservable
     {
         taskManager = GameObject.FindObjectOfType<TaskManager>();
         rotationManager = GameObject.FindObjectOfType<RotationManager>();
+        eye = GameObject.FindObjectOfType<eyeBlink>();
 
 
-        if(rotationManager.bystanderType != BystanderType.Avatar)
+        if (rotationManager.bystanderType != BystanderType.Avatar)
         {
 
             // mix just for angled90 
@@ -292,6 +294,11 @@ public class GetHeadRotation : MonoBehaviourPun, IPunObservable
                 headRotationY = 360-headRotationY;
             }
             transparency = headRotationY > 90f ? 1f : headRotationY/90.0f;
+            //eyeIcon
+            if (rotationManager.isEyeIcon)
+            {
+                eye.UpdateEye(transparency,left);
+            }
             //for sidebyside, make the transparency range to 0-0.9(only for the avatar that may occlude the player avtar)
             if (sideByside)
             {

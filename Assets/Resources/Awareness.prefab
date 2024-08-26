@@ -4468,6 +4468,7 @@ MonoBehaviour:
   commonCapsule: {fileID: 4414207421982114459}
   leftT: {fileID: 2930809214015965026}
   rightT: {fileID: 4569246219682599632}
+  eye: {fileID: 0}
   transparency: 0
 --- !u!114 &8187248883910121336
 MonoBehaviour:

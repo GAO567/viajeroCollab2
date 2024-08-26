@@ -21,6 +21,7 @@ public class RotationManager : MonoBehaviour
     public bool isHeadGain = true;
     public bool isArrow = false;
     public bool isFrustum = false;
+    public bool isEyeIcon = false;
 
 
     // Start is called before the first frame update
