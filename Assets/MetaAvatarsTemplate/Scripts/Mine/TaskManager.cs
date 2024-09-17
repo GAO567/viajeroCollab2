@@ -1125,18 +1125,19 @@ public class TaskManager : MonoBehaviour
     //drawboundary when taskmanager.isremote
     private void Boundaries()
     {
+
         //Debug.Log("called by remote");
         if (headPlayer1 && rightHandPlayer1 && leftHandPlayer1)
         {
             //we dont care about the Y
-            Vector3 headP1Local = Player1Area.transform.InverseTransformPoint(headPlayer1.transform.position);
-            Vector3 rightHandP1Local = Player1Area.transform.InverseTransformPoint(rightHandPlayer1.transform.position);
-            Vector3 leftHandP1Local = Player1Area.transform.InverseTransformPoint(leftHandPlayer1.transform.position);
+            Vector3 headP1Local = Player2Area.transform.InverseTransformPoint(headPlayer1.transform.position);
+            Vector3 rightHandP1Local = Player2Area.transform.InverseTransformPoint(rightHandPlayer1.transform.position);
+            Vector3 leftHandP1Local = Player2Area.transform.InverseTransformPoint(leftHandPlayer1.transform.position);
 
             headP1Local = new Vector3(Mathf.Abs(headP1Local.x), Mathf.Abs(headP1Local.y), Mathf.Abs(headP1Local.z));
             rightHandP1Local = new Vector3(Mathf.Abs(rightHandP1Local.x), Mathf.Abs(rightHandP1Local.y), Mathf.Abs(rightHandP1Local.z));
             leftHandP1Local = new Vector3(Mathf.Abs(leftHandP1Local.x), Mathf.Abs(leftHandP1Local.y), Mathf.Abs(leftHandP1Local.z));
-            //print("head = " + headP1Local.ToString() + " rightHand" + rightHandP1Local.ToString() + " leftHand " + leftHandP1Local.ToString() + " bounds" + boundsSize.ToString() );//
+            print("head = " + headP1Local.ToString() + " rightHand" + rightHandP1Local.ToString() + " leftHand " + leftHandP1Local.ToString() + " bounds" + boundsSize.ToString() );//
             float delta = Time.deltaTime;
             if (!outsideBoundsLastFrameP1)
             {
@@ -1148,15 +1149,8 @@ public class TaskManager : MonoBehaviour
             Bodypart activeBodyPart = Bodypart.HeadP1;
             if (headP1Local.x > boundsSize.x / 2.0f || headP1Local.y > boundsSize.y / 2.0f || headP1Local.z > boundsSize.z / 2.0f)
             {
-                float distance = Vector3.Distance(Vector3.zero, headP1Local);
-     
-                boundaryDrawerP1.drawBoundary(true);
+                drawBoundaryP1 = true;
       
-            }
-            else if (headP1Local.x < boundsSize.x / 2.0f || headP1Local.y < boundsSize.y / 2.0f || headP1Local.z < boundsSize.z / 2.0f)
-            {
-     
-                boundaryDrawerP1.drawBoundary(false);
             }
 
             activeBodyPart = Bodypart.rightHandP1;
@@ -1170,11 +1164,7 @@ public class TaskManager : MonoBehaviour
                 //currentTaskLog.incrementTimeOutsideBounds(Time.deltaTime);
                 //
             }
-            else if (rightHandP1Local.x < boundsSize.x / 2.0f || rightHandP1Local.y < boundsSize.y / 2.0f || rightHandP1Local.z < boundsSize.z / 2.0f)
-            {
 
-                //boundaryDrawerP1.drawBoundary(false);
-            }
 
             activeBodyPart = Bodypart.leftHandP1;
             if (leftHandP1Local.x > boundsSize.x / 2.0f || leftHandP1Local.y > boundsSize.y / 2.0f || leftHandP1Local.z > boundsSize.z / 2.0f)
@@ -1184,20 +1174,17 @@ public class TaskManager : MonoBehaviour
                 //currentTaskLog.incrementTimeOutsideBounds(Time.deltaTime);
                 //
             }
-            else if (leftHandP1Local.x < boundsSize.x / 2.0f || leftHandP1Local.y < boundsSize.y / 2.0f || leftHandP1Local.z < boundsSize.z / 2.0f)
-            {
-                //boundaryDrawerP1.drawBoundary(false);
-            }
 
-            boundaryDrawerP1.drawBoundary(drawBoundaryP1);
+            //
+            boundaryDrawerP2.drawBoundary(drawBoundaryP1);
         }
 
         if (headPlayer2 && rightHandPlayer2 && leftHandPlayer2)
         {
             //we dont care about the Y
-            Vector3 headP2Local = Player2Area.transform.InverseTransformPoint(headPlayer2.transform.position);
-            Vector3 rightHandP2Local = Player2Area.transform.InverseTransformPoint(rightHandPlayer2.transform.position);
-            Vector3 leftHandP2Local = Player2Area.transform.InverseTransformPoint(leftHandPlayer2.transform.position);
+            Vector3 headP2Local = Player1Area.transform.InverseTransformPoint(headPlayer2.transform.position);
+            Vector3 rightHandP2Local = Player1Area.transform.InverseTransformPoint(rightHandPlayer2.transform.position);
+            Vector3 leftHandP2Local = Player1Area.transform.InverseTransformPoint(leftHandPlayer2.transform.position);
 
             headP2Local = new Vector3(Mathf.Abs(headP2Local.x), Mathf.Abs(headP2Local.y), Mathf.Abs(headP2Local.z));
             rightHandP2Local = new Vector3(Mathf.Abs(rightHandP2Local.x), Mathf.Abs(rightHandP2Local.y), Mathf.Abs(rightHandP2Local.z));
@@ -1216,12 +1203,7 @@ public class TaskManager : MonoBehaviour
                 //currentTaskLog.incrementTimeOutsideBounds(Time.deltaTime);
                 //
             }
-            else if (headP2Local.x < boundsSize.x / 2.0f || headP2Local.y < boundsSize.y / 2.0f || headP2Local.z < boundsSize.z / 2.0f)
-            {
-  
-                //boundaryDrawerP2.drawBoundary(false);
-                //Player2Area.GetComponent<Photon.Pun.PhotonView>().RPC("drawBoundary", Photon.Pun.RpcTarget.AllBuffered, false);
-            }
+
 
             activeBodyPart = Bodypart.rightHandP2;
             if (rightHandP2Local.x > boundsSize.x / 2.0f || rightHandP2Local.y > boundsSize.y / 2.0f || rightHandP2Local.z > boundsSize.z / 2.0f)
@@ -1232,12 +1214,6 @@ public class TaskManager : MonoBehaviour
                 //Player2Area.GetComponent<Photon.Pun.PhotonView>().RPC("drawBoundary", Photon.Pun.RpcTarget.AllBuffered, true);
                 //currentTaskLog.incrementTimeOutsideBounds(Time.deltaTime);
                 //
-            }
-            else if (rightHandP2Local.x < boundsSize.x / 2.0f || rightHandP2Local.y < boundsSize.y / 2.0f || rightHandP2Local.z < boundsSize.z / 2.0f)
-            {
-  
-                //boundaryDrawerP2.drawBoundary(false);
-                //Player2Area.GetComponent<Photon.Pun.PhotonView>().RPC("drawBoundary", Photon.Pun.RpcTarget.AllBuffered, false);
             }
 
             activeBodyPart = Bodypart.leftHandP2;
@@ -1250,14 +1226,8 @@ public class TaskManager : MonoBehaviour
                 //currentTaskLog.incrementTimeOutsideBounds(Time.deltaTime);
                 //
             }
-            else if (leftHandP2Local.x < boundsSize.x / 2.0f || leftHandP2Local.y < boundsSize.y / 2.0f || leftHandP2Local.z < boundsSize.z / 2.0f)
-            {
- 
-                //boundaryDrawerP2.drawBoundary(false);
-                //Player2Area.GetComponent<Photon.Pun.PhotonView>().RPC("drawBoundary", Photon.Pun.RpcTarget.AllBuffered, false);
-            }
 
-            boundaryDrawerP2.drawBoundary(drawboundaryP2);
+            boundaryDrawerP1.drawBoundary(drawboundaryP2);
             //Player2Area.GetComponent<Photon.Pun.PhotonView>().RPC("drawBoundary", Photon.Pun.RpcTarget.AllBuffered, drawboundaryP2);
         }
     }

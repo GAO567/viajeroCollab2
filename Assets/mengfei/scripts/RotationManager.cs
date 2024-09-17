@@ -20,6 +20,7 @@ public class RotationManager : MonoBehaviour
     public BystanderType bystanderType = BystanderType.Avatar;
     public bool isHeadGain = true;
     public bool isArrow = false;
+    public bool isArrow_selfcentered = false;
     public bool isFrustum = false;
     public bool isEyeIcon = false;
 

@@ -11,7 +11,6 @@ public class GetHeadRotation : MonoBehaviourPun, IPunObservable
     public GameObject playerAreaCenter;
     public TaskManager taskManager;
     public Transform head;
-   
     public GameObject avatar;
     public GameObject avatar2;
     public GameObject leftCapsule;
@@ -20,6 +19,8 @@ public class GetHeadRotation : MonoBehaviourPun, IPunObservable
     public Transform leftT;
     public Transform rightT;
     public eyeBlink eye;
+    public Material cube_local;
+    public Material cube_remote;
     [Range(0.0f, 1.0f)] public float transparency = 0f;
 
     #endregion
@@ -46,8 +47,57 @@ public class GetHeadRotation : MonoBehaviourPun, IPunObservable
 
         if (rotationManager.bystanderType != BystanderType.Avatar)
         {
+            //add bystander(capsule_face) material
+            //local bystander is red, remote is blue
+            //left and right bystander use same materials
+            GameObject leftcube = leftCapsule.transform.GetChild(0).gameObject;
+            GameObject rightcube = rightCapsule.transform.GetChild(0).gameObject;
+            Renderer left_renderer = leftcube.GetComponent<Renderer>();
+            Renderer right_renderer = rightcube.GetComponent<Renderer>();
+            Material[] materials = left_renderer.materials;
+            Material[] newmaterials = new Material[materials.Length + 1];
+            for (int i = 0; i < materials.Length; i++)
+            {
+                newmaterials[i] = materials[i];
+            }
+            if (!taskManager.isRemotePlayer)
+            {   
+                
+                if (photonView.IsMine)
+                {  
+                    //red capsule face
+                    newmaterials[newmaterials.Length - 1] = cube_local;               
+                }
+                else
+                {
+                    //blue capsule face
+                    newmaterials[newmaterials.Length - 1] = cube_remote;
+                }
+                
+            }
+            else
+            {
+                if (photonView.IsMine)
+                {
 
-            // mix just for angled90 
+                    //blue capsule face
+                    newmaterials[newmaterials.Length - 1] = cube_remote;
+
+                }
+                else
+                {
+
+                    //red capsule face
+                    newmaterials[newmaterials.Length - 1] = cube_local;
+                }
+
+                    
+            }
+            left_renderer.materials = newmaterials;
+            right_renderer.materials = newmaterials;
+
+
+            //  for angled90 
             if (taskManager.collabType == CollabType.Angled90)
             {
                 if (taskManager.isRemotePlayer)
@@ -59,6 +109,9 @@ public class GetHeadRotation : MonoBehaviourPun, IPunObservable
                         avatar.SetActive(false);
                         leftCapsule.SetActive(false);
                         leftBystander = commonCapsule;
+                        commonCapsule.transform.SetParent(leftT);
+                        commonCapsule.transform.localRotation = Quaternion.Euler(new Vector3(0, 135, 0));
+                        commonCapsule.transform.localPosition = new Vector3(-0.6f, 0.8f, -0.1f);
                         if (rotationManager.bystanderType == BystanderType.Capsule) 
                         { 
                             rightBystander = rightCapsule;
@@ -97,6 +150,8 @@ public class GetHeadRotation : MonoBehaviourPun, IPunObservable
                         avatar2.SetActive(false);
                         rightCapsule.SetActive(false);
                         rightBystander = commonCapsule;
+                        commonCapsule.transform.SetParent(rightT);
+                        commonCapsule.transform.localPosition = new Vector3(0.6f, 0.8f, -0.1f);
                         if (rotationManager.bystanderType == BystanderType.Capsule)
                         { 
                             leftBystander = leftCapsule;
@@ -149,6 +204,7 @@ public class GetHeadRotation : MonoBehaviourPun, IPunObservable
         }
         //        head = Camera.main.transform;
 
+        //set them invisable in the begining
         //left avatar
         SetChildrenTransparency(leftBystander, 0);
         //right avatar
@@ -212,7 +268,7 @@ public class GetHeadRotation : MonoBehaviourPun, IPunObservable
         if (taskManager != null)
         {
 
-            if (taskManager.taskStarted)
+            if ((taskManager.taskStarted||taskManager.taskStartedP2) && photonView.IsMine)
             {
                 //disable the PhotonTransformView if task starts
                 gameObject.GetComponent<PhotonTransformView>().enabled = false;
@@ -299,24 +355,13 @@ public class GetHeadRotation : MonoBehaviourPun, IPunObservable
             {
                 eye.UpdateEye(transparency,left);
             }
-            //for sidebyside, make the transparency range to 0-0.9(only for the avatar that may occlude the player avtar)
-            if (sideByside)
+            else
             {
-                if(taskManager.isRemotePlayer)
-                {
-                    if (left)
-                    {
-                        transparency = transparency * 0.9f;
-                    }
-                }
-                else
-                {
-                    if(!left)
-                    {
-                        transparency = transparency * 0.9f;
-                    }
-                }
+                eye.UpdateEye(0, true);
             }
+            //transparency range to 0.8
+            transparency = transparency * 0.8f;
+
            
             //
             //notify intrusion 
@@ -378,40 +423,40 @@ public class GetHeadRotation : MonoBehaviourPun, IPunObservable
 
             
         }
-        if (Angled90)
+       /* if (Angled90)
         {
             if (!taskManager.isRemotePlayer)
             {
                 //slightly change the position of the corner avatar
                 if (photonView.IsMine)
                 {
-                    commonCapsule.transform.position = new Vector3(0.6f, 0.1f, -0.4f);
+                    commonCapsule.transform.position = new Vector3(0.6f, 0.4f, -0.4f);
                 }
-                /*else
+                *//*else
                 {
                     float left_x = leftCapsule.transform.position.x;
                     float left_z = leftCapsule.transform.position.z;
                     leftCapsule.transform.position = new Vector3(left_x, 0.1f, left_z);
 
-                }*/
+                }*//*
             }
             else
             {
                 if (photonView.IsMine)
                 {
                     commonCapsule.transform.localRotation = Quaternion.Euler(new Vector3(0, 135, 0));
-                    commonCapsule.transform.position = new Vector3(0.6f, 0.1f, -0.4f);
+                    commonCapsule.transform.position = new Vector3(0.6f, 0.4f, -0.4f);
 
                 }
-                /*else
+                *//*else
                 {
                     float right_x = rightCapsule.transform.position.x;
                     float right_z = rightCapsule.transform.position.z;
                     rightCapsule.transform.position = new Vector3(right_x, 0.1f, right_z);
-                }*/
+                }*//*
             }
 
-        }
+        }*/
 
 
 

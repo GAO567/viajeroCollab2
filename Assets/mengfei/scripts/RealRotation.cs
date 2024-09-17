@@ -1,18 +1,20 @@
+using Oculus.Interaction;
 using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Photon.Pun;
 
 
 
 public class RealRotation : MonoBehaviourPun, IPunObservable
 {
+    public GameObject selfarr;
     public TaskManager taskManager;
-
     private RotationManager rotationManager;
-    private Transform arrow;
-    private Transform frustum;
+    public Transform arrow;
+    public Transform frustum;
+    private Transform lookAt;
+    private Transform otherlookat;
 
     private bool isPlaced=false;
     public Transform head;
@@ -20,6 +22,7 @@ public class RealRotation : MonoBehaviourPun, IPunObservable
     public Quaternion adjustRotaion;
     private int arrowColor = -1;
     private bool adjusted = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -27,8 +30,11 @@ public class RealRotation : MonoBehaviourPun, IPunObservable
 
         arrow = transform.GetChild(0);
         frustum = transform.GetChild(1);
+        lookAt = transform.GetChild(2);
         material = arrow.GetComponent<Renderer>().material;
         rotationManager = GameObject.FindObjectOfType<RotationManager>();
+        selfarr = GameObject.Find("selfArrow");
+       
     }
 
     // Update is called once per frame
@@ -173,7 +179,75 @@ public class RealRotation : MonoBehaviourPun, IPunObservable
             frustum.gameObject.SetActive(false);
         }
 
+        if(rotationManager.isArrow_selfcentered)
+        {
+            selfarr.gameObject.SetActive(true);
+            if (photonView.IsMine)
+            {
+                lookAt.gameObject.name = "lookat_hide";
+                lookAt.gameObject.SetActive(false);
+            }
+            else
+            {
+                lookAt.gameObject.SetActive(true);
 
+            }
+            if (!otherlookat)
+            {
+                otherlookat = GameObject.Find("lookAt").transform;
+
+
+            }
+            else
+            {
+                selfarr.transform.LookAt(otherlookat);
+                selfarr.transform.Rotate(new Vector3(90, 90, 0));
+                Material mat = selfarr.GetComponent<Renderer>().material;
+                mat.color = arrow.GetComponent<Renderer>().material.color;
+            }
+
+
+            /*//hide one arrow
+            if (photonView.IsMine)
+            {
+                arrowSelfCentered.gameObject.SetActive(true);
+            }
+            else
+            {
+                arrowSelfCentered.gameObject.SetActive(false);
+            }
+            if (otherPlayerHead == null)
+            {
+                    //get head of the other player
+                  otherPlayerHead = GameObject.Find("Remote Network Player").GetComponent<NetworkPlayer>().head;
+
+
+            }
+            else
+            {
+                if (!taskManager.isRemotePlayer)
+                {
+                    if (adjusted)
+                    {
+                        
+                        arrowSelfCentered.rotation = otherPlayerHead.rotation * Quaternion.Euler(90, 90, 0) * Quaternion.Inverse(adjustRotaion);
+                        arrowSelfCentered.localPosition = new Vector3(-0.025f, -0.25f, 0.4f);
+                    }
+
+                }
+                else
+                {
+                    arrowSelfCentered.rotation = otherPlayerHead.rotation * Quaternion.Euler(90, 90, 0);
+                    arrowSelfCentered.localPosition = new Vector3(-0.025f, -0.25f, 0.4f);
+
+                }
+            }*/
+
+        }
+        else
+        {
+            selfarr.gameObject.SetActive(false) ;
+        }
     }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)

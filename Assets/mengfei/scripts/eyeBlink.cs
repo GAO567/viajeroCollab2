@@ -55,10 +55,10 @@ public class eyeBlink : MonoBehaviour
         images[2].color = newColor2;
         text.GetComponent<TMP_Text>().color = newTextColor;
 
-        if (left) { text.GetComponent<TMP_Text>().text = "Looking at the left"; } 
+        if (left) { text.GetComponent<TMP_Text>().text = "Bystander at left"; } 
         else
         {
-            text.GetComponent<TMP_Text>().text = "Looking at the right";
+            text.GetComponent<TMP_Text>().text = "Bystander at right";
         }
             
         if (value == 1f && !isBlinking)
